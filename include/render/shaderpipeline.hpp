@@ -9,46 +9,42 @@
 namespace render {
 	class ShaderPipeLine {
 		private:
-			enum ShaderErrorType {
-				compile, link
-			};
-
-			std::string vertexShaderSource, geometryShaderSource, fragmentShaderSource;
+			std::string vertexShaderName, geometryShaderName, fragmentShaderName;
 			GLuint shaderProgram;
 
-			void checkShaderError(GLuint shader, ShaderErrorType errorType);
+			void checkLinkError(const GLuint shader) const;
 		public:
-			ShaderPipeLine(std::string myVertexShaderSource, std::string myFragmentShaderSource);
+			ShaderPipeLine(const std::string myVertexShaderName, const std::string myFragmentShaderName);
 
 			void setVertexShader(std::string myVertexShaderSource);
 			void setGeometryShader(std::string myGeometryShaderSource);
 			void setFragmentShader(std::string myFragmentShaderSource);
 
-			GLuint getShaderProgram();
+			const GLuint getShaderProgram() const;
 
-			void compilePipeLine();
+			void linkPipeLine();
 	};
 
-	inline GLuint ShaderPipeLine::getShaderProgram() {
+	const GLuint ShaderPipeLine::getShaderProgram() const {
 		return shaderProgram;
 	}
 
 	inline void ShaderPipeLine::setVertexShader(std::string myVertexShaderSource) {
 		assert(myVertexShaderSource != "");
 
-		vertexShaderSource = myVertexShaderSource;
+		vertexShaderName = myVertexShaderSource;
 	}
 
 	inline void ShaderPipeLine::setGeometryShader(std::string myGeometryShaderSource) {
 		assert(myGeometryShaderSource != "");
 
-		geometryShaderSource = myGeometryShaderSource;
+		geometryShaderName = myGeometryShaderSource;
 	}
 
 	inline void ShaderPipeLine::setFragmentShader(std::string myFragmentShaderSource) {
 		assert(myFragmentShaderSource != "");
 
-		fragmentShaderSource = myFragmentShaderSource;
+		fragmentShaderName = myFragmentShaderSource;
 	}
 }
 #endif // SHADERPIPELINE_HPP

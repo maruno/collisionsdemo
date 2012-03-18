@@ -2,86 +2,45 @@
 
 #include <iostream>
 
-render::ShaderPipeLine::ShaderPipeLine(std::string myVertexShaderSource, std::string myFragmentShaderSource) {
-	setVertexShader(myVertexShaderSource);
-	setFragmentShader(myFragmentShaderSource);
+#include "render/shaderfactory.hpp"
+
+render::ShaderPipeLine::ShaderPipeLine(const std::string myVertexShaderName, const std::string myFragmentShaderName) {
+	setVertexShader(myVertexShaderName);
+	setFragmentShader(myFragmentShaderName);
 
 	shaderProgram = glCreateProgram();
 }
 
-void render::ShaderPipeLine::checkShaderError(GLuint shader, render::ShaderPipeLine::ShaderErrorType errorType) {
-	GLboolean succeeded;
+void render::ShaderPipeLine::checkLinkError(const GLuint shader) const {
+	GLint succeeded;
 
-	if(errorType == compile) {
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &succeeded);
-		}
-	else {
-			glGetProgramiv(shader, GL_LINK_STATUS, &succeeded);
-		}
+	glGetProgramiv(shader, GL_LINK_STATUS, &succeeded);
 
 	if(succeeded == false) {
-			unsigned int maxLength;
-			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+		GLint maxLength;
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
-			/* The maxLength includes the NULL character */
-			char infoLog[] = new char[maxLength];
+		char infoLog[maxLength];
+		glGetProgramInfoLog(shader, maxLength, &maxLength, infoLog);
 
-			std::string errorName;
-			if(errorType == compile) {
-					glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
+		//TODO Omzetten naar logging!
+		std::cerr << "Shader link error:" << std::endl << infoLog << std::endl;
 
-					errorName = "compile";
-				}
-			else {
-					glGetProgramInfoLog(shader, maxLength, &maxLength, infoLog);
-
-					errorName = "link";
-				}
-
-			//TODO Omzetten naar logging!
-			std::cerr << "Shader " << errorName << " error:" << std::endl << infoLog << std::endl;
-
-			/* Handle the error in an appropriate way such as displaying a message or writing to a log file. */
-			/* In this simple program, we'll just leave */
-			delete[] infoLog;
-
-			assert(succeeded);
-		}
+		assert(succeeded);
+	}
 }
 
-void render::ShaderPipeLine::compilePipeLine() {
-	GLuint vertexShader, fragmentShader;
+void render::ShaderPipeLine::linkPipeLine() {
+	glAttachShader(shaderProgram, ShaderFactory::getShader(vertexShaderName, GL_VERTEX_SHADER));
+	
+	if(geometryShaderName != "") {
+		glAttachShader(shaderProgram, ShaderFactory::getShader(geometryShaderName, GL_GEOMETRY_SHADER));
+	}
+	
+	glAttachShader(shaderProgram, ShaderFactory::getShader(fragmentShaderName, GL_FRAGMENT_SHADER));
 
-	//Compile vertex shader
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-	glShaderSource(vertexShader, 1, vertexShaderSource.c_str(), 0);
-	glCompileShader(vertexShader);
-	checkShaderError(vertexShader, compile);
-
-	//Compile geometry shader if available
-	if(geometryShaderSource != "") {
-			GLuint geometryShader;
-			geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-
-			glShaderSource(geometryShader, 1, geometryShaderSource.c_str(), 0);
-			glCompileShader(geometryShader);
-			checkShaderError(geometryShader, compile);
-		}
-
-	//Compile fragment shader
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	glShaderSource(fragmentShader, 1, vertexShaderSource.c_str(), 0);
-	glCompileShader(fragmentShader);
-	checkShaderError(vertexShader, compile);
-
-	//Link shader program
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-
-	//TODO Attributes!!! Shader class!!!
+	//TODO Attributes!!!
 
 	glLinkProgram(shaderProgram);
-	checkShaderError();
+	checkLinkError(shaderProgram);
 }
