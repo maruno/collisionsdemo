@@ -64,8 +64,8 @@ int main(int argc, char **argv) {
 	//TODO glBindAttribLocation(shaderprogram, 0, "vertex");
 	
 	//TODO Naar vertex object class!!!
-	render::ShaderPipeLine shaderpipe("SOURCE LADEN!", "SOURCE LADEN!");
-	shaderpipe.compilePipeLine();
+	render::ShaderPipeLine shaderpipe("Vertex-Pass Y", "Fragment-Colour Height");
+	shaderpipe.linkPipeLine();
 	
 	GLuint shaderProgram = shaderpipe.getShaderProgram();
 	
