@@ -5,6 +5,8 @@
 #include <iostream>
 #include <cassert>
 
+std::map<const std::string, const GLuint> render::ShaderFactory::shaders;
+
 void render::ShaderFactory::checkShaderError(GLuint shader) {
 	GLint succeeded;
 
