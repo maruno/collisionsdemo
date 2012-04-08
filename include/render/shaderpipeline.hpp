@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cassert>
+#include <list>
 
 #include "glload/gl_3_2.h"
 
@@ -11,6 +12,7 @@ namespace render {
 		private:
 			std::string vertexShaderName, geometryShaderName, fragmentShaderName;
 			GLuint shaderProgram;
+			std::list<std::string> attributes;
 
 			void checkLinkError(const GLuint shader) const;
 		public:
@@ -19,13 +21,15 @@ namespace render {
 			void setVertexShader(std::string myVertexShaderSource);
 			void setGeometryShader(std::string myGeometryShaderSource);
 			void setFragmentShader(std::string myFragmentShaderSource);
+			
+			void addShaderAttribute(std::string attributeName);
 
 			const GLuint getShaderProgram() const;
 
 			void linkPipeLine();
 	};
 
-	const GLuint ShaderPipeLine::getShaderProgram() const {
+	inline const GLuint ShaderPipeLine::getShaderProgram() const {
 		return shaderProgram;
 	}
 
@@ -45,6 +49,12 @@ namespace render {
 		assert(myFragmentShaderSource != "");
 
 		fragmentShaderName = myFragmentShaderSource;
+	}
+	
+	inline void ShaderPipeLine::addShaderAttribute(std::string attributeName) {
+		assert(attributeName != "");
+		
+		attributes.push_back(attributeName);
 	}
 }
 #endif // SHADERPIPELINE_HPP

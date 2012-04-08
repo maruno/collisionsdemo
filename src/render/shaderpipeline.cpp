@@ -17,6 +17,7 @@ void render::ShaderPipeLine::checkLinkError(const GLuint shader) const {
 	glGetProgramiv(shader, GL_LINK_STATUS, &succeeded);
 
 	if(succeeded == false) {
+
 		GLint maxLength;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
@@ -39,7 +40,12 @@ void render::ShaderPipeLine::linkPipeLine() {
 	
 	glAttachShader(shaderProgram, ShaderFactory::getShader(fragmentShaderName, GL_FRAGMENT_SHADER));
 
-	//TODO Attributes!!!
+	int numAttrib = 0;
+	for(std::list<std::string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
+		//TODO glBindAttribLocation(shaderprogram, 0, "vertex");
+		glBindAttribLocation(shaderProgram, numAttrib, (*it).c_str());
+		++numAttrib;
+	}
 
 	glLinkProgram(shaderProgram);
 	checkLinkError(shaderProgram);
