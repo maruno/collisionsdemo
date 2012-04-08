@@ -7,6 +7,7 @@
 #include <ctime>
 #include <vector>
 #include <boost/tr1/memory.hpp>
+#include <cassert>
 
 typedef std::tr1::shared_ptr<std::vector<int> > IntVectorPtr;
 typedef std::vector<IntVectorPtr > Matrix;
@@ -24,10 +25,13 @@ class HeightmapGenerator {
 		const Matrix& getMap();
 		void convertMap();
 		HMVertex* getVertices();
+		
+		unsigned int getVertexCount();
 	private:
 		Matrix map;
 		int mapWidth;
 		int variation;
+		unsigned int vertexCount;
 		HMVertex* vertices;
 
 		void fillMap(int iteration);
@@ -36,5 +40,11 @@ class HeightmapGenerator {
 		int randomNumber(int iteration);
 		int numberOfTrailingZeros(int);
 };
+
+inline unsigned int HeightmapGenerator::getVertexCount() {
+	assert(vertexCount);
+	
+	return vertexCount;
+}
 
 #endif

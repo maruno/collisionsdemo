@@ -6,7 +6,8 @@ HeightmapGenerator::HeightmapGenerator(int size, int seed, int variation) {
 	mapWidth = size;
 	HeightmapGenerator::variation = variation;
 	vertices = new HMVertex[size*size];
-
+	vertexCount = 0;
+	
 	for(int i = 0; i < size; ++i) {
 		IntVectorPtr intVectorPtr(new std::vector<int>(size));
 		map.push_back(intVectorPtr);
@@ -87,6 +88,8 @@ void HeightmapGenerator::convertMap() {
 			zPrev = z;
 		}
 	}
+	
+	vertexCount = numVertex;
 }
 
 void HeightmapGenerator::fillMap(int iteration) {
