@@ -1,22 +1,25 @@
 #version 150 core
 
-in int y;
+in float y;
 
 void main(void) {
 	vec3 colour;
 	
-	if(y < 0) {
+	if(y < 0.0) {
+		//Water
 		colour = (0, 0, 255);
-		//WTF ben je aan het doen? :P
-	} else if (y < 20) {
-		//Geel
-	} else if(y < 40) {
-		//Groen
-	} else if(y < 75) {
-		//Bruin
-	} else if(y < 65536) {
+	} else if (y < 0.25) {
+		//Sand
+		colour = (244, 240, 135);
+	} else if(y < 0.5) {
+		//Green
+		colour = (0, 145, 0);
+	} else if(y < 0.75) {
+		colour = (150, 106, 59);
+	} else {
 		//WIT, KOUD!!!! :(
+		colour = (255, 255, 255);
 	}
 	
-	gl_FragColor = vec4(colour.x, colour.y, colour.z, 1.0);
+	gl_FragColor = vec4(colour, 1.0);
 }
