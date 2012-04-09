@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <cassert>
+#include <cstring>
 
 std::map<const std::string, const GLuint> render::ShaderFactory::shaders;
 
@@ -31,32 +32,37 @@ const GLuint render::ShaderFactory::getShader(const std::string shaderName, GLen
 	if(shaders.find(shaderName) != shaders.end()) {
 		return shaders[shaderName];
 	}
-	
+
 	//Shader not in flyweight pool: load and compile shader
 	std::ifstream shaderSourceFile(std::string("./shaders/" + shaderName + ".glsl").c_str());
-	
+
 	if(!shaderSourceFile.is_open()) {
 		//TODO To logging
 		std::cerr << "Could not find shader " << shaderName << std::endl;
 		assert(shaderSourceFile.is_open());
 	}
-	
+
 	std::stringstream shaderSourceStream;
-	
+
 	while(shaderSourceFile.good()) {
 		std::string line;
 		std::getline(shaderSourceFile, line);
 
-		shaderSourceStream << line;
+		shaderSourceStream << line << std::endl;
 	}
+
+	char* shaderSourceCString = new char[shaderSourceStream.str().size()+1];
+	std::strcpy(shaderSourceCString, shaderSourceStream.str().c_str());
 
 	GLuint shader = glCreateShader(shaderType);
 
-	glShaderSource(shader, 1, (const GLchar**) shaderSourceStream.str().c_str(), 0);
+	glShaderSource(shader, 1, (const GLchar**) &shaderSourceCString, 0);
 	glCompileShader(shader);
 	checkShaderError(shader);
 	
-	shaders.insert(std::pair<std::string, GLuint>(shaderName, shader));
+	delete[] shaderSourceCString;
 	
+	shaders.insert(std::pair<std::string, GLuint>(shaderName, shader));
+
 	return shader;
 }
