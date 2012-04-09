@@ -3,9 +3,7 @@
 #include <ctime>
 
 HeightmapGenerator::HeightmapGenerator(int size, int seed, int variation) {
-	mapWidth = size;
 	HeightmapGenerator::variation = variation;
-	vertices = new HMVertex[size*size];
 	vertexCount = 0;
 	
 	for(int i = 0; i < size; ++i) {
@@ -17,6 +15,11 @@ HeightmapGenerator::HeightmapGenerator(int size, int seed, int variation) {
 	(*map[0])[size-1] = seed;
 	(*map[size-1])[0] = seed;
 	(*map[size-1])[size-1] = seed;
+
+	mapWidth = size;
+	int pow = numberOfTrailingZeros(size-1);
+	int arraySize = ((1 << (pow+1))-1)*mapWidth+2;
+	vertices = new HMVertex[arraySize];
 }
 
 HeightmapGenerator::~HeightmapGenerator() {
