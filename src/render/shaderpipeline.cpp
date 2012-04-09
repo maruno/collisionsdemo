@@ -42,7 +42,6 @@ void render::ShaderPipeLine::linkPipeLine() {
 
 	int numAttrib = 0;
 	for(std::list<std::string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
-		//TODO glBindAttribLocation(shaderprogram, 0, "vertex");
 		glBindAttribLocation(shaderProgram, numAttrib, (*it).c_str());
 		++numAttrib;
 	}
