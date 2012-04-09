@@ -5,7 +5,7 @@ out float y;
 
 void main(void) {
 	//Pass vertex as homogenous vertex
-	gl_Position = vec4(vertex, 1.0);
+	gl_Position = vec4(vertex, 1.);
 	
 	//Pass Y
 	y = vertex.y;
