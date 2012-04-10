@@ -1,5 +1,6 @@
 *.swp
 *~
 build
-.kdev4
-.kate-swp
+*.kdev4
+*.kate-swp
+*.trace
