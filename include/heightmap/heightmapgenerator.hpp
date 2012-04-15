@@ -13,7 +13,7 @@ typedef std::tr1::shared_ptr<std::vector<int> > IntVectorPtr;
 typedef std::vector<IntVectorPtr > Matrix;
 
 struct HMVertex {
-	int x, y, z;
+	float x, y, z;
 };
 
 class HeightmapGenerator {
@@ -25,7 +25,7 @@ class HeightmapGenerator {
 		const Matrix& getMap();
 		void convertMap();
 		HMVertex* getVertices();
-		
+
 		unsigned int getVertexCount();
 	private:
 		Matrix map;
@@ -43,7 +43,7 @@ class HeightmapGenerator {
 
 inline unsigned int HeightmapGenerator::getVertexCount() {
 	assert(vertexCount);
-	
+
 	return vertexCount;
 }
 
