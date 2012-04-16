@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
 
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(HMVertex), hmgen->getVertices(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_INT, GL_TRUE, 0, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
 
 	render::ShaderPipeLine shaderpipe("Vertex-Pass Y", "Fragment-Colour Height");
 
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
 		usleep(500000);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 9);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertexCount);
 
 		glfwSwapBuffers();
 	}
