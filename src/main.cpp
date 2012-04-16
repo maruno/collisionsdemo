@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 	glGenBuffers(1, vbos);
 	glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
 	
-	/Generate heightmap
+	//Generate heightmap
 	HeightmapGenerator* hmgen = new HeightmapGenerator(1025, 0, 512);
 	hmgen->fillMap();
 	hmgen->convertMap();
