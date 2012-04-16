@@ -6,6 +6,10 @@
 #include "glload/gll.hpp"
 #include <GL/glfw.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "render/shaderpipeline.hpp"
 #include "heightmap/heightmapgenerator.hpp"
 
@@ -18,7 +22,10 @@ int main(int argc, char** argv) {
 	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	glfwOpenWindow(1024, 768, 8, 8, 8, 8, 24, 24, GLFW_WINDOW);
+	int width = 1024;
+	int height = 768;
+
+	glfwOpenWindow(width, height, 8, 8, 8, 8, 24, 24, GLFW_WINDOW);
 	glfwSetWindowTitle("OpenGL 3.2 Core profile test");
 
 	//Load OpenGL functions
@@ -26,7 +33,7 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	glViewport(0, 0, 1024, 768);
+	glViewport(0, 0, width, height);
 
 	//Set clear colour to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -39,7 +46,7 @@ int main(int argc, char** argv) {
 	GLuint vbos[1];
 	glGenBuffers(1, vbos);
 	glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
-	
+
 	//Generate heightmap
 	HeightmapGenerator* hmgen = new HeightmapGenerator(1025, 0, 512);
 	hmgen->fillMap();
@@ -51,7 +58,22 @@ int main(int argc, char** argv) {
 
 	//Set vertex attribute index 0 to current VBO
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
-	
+
+	//Matrices
+	//The approximate field of view of a human eye is 95° out, 75° down, 60° in, 60° up
+	glm::mat4 perspective = glm::infinitePerspective<float>(135.0f,static_cast<float>(width)/height, 1.0f);
+	glm::mat4 view = glm::lookAt<float>(glm::vec3(0.0f, 2.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	glm::mat4 VPMatrix = perspective * view;
+
+	//Create UBO
+	GLuint ubos[1];
+	glGenBuffers(1, ubos);
+	glBindBuffer(GL_UNIFORM_BUFFER, ubos[0]);
+
+	//TODO Interactivity
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), glm::value_ptr(VPMatrix), GL_DYNAMIC_DRAW);
+
 	//Create shader pipeline
 	render::ShaderPipeLine shaderpipe("Vertex-Pass Y", "Fragment-Colour Height");
 
@@ -59,6 +81,11 @@ int main(int argc, char** argv) {
 
 	shaderpipe.linkPipeLine();
 	GLuint shaderProgram = shaderpipe.getShaderProgram();
+
+	//UBO bindings... TODO OOP
+	GLuint hmMatricesUniformBlockIdx = glGetUniformBlockIndex(shaderProgram, "hmMatrices");
+	glUniformBlockBinding(shaderProgram, hmMatricesUniformBlockIdx, 0);
+	glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubos[0]);
 
 	glUseProgram(shaderProgram);
 
