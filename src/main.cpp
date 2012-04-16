@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
 	//Set clear colour to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+	//Create VAO and VBO
 	GLuint vaos[1];
 	glGenVertexArrays(1, vaos);
 	glBindVertexArray(vaos[0]);
@@ -38,17 +39,20 @@ int main(int argc, char** argv) {
 	GLuint vbos[1];
 	glGenBuffers(1, vbos);
 	glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
-
+	
+	/Generate heightmap
 	HeightmapGenerator* hmgen = new HeightmapGenerator(1025, 0, 512);
 	hmgen->fillMap();
 	hmgen->convertMap();
 
+	//Buffer heightmap-data to VBO
 	unsigned int vertexCount = hmgen->getVertexCount();
-
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(HMVertex), hmgen->getVertices(), GL_STATIC_DRAW);
 
+	//Set vertex attribute index 0 to current VBO
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
-
+	
+	//Create shader pipeline
 	render::ShaderPipeLine shaderpipe("Vertex-Pass Y", "Fragment-Colour Height");
 
 	shaderpipe.addShaderAttribute("vertex");
@@ -58,6 +62,7 @@ int main(int argc, char** argv) {
 
 	glUseProgram(shaderProgram);
 
+	//Main render loop
 	while(true) {
 		usleep(500000);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
