@@ -1,13 +1,12 @@
+#include <cassert>
+
 #include <unistd.h>
 
 #include "glload/gl_3_2.h"
 #include "glload/gll.hpp"
-
 #include <GL/glfw.h>
-#include <cassert>
 
 #include "render/shaderpipeline.hpp"
-
 #include "heightmap/heightmapgenerator.hpp"
 
 int main(int argc, char** argv) {
