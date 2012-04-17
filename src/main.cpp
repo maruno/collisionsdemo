@@ -64,11 +64,11 @@ int main(int argc, char** argv) {
 	//The approximate field of view of a human eye is 95° out, 75° down, 60° in, 60° up
 	glm::mat4 perspective = glm::infinitePerspective<float>(135.0f,static_cast<float>(width)/height, 1.0f);
 	glm::mat4 view = glm::lookAt<float>(glm::vec3(0.0f, 2.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	
-	glm::mat4 model = glm::scale<float>(glm::mat4(1.0f), glm::vec3(0.02f, 0.02f, 0.02f));
-	
+
+	glm::mat4 model = glm::scale<float>(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
+
 	glm::mat4 mVPMatrix = perspective * view * model;
-	
+
 	//Create UBO
 	GLuint ubos[1];
 	glGenBuffers(1, ubos);
