@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
 
 	//Set vertex attribute index 0 to current VBO
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
 
 	//Matrices
 	//The approximate field of view of a human eye is 95° out, 75° down, 60° in, 60° up
