@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
 
 	//Generate heightmap
-	HeightmapGenerator* hmgen = new HeightmapGenerator(1025, 0, 512);
+	HeightmapGenerator* hmgen = new HeightmapGenerator(65, 0, 64);
 	hmgen->fillMap();
 	hmgen->convertMap();
 
@@ -57,22 +57,24 @@ int main(int argc, char** argv) {
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(HMVertex), hmgen->getVertices(), GL_STATIC_DRAW);
 
 	//Set vertex attribute index 0 to current VBO
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	//Matrices
 	//The approximate field of view of a human eye is 95° out, 75° down, 60° in, 60° up
 	glm::mat4 perspective = glm::infinitePerspective<float>(135.0f,static_cast<float>(width)/height, 1.0f);
 	glm::mat4 view = glm::lookAt<float>(glm::vec3(0.0f, 2.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-	glm::mat4 VPMatrix = perspective * view;
-
+	
+	glm::mat4 model = glm::scale<float>(glm::mat4(1.0f), glm::vec3(0.02f, 0.02f, 0.02f));
+	
+	glm::mat4 mVPMatrix = perspective * view * model;
+	
 	//Create UBO
 	GLuint ubos[1];
 	glGenBuffers(1, ubos);
 	glBindBuffer(GL_UNIFORM_BUFFER, ubos[0]);
 
 	//TODO Interactivity
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), glm::value_ptr(VPMatrix), GL_DYNAMIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), glm::value_ptr(mVPMatrix), GL_DYNAMIC_DRAW);
 
 	//Create shader pipeline
 	render::ShaderPipeLine shaderpipe("Vertex-Pass Y", "Fragment-Colour Height");
