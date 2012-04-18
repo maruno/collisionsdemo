@@ -12,6 +12,7 @@
 
 #include "render/shaderpipeline.hpp"
 #include "heightmap/heightmapgenerator.hpp"
+#include "scene/world.hpp"
 
 int main(int argc, char** argv) {
 	glfwInit();
@@ -32,8 +33,9 @@ int main(int argc, char** argv) {
 	if(glload::LoadFunctions() == glload::LS_LOAD_FAILED) {
 		return 1;
 	}
-
-	glViewport(0, 0, width, height);
+	
+	//Define world
+	scene::World::rescale(width, height);
 
 	//Set clear colour to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -61,13 +63,9 @@ int main(int argc, char** argv) {
 	glEnableVertexAttribArray(0);
 
 	//Matrices
-	//The approximate field of view of a human eye is 95° out, 75° down, 60° in, 60° up
-	glm::mat4 perspective = glm::infinitePerspective<float>(135.0f,static_cast<float>(width)/height, 1.0f);
-	glm::mat4 view = glm::lookAt<float>(glm::vec3(0.0f, 2.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
 	glm::mat4 model = glm::scale<float>(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
 
-	glm::mat4 mVPMatrix = perspective * view * model;
+	glm::mat4 mVPMatrix = scene::World::getMatrix() * model;
 
 	//Create UBO
 	GLuint ubos[1];
