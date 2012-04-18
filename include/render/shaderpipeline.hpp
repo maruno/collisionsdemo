@@ -4,6 +4,7 @@
 #include <string>
 #include <cassert>
 #include <list>
+#include <map>
 
 #include "glload/gl_3_2.h"
 
@@ -13,6 +14,7 @@ namespace render {
 			std::string vertexShaderName, geometryShaderName, fragmentShaderName;
 			GLuint shaderProgram;
 			std::list<std::string> attributes;
+			std::map<std::string, GLuint> uniformBindings;
 
 			void checkLinkError(const GLuint shader) const;
 		public:
@@ -23,6 +25,7 @@ namespace render {
 			void setFragmentShader(std::string myFragmentShaderSource);
 			
 			void addShaderAttribute(std::string attributeName);
+			void setShaderUniform(std::string uniformName, GLuint uboId);
 
 			const GLuint getShaderProgram() const;
 
@@ -55,6 +58,13 @@ namespace render {
 		assert(attributeName != "");
 		
 		attributes.push_back(attributeName);
+	}
+	
+	inline void ShaderPipeLine::setShaderUniform(std::string uniformName, GLuint uboId) {
+		assert(uniformName != "");
+		
+		uniformBindings.erase(uniformName);
+		uniformBindings.insert(std::pair<std::string, GLuint>(uniformName, uboId));
 	}
 }
 #endif // SHADERPIPELINE_HPP
