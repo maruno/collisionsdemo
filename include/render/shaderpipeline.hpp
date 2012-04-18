@@ -23,7 +23,7 @@ namespace render {
 			void setVertexShader(std::string myVertexShaderSource);
 			void setGeometryShader(std::string myGeometryShaderSource);
 			void setFragmentShader(std::string myFragmentShaderSource);
-			
+
 			void addShaderAttribute(std::string attributeName);
 			void setShaderUniform(std::string uniformName, GLuint uboId);
 
@@ -53,16 +53,16 @@ namespace render {
 
 		fragmentShaderName = myFragmentShaderSource;
 	}
-	
+
 	inline void ShaderPipeLine::addShaderAttribute(std::string attributeName) {
 		assert(attributeName != "");
-		
+
 		attributes.push_back(attributeName);
 	}
-	
+
 	inline void ShaderPipeLine::setShaderUniform(std::string uniformName, GLuint uboId) {
 		assert(uniformName != "");
-		
+
 		uniformBindings.erase(uniformName);
 		uniformBindings.insert(std::pair<std::string, GLuint>(uniformName, uboId));
 	}

@@ -33,11 +33,11 @@ void render::ShaderPipeLine::checkLinkError(const GLuint shader) const {
 
 void render::ShaderPipeLine::linkPipeLine() {
 	glAttachShader(shaderProgram, ShaderFactory::getShader(vertexShaderName, GL_VERTEX_SHADER));
-	
+
 	if(geometryShaderName != "") {
 		glAttachShader(shaderProgram, ShaderFactory::getShader(geometryShaderName, GL_GEOMETRY_SHADER));
 	}
-	
+
 	glAttachShader(shaderProgram, ShaderFactory::getShader(fragmentShaderName, GL_FRAGMENT_SHADER));
 
 	//Attribute bindings
@@ -49,15 +49,15 @@ void render::ShaderPipeLine::linkPipeLine() {
 
 	glLinkProgram(shaderProgram);
 	checkLinkError(shaderProgram);
-	
+
 	//UBO bindings
 	unsigned int numUBOs = 0;
 	for(auto it = uniformBindings.begin(); it!= uniformBindings.end(); ++it) {
 		GLuint uniformBlockIdx = glGetUniformBlockIndex(shaderProgram, it->first.c_str());
-		
+
 		glUniformBlockBinding(shaderProgram, uniformBlockIdx, numUBOs);
 		glBindBufferBase(GL_UNIFORM_BUFFER, numUBOs, it->second);
-		
+
 		++numUBOs;
 	}
 }
