@@ -40,8 +40,9 @@ void render::ShaderPipeLine::linkPipeLine() {
 	
 	glAttachShader(shaderProgram, ShaderFactory::getShader(fragmentShaderName, GL_FRAGMENT_SHADER));
 
+	//Attribute bindings
 	int numAttrib = 0;
-	for(std::list<std::string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
+	for(auto it = attributes.begin(); it != attributes.end(); ++it) {
 		glBindAttribLocation(shaderProgram, numAttrib, (*it).c_str());
 		++numAttrib;
 	}
