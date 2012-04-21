@@ -11,12 +11,19 @@ uniform hmHeight {
 };
 
 in vec3 vertex;
+
 out vec3 colour;
+out float z;
 
 void main(void) {
 	//Pass transformed vertex as homogenous vertex
 	gl_Position = mVPMatrix * vec4(vertex, 1.);
 	
+	//Pass Z for depth-test
+	//HACK Pretends far plane to be 100, whilst we don't have a far plane yet
+	z = gl_Position.z / 100.;
+	
+	//Determine normalized height
 	float height = vertex.y / maxHeight;
 	
 	//Basic map colours
