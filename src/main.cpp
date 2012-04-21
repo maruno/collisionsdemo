@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 	glfwSetKeyCallback([](int keyId, int keyState) {
 		switch(keyId) {
 		case GLFW_KEY_LEFT:
-			if(keyState = GLFW_PRESS) {
+			if(keyState == GLFW_PRESS) {
 				terrainPtr->rotateLeft();
 			} else {
 				terrainPtr->stopRotation();
@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 
 			break;
 		case GLFW_KEY_RIGHT:
-			if(keyState = GLFW_PRESS) {
+			if(keyState == GLFW_PRESS) {
 				terrainPtr->rotateRight();
 			} else {
 				terrainPtr->stopRotation();
