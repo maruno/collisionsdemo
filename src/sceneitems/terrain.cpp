@@ -15,13 +15,13 @@ sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix) : parentMatrix(myPa
 	glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
 
 	//Generate heightmap
-	HeightmapGenerator* hmgen = new HeightmapGenerator(65, 0, 75);
-	hmgen->fillMap();
-	hmgen->convertMap();
+	HeightmapGenerator hmgen(65, 0, 75);
+	hmgen.fillMap();
+	hmgen.convertMap();
 
 	//Buffer heightmap-data to VBO
-	vertexCount = hmgen->getVertexCount();
-	glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(HMVertex), hmgen->getVertices(), GL_STATIC_DRAW);
+	vertexCount = hmgen.getVertexCount();
+	glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(HMVertex), hmgen.getVertices(), GL_STATIC_DRAW);
 
 	//Set vertex attribute index 0 to current VBO
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
