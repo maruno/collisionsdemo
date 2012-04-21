@@ -11,14 +11,14 @@ namespace sceneitems {
 
 	class Terrain {
 		private:
-			GLuint vaos[1], vbos[1], ubos[1], shaderProgram;
+			GLuint vaos[1], vbos[1], ubos[2], shaderProgram;
 			glm::mat4 modelMatrix, parentMatrix;
 
 			Rotation rotation;
 
 			unsigned int vertexCount;
 		public:
-			Terrain(const glm::mat4 myParentMatrix);
+			Terrain(const glm::mat4 myParentMatrix, unsigned int size, unsigned int variance);
 
 			void rotateLeft();
 			void rotateRight();

@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 	scene::World::rescale(width, height);
 
 	//Define terrain
-	sceneitems::Terrain terrain(scene::World::getMatrix());
+	sceneitems::Terrain terrain(scene::World::getMatrix(), 65, 75);
 	terrainPtr = &terrain;
 
 	glfwSetWindowSizeCallback([](int width, int height) {

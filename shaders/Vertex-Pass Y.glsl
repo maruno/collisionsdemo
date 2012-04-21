@@ -6,13 +6,17 @@ uniform hmMatrices {
 	mat4 mVPMatrix;
 };
 
+uniform hmHeight {
+	uint maxHeight;
+};
+
 in vec3 vertex;
 out float y;
 
 void main(void) {
-	//Pass vertex as homogenous vertex
+	//Pass transformed vertex as homogenous vertex
 	gl_Position = mVPMatrix * vec4(vertex, 1.);
 	
 	//Pass Y
-	y = vertex.y;
+	y = vertex.y / maxHeight;
 }

@@ -6,7 +6,7 @@
 #include "heightmap/heightmapgenerator.hpp"
 #include "render/shaderpipeline.hpp"
 
-sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix) : parentMatrix(myParentMatrix), rotation(STATIONARY) {
+sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix, unsigned int size, unsigned int variance) : parentMatrix(myParentMatrix), rotation(STATIONARY) {
 	//Create VAO and VBO
 	glGenVertexArrays(1, vaos);
 	glBindVertexArray(vaos[0]);
@@ -15,7 +15,7 @@ sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix) : parentMatrix(myPa
 	glBindBuffer(GL_ARRAY_BUFFER, vbos[0]);
 
 	//Generate heightmap
-	HeightmapGenerator hmgen(65, 0, 75);
+	HeightmapGenerator hmgen(size, 0, variance);
 	hmgen.fillMap();
 	hmgen.convertMap();
 
@@ -27,8 +27,14 @@ sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix) : parentMatrix(myPa
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 
-	//Create UBO
-	glGenBuffers(1, ubos);
+	//Create UBO's
+	glGenBuffers(2, ubos);
+
+	//Save max heightmap height
+	unsigned int maxHeight = variance * 2;
+
+	glBindBuffer(GL_UNIFORM_BUFFER, ubos[1]);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(unsigned int), &maxHeight, GL_STATIC_DRAW);
 
 	//Scale 0.1x
 	modelMatrix = glm::scale<float>(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
@@ -38,6 +44,7 @@ sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix) : parentMatrix(myPa
 	render::ShaderPipeLine shaderpipe("Vertex-Pass Y", "Fragment-Colour Height");
 	shaderpipe.addShaderAttribute("vertex");
 	shaderpipe.setShaderUniform("hmMatrices", ubos[0]);
+	shaderpipe.setShaderUniform("hmHeight", ubos[1]);
 
 	shaderpipe.linkPipeLine();
 	shaderProgram = shaderpipe.getShaderProgram();
