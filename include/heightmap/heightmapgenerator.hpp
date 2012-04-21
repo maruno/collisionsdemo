@@ -16,6 +16,12 @@ struct HMVertex {
 	float x, y, z;
 };
 
+/**
+ * This class generates a height values representing terrain. The terrain
+ * is generated using the Diamond-Square algorithm as explained here:
+ *
+ * http://www.gameprogrammer.com/fractal.html
+ */
 class HeightmapGenerator {
 	public:
 		HeightmapGenerator(int size, int seed, int variation);
@@ -35,6 +41,7 @@ class HeightmapGenerator {
 		HMVertex* vertices;
 
 		void fillMap(int iteration);
+		void convertMap(int x, int z, int numVertex);
 		void makeDiamond(int, int, int, int, int);
 		void makeSquare(int, int, int, int, int);
 		int randomNumber(int iteration);
