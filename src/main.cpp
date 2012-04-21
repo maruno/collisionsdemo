@@ -9,6 +9,9 @@
 #include "scene/world.hpp"
 #include "sceneitems/terrain.hpp"
 
+//HACK for stupid C-functions. Need to edit GLFW-source
+sceneitems::Terrain* terrainPtr;
+
 int main(int argc, char** argv) {
 	glfwInit();
 
@@ -37,14 +40,36 @@ int main(int argc, char** argv) {
 
 	//Define terrain
 	sceneitems::Terrain terrain(scene::World::getMatrix());
+	terrainPtr = &terrain;
 
 	glfwSetWindowSizeCallback([](int width, int height) {
 		scene::World::rescale(width, height);
 	});
 
+	glfwSetKeyCallback([](int keyId, int keyState) {
+		switch(keyId) {
+		case GLFW_KEY_LEFT:
+			if(keyState = GLFW_PRESS) {
+				terrainPtr->rotateLeft();
+			} else {
+				terrainPtr->stopRotation();
+			}
+
+			break;
+		case GLFW_KEY_RIGHT:
+			if(keyState = GLFW_PRESS) {
+				terrainPtr->rotateRight();
+			} else {
+				terrainPtr->stopRotation();
+			}
+
+			break;
+		}
+	});
+
 	//Main render loop
 	while(true) {
-		usleep(500000);
+		usleep(40000);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		//HACK till we have a proper scene graph

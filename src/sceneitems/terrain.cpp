@@ -6,7 +6,7 @@
 #include "heightmap/heightmapgenerator.hpp"
 #include "render/shaderpipeline.hpp"
 
-sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix) : parentMatrix(myParentMatrix) {
+sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix) : parentMatrix(myParentMatrix), rotation(STATIONARY) {
 	//Create VAO and VBO
 	glGenVertexArrays(1, vaos);
 	glBindVertexArray(vaos[0]);
@@ -45,10 +45,25 @@ sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix) : parentMatrix(myPa
 
 void sceneitems::Terrain::updateMatrix() {
 	glBindBuffer(GL_UNIFORM_BUFFER, ubos[0]);
-	
+
+	//Rotation
+	float degrees;
+	switch(rotation) {
+	case LEFT:
+		degrees = 1.0f;
+		break;
+	case RIGHT:
+		degrees = -1.0f;
+		break;
+	}
+
+	if(rotation != STATIONARY) {
+		modelMatrix = glm::rotate<float>(modelMatrix, degrees, glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+
 	//HACK Temporarily get a new parentMatrix from World till we have a proper scene graph
 	parentMatrix = scene::World::getMatrix();
-	
+
 	glm::mat4 mVPMatrix = parentMatrix * modelMatrix;
 
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), glm::value_ptr(mVPMatrix), GL_DYNAMIC_DRAW);
