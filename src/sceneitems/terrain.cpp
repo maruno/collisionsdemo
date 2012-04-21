@@ -41,7 +41,7 @@ sceneitems::Terrain::Terrain(const glm::mat4 myParentMatrix, unsigned int size, 
 	updateMatrix();
 
 	//Create shader pipeline
-	render::ShaderPipeLine shaderpipe("Vertex-Pass Y", "Fragment-Colour Height");
+	render::ShaderPipeLine shaderpipe("Vertex-Transform-Map Colour", "Fragment-Colour Height");
 	shaderpipe.addShaderAttribute("vertex");
 	shaderpipe.setShaderUniform("hmMatrices", ubos[0]);
 	shaderpipe.setShaderUniform("hmHeight", ubos[1]);
