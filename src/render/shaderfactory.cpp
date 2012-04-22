@@ -51,6 +51,7 @@ const GLuint render::ShaderFactory::getShader(const std::string shaderName, GLen
 		shaderSourceStream << line << std::endl;
 	}
 
+	//We need to copy the C-string because of the volatile characteristics of std::string.c_str()
 	char* shaderSourceCString = new char[shaderSourceStream.str().size()+1];
 	std::strcpy(shaderSourceCString, shaderSourceStream.str().c_str());
 
