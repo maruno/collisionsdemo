@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 	int height = 768;
 
 	glfwOpenWindow(width, height, 8, 8, 8, 8, 24, 24, GLFW_WINDOW);
-	glfwSetWindowTitle("OpenGL 3.2 Core profile test");
+	glfwSetWindowTitle("HeightMap visualisation");
 
 	//Load OpenGL functions
 	if(glload::LoadFunctions() == glload::LS_LOAD_FAILED) {
