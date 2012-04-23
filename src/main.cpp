@@ -31,6 +31,9 @@ int main(int argc, char** argv) {
 	if(glload::LoadFunctions() == glload::LS_LOAD_FAILED) {
 		return 1;
 	}
+	
+	//Enable depth test
+	glEnable(GL_DEPTH_TEST);
 
 	//Set clear colour to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
