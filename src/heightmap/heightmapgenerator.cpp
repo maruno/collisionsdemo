@@ -50,7 +50,7 @@ HMVertex* HeightmapGenerator::getVertices() {
 	return vertices;
 }
 
-void HeightmapGenerator::fillMap(){
+void HeightmapGenerator::fillMap() {
 	srand(std::time(0));//Initialize the random number generator with the current time
 	int twoLog = numberOfTrailingZeros(map.size()-1);//Number of iterations needed to generate the map
 	for(int i = 0; i < twoLog; i++) {
@@ -72,30 +72,30 @@ void HeightmapGenerator::convertMap() {
 
 	for(int mod = 0; mod < mapWidth-1; mod++) {
 		for(x = 0; x < mapWidth; x++) {
-		   	if(x != xPrev || z != zPrev) {//Turnaround at the end of the row must be added only once
-	    		z = mod;
-	    		convertMap(x, z, numVertex);
-	    		numVertex++;
-	    	}
-	        z = mod+1;
-	        convertMap(x, z, numVertex);
-    		numVertex++;
-	        xPrev = x;
-	        zPrev = z;
-	    }
-	    mod++;
-	    for(x = mapWidth-1; x >= 0; x--) {
-	    	if(x != xPrev || z != zPrev) {//Turnaround at the end of the row must be added only once
-	    		z = mod;
-	    		convertMap(x, z, numVertex);
-	    		numVertex++;
-	    	}
-	        z = mod+1;
-	        convertMap(x, z, numVertex);
-    		numVertex++;
-	        xPrev = x;
-	        zPrev = z;
-	    }
+			if(x != xPrev || z != zPrev) {//Turnaround at the end of the row must be added only once
+				z = mod;
+				convertMap(x, z, numVertex);
+				numVertex++;
+			}
+			z = mod+1;
+			convertMap(x, z, numVertex);
+			numVertex++;
+			xPrev = x;
+			zPrev = z;
+		}
+		mod++;
+		for(x = mapWidth-1; x >= 0; x--) {
+			if(x != xPrev || z != zPrev) {//Turnaround at the end of the row must be added only once
+				z = mod;
+				convertMap(x, z, numVertex);
+				numVertex++;
+			}
+			z = mod+1;
+			convertMap(x, z, numVertex);
+			numVertex++;
+			xPrev = x;
+			zPrev = z;
+		}
 	}
 }
 
@@ -116,9 +116,9 @@ void HeightmapGenerator::fillMap(int iteration) {
 
 	//Determine the values needed for the diamond step
 	//and execute the diamond step
-	for (int xLow = 0; xLow < mapSize - 1; xLow += length) {
+	for(int xLow = 0; xLow < mapSize - 1; xLow += length) {
 		int xHigh = xLow + length;
-		for (int zLow = 0; zLow < mapSize - 1; zLow += length) {
+		for(int zLow = 0; zLow < mapSize - 1; zLow += length) {
 			int zHigh = zLow + length;
 			makeDiamond(iteration, xLow, xHigh, zLow, zHigh);
 		}
@@ -126,9 +126,9 @@ void HeightmapGenerator::fillMap(int iteration) {
 
 	//Determine the values needed for the square step
 	//and execute the square step for the odd rows.
-	for (int xLow = ((length>>1)^-1)+1; xLow < mapSize - length; xLow += length) {
+	for(int xLow = ((length>>1)^-1)+1; xLow < mapSize - length; xLow += length) {
 		int xHigh = xLow + length;
-		for (int zLow = 0; zLow < mapSize - 1; zLow += length) {
+		for(int zLow = 0; zLow < mapSize - 1; zLow += length) {
 			int zHigh = zLow + length;
 			makeSquare(iteration, xLow, xHigh, zLow, zHigh);
 		}
@@ -136,9 +136,9 @@ void HeightmapGenerator::fillMap(int iteration) {
 
 	//Determine the values needed for the square step
 	//and execute the square step for the even rows.
-	for (int zLow = ((length>>1)^-1)+1; zLow < mapSize - length; zLow += length) {
+	for(int zLow = ((length>>1)^-1)+1; zLow < mapSize - length; zLow += length) {
 		int zHigh = zLow + length;
-		for (int xLow = 0; xLow < mapSize - 1; xLow += length) {
+		for(int xLow = 0; xLow < mapSize - 1; xLow += length) {
 			int xHigh = xLow + length;
 			makeSquare(iteration, xLow, xHigh, zLow, zHigh);
 		}
@@ -175,10 +175,10 @@ void HeightmapGenerator::makeSquare(int iteration, int xLow, int xHigh, int zLow
 	int newValue = ((val1 + val2 + val3 + val4) >> 2) + random;//Average of the values plus a random variation.
 
 	(*map[x])[z] = newValue;
-	if (x == 0) {
+	if(x == 0) {
 		(*map[map.size()-1])[z] = newValue;//Make the map wrappable
 	}
-	if (z == 0) {
+	if(z == 0) {
 		(*map[x])[map.size()-1] = newValue;//Make the map wrappable
 	}
 }
@@ -188,9 +188,9 @@ void HeightmapGenerator::makeSquare(int iteration, int xLow, int xHigh, int zLow
  * and its negative halved by the amount of iterations the algorithm
  * has done so far.
  */
-int HeightmapGenerator::randomNumber(int iteration){
+int HeightmapGenerator::randomNumber(int iteration) {
 	int random = (((rand()%variation)<<1)-variation)//Set the range to [-variation, variation)
-									>>iteration;   //Halve the number base on the iteration
+		     >>iteration;   //Halve the number base on the iteration
 	return random;
 }
 
@@ -199,10 +199,17 @@ int HeightmapGenerator::randomNumber(int iteration){
  * For example: 4 is 100 in binary, so 4 has 2 trailing zeros.
  */
 int HeightmapGenerator::numberOfTrailingZeros(int integer) {
-	int trailingZeros = 32;
+	int trailingZeros;
+
+#if (defined __i386__ || defined __amd64__)
+	asm("bsf %1, %0" : "=r"(trailingZeros) : "r"(integer));
+#else
+	trailingZeros = 32;
 	while(integer != 0) {
 		integer = integer << 1;
 		trailingZeros--;
 	}
+#endif
+
 	return trailingZeros;
 }
