@@ -21,5 +21,8 @@ find_package(GLFW REQUIRED)
 #Add GL Load source folder
 add_subdirectory(glload)
 
+#Add objLoader source folder
+add_subdirectory(objectloader)
+
 #Add main Source folder
 add_subdirectory(src)
