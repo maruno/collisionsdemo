@@ -1,1 +1,0 @@
-add_library(objloader STATIC list.cpp obj_parser.cpp objLoader.cpp string_extra.cpp)
