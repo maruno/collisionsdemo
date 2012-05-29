@@ -1,5 +1,5 @@
-#ifndef RENDER_VERTEXBUFFERFACTORY_HPP
-#define RENDER_VERTEXBUFFERFACTORY_HPP
+#ifndef MODELLOADER_VERTEXBUFFERFACTORY_HPP
+#define MODELLOADER_VERTEXBUFFERFACTORY_HPP
 
 #include <tuple>
 #include <string>
@@ -7,7 +7,7 @@
 
 #include "glload/gl_3_2.h"
 
-namespace render {
+namespace modelloader {
 	class VertexBufferFactory {
 		private:
 			std::map<const std::string, const std::tuple<const GLuint, const GLuint>> vbopool;
@@ -24,4 +24,4 @@ namespace render {
  		return instance;
 	}
 }
-#endif // RENDER_VERTEXBUFFERFACTORY_HPP
+#endif // MODELLOADER_VERTEXBUFFERFACTORY_HPP

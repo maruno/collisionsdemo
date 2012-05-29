@@ -1,4 +1,4 @@
-#include "render/vertexbufferfactory.hpp"
+#include "modelloader/vertexbufferfactory.hpp"
 
 #include <fstream>
 #include <vector>
@@ -6,7 +6,7 @@
 #include "src/modelloader/objparser.yy.hpp"
 #include "modelloader/objlexer.hpp"
 
-using namespace render;
+using namespace modelloader;
 
 VertexBufferFactory VertexBufferFactory::instance;
 
