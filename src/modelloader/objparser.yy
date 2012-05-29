@@ -13,11 +13,15 @@
 
 %lex-param {modelloader::ObjLexer& lexer}
 
+%error-verbose
+
 %code requires {
 	#include <vector>
 	#include <boost/lexical_cast.hpp>
 	
 	#define YYSTYPE std::string
+	
+	#include <iostream>
 	
 	namespace modelloader {
 		class ObjLexer;
@@ -53,7 +57,7 @@ face : FACE INTEGER INTEGER INTEGER {
 
 void modelloader::ObjParser::error(const modelloader::ObjParser::location_type& loc,
                                           const std::string &msg) {
-	//TODO Throw syntax error
+	std::cerr << msg << " on " << loc << std::endl;
 }
 
 #include "modelloader/objlexer.hpp"
