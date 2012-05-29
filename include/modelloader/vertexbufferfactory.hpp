@@ -17,10 +17,10 @@ namespace modelloader {
 		public:
 			const std::tuple<const GLuint, const GLuint> operator[] (std::string objName);
 			
-			VertexBufferFactory& getInstance();
+			static inline VertexBufferFactory& getInstance();
 	};
 	
-	VertexBufferFactory& VertexBufferFactory::getInstance() {
+	inline VertexBufferFactory& VertexBufferFactory::getInstance() {
  		return instance;
 	}
 }
