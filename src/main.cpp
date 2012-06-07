@@ -6,7 +6,7 @@
 #include "glload/gll.hpp"
 #include <GL/glfw.h>
 
-#include "scene/world.hpp"
+#include "scene/PerspectiveCamera.hpp"
 #include "sceneitems/terrain.hpp"
 
 //HACK for stupid C-functions. Need to edit GLFW-source
@@ -39,14 +39,14 @@ int main(int argc, char** argv) {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//Define world
-	scene::World::rescale(width, height);
+	scene::PerspectiveCamera::rescale(width, height);
 
 	//Define terrain
-	sceneitems::Terrain terrain(scene::World::getMatrix(), 65, 75);
+	sceneitems::Terrain terrain(scene::PerspectiveCamera::getMatrix(), 65, 75);
 	terrainPtr = &terrain;
 
 	glfwSetWindowSizeCallback([](int width, int height) {
-		scene::World::rescale(width, height);
+		scene::PerspectiveCamera::rescale(width, height);
 	});
 
 	glfwSetKeyCallback([](int keyId, int keyState) {
