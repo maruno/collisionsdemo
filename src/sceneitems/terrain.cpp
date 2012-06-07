@@ -69,7 +69,7 @@ void sceneitems::Terrain::updateMatrix() {
 	}
 
 	//HACK Temporarily get a new parentMatrix from World till we have a proper scene graph
-	parentMatrix = scene::World::getMatrix();
+	parentMatrix = scene::PerspectiveCamera::getMatrix();
 
 	glm::mat4 mVPMatrix = parentMatrix * modelMatrix;
 

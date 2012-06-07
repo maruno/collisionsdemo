@@ -4,7 +4,7 @@
 #include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
 
-#include "scene/world.hpp"
+#include "scene/PerspectiveCamera.hpp"
 
 namespace sceneitems {
 	enum Rotation {LEFT, RIGHT, STATIONARY};
