@@ -1,5 +1,5 @@
-#ifndef WORLD_HPP
-#define WORLD_HPP
+#ifndef PERSPECTIVECAMERA_HPP
+#define PERSPECTIVECAMERA_HPP
 
 #include <glm/glm.hpp>
 
@@ -9,7 +9,7 @@ namespace scene {
 	 *
 	 * @author Michel Bouwmans
 	 */
-	class World {
+	class PerspectiveCamera {
 		private:
 			static const glm::mat4 view;
 			static glm::mat4 viewProjection;
@@ -30,8 +30,8 @@ namespace scene {
 			static const glm::mat4& getMatrix();
 	};
 
-	inline const glm::mat4& World::getMatrix() {
+	inline const glm::mat4& PerspectiveCamera::getMatrix() {
 		return viewProjection;
 	}
 }
-#endif // WORLD_HPP
+#endif // PERSPECTIVECAMERA_HPP
