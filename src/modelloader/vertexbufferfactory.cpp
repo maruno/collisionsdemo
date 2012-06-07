@@ -3,6 +3,8 @@
 #include <fstream>
 #include <vector>
 
+#include <glm/glm.hpp>
+
 #include "src/modelloader/objparser.yy.hpp"
 #include "modelloader/objlexer.hpp"
 
@@ -22,8 +24,9 @@ const std::tuple<const GLuint, const GLuint> VertexBufferFactory::operator[] (st
 	
 	std::vector<float> verticesData;
 	std::vector<unsigned int> indicesData;
+	std::tuple<glm::vec3, glm::vec3> extremes;
 	
-	modelloader::ObjParser parser(verticesData, indicesData, lexer);
+	modelloader::ObjParser parser(verticesData, indicesData, extremes, lexer);
 	parser.parse();
 	
 	//Allocate room for a VBO and IBO
