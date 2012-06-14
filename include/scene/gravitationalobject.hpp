@@ -3,14 +3,16 @@
 
 #include <glm/glm.hpp>
 
+#include "scene/SceneItem.hpp"
+
 namespace scene {
-	class GravitationalObject {
+	class GravitationalObject : public scene::SceneItem {
 		private:
 			unsigned int mass;
 			glm::vec3 gravitationalForce;
 
 		public:
-			GravitationalObject(unsigned int myMass);
+			GravitationalObject(SceneItem* parent, unsigned int myMass);
 
 			inline unsigned int getMass() const;
 
@@ -18,6 +20,9 @@ namespace scene {
 			inline void resetForce();
 
 			glm::vec3 currentMotion() const;
+			
+			virtual void update() override = 0;
+			virtual void draw() override = 0;
 	};
 
 	void GravitationalObject::addForce(glm::vec3 additionalForce) {

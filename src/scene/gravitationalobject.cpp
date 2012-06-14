@@ -2,7 +2,7 @@
 
 using namespace scene;
 
-GravitationalObject::GravitationalObject(unsigned int myMass) : mass(myMass) {
+GravitationalObject::GravitationalObject(SceneItem* parent, unsigned int myMass) : SceneItem(parent), mass(myMass) {
 }
 
 glm::vec3 GravitationalObject::currentMotion() const {
