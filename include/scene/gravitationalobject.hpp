@@ -10,6 +10,7 @@ namespace scene {
 		private:
 			unsigned int mass;
 			glm::vec3 gravitationalForce;
+			glm::vec3 currentMotion;
 
 		public:
 			GravitationalObject(SceneItem* parent, unsigned int myMass);
@@ -19,9 +20,9 @@ namespace scene {
 			inline void addForce(glm::vec3 additionalForce);
 			inline void resetForce();
 
-			glm::vec3 currentMotion() const;
+			inline glm::vec3 getCurrentMotion() const;
 			
-			virtual void update() override = 0;
+			virtual void update() override;
 			virtual void draw() override = 0;
 	};
 
@@ -35,6 +36,10 @@ namespace scene {
 
 	unsigned int GravitationalObject::getMass() const {
 		return mass;
+	}
+	
+	glm::vec3 GravitationalObject::getCurrentMotion() const {
+		return currentMotion;
 	}
 }
 

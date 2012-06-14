@@ -1,13 +1,17 @@
 #include "scene/gravitationalobject.hpp"
 
+#include "config/globals.hpp"
+
 using namespace scene;
 
 GravitationalObject::GravitationalObject(SceneItem* parent, unsigned int myMass) : SceneItem(parent), mass(myMass) {
 }
 
-glm::vec3 GravitationalObject::currentMotion() const {
+void GravitationalObject::update() {
 	//Newton's second law of motion
 	float a = glm::length<float>(gravitationalForce) / mass;
-
-	return a * glm::normalize(gravitationalForce);
+	glm::vec3 directionalAcceleration = a * glm::normalize(gravitationalForce);
+	
+	//Newton's first law of motion
+	currentMotion += 1.0f/Globals::updateRate * directionalAcceleration;
 }
