@@ -1,4 +1,4 @@
-project(heightmap)
+project(awesomedemo)
 cmake_minimum_required(VERSION 2.8)
 
 #CMake policies
@@ -19,6 +19,7 @@ find_package(OpenGL REQUIRED)
 find_package(GLFW REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
+find_package(Boost REQUIRED)
 
 #Add GL Load source folder
 add_subdirectory(glload)
