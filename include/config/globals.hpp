@@ -6,6 +6,7 @@ class Globals {
 		static constexpr unsigned short updateRate = 60;
 		static constexpr unsigned int initialWidth = 1024;
 		static constexpr unsigned int initialHeight = 768;
+		static constexpr unsigned short multiSamples = 8;
 };
 
 #endif // GLOBALS_HPP

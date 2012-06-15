@@ -17,7 +17,7 @@ sceneitems::Terrain* terrainPtr;
 int main(int argc, char** argv) {
 	glfwInit();
 
-	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 8);
+	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, Globals::multiSamples);
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
 	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
