@@ -13,7 +13,7 @@ namespace scene {
 			glm::vec3 currentMotion;
 
 		public:
-			GravitationalObject(SceneItem* parent, unsigned int myMass);
+			GravitationalObject(unsigned int myMass);
 
 			inline unsigned int getMass() const;
 

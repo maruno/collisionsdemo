@@ -4,7 +4,7 @@
 
 using namespace scene;
 
-GravitationalObject::GravitationalObject(SceneItem* parent, unsigned int myMass) : SceneItem(parent), mass(myMass) {
+GravitationalObject::GravitationalObject(unsigned int myMass) : mass(myMass) {
 }
 
 void GravitationalObject::update() {
