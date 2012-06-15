@@ -14,7 +14,7 @@ void scene::PerspectiveCamera::rescale(int width, int height) {
 
 	//HOR+
 	//The approximate field of view of a human eye is 95° out, 75° down, 60° in, 60° up
-	glm::mat4 perspective = glm::perspective<float>(135.0f,static_cast<float>(width)/height, 0.3f, 10.0f);
+	glm::mat4 perspective = glm::perspective<float>(60.0f, static_cast<float>(width)/height, 0.3f, 10.0f);
 
 	viewProjection = perspective * view;
 }
