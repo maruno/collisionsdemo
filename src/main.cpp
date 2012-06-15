@@ -6,6 +6,8 @@
 #include "glload/gll.hpp"
 #include <GL/glfw.h>
 
+#include "config/globals.hpp"
+
 #include "scene/PerspectiveCamera.hpp"
 #include "sceneitems/terrain.hpp"
 
@@ -21,11 +23,8 @@ int main(int argc, char** argv) {
 	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	int width = 1024;
-	int height = 768;
-
-	glfwOpenWindow(width, height, 8, 8, 8, 8, 24, 24, GLFW_WINDOW);
-	glfwSetWindowTitle("HeightMap visualisation");
+	glfwOpenWindow(Globals::initialWidth, Globals::initialHeight, 8, 8, 8, 8, 24, 24, GLFW_WINDOW);
+	glfwSetWindowTitle("Awesome planetary simulation demo");
 
 	//Load OpenGL functions
 	if(glload::LoadFunctions() == glload::LS_LOAD_FAILED) {
@@ -39,7 +38,7 @@ int main(int argc, char** argv) {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//Define world
-	scene::PerspectiveCamera::rescale(width, height);
+	scene::PerspectiveCamera::rescale(Globals::initialWidth, Globals::initialHeight);
 
 	//Define terrain
 	sceneitems::Terrain terrain(scene::PerspectiveCamera::getMatrix(), 65, 75);
