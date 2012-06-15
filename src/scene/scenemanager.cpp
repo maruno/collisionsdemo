@@ -4,7 +4,7 @@
  *      Author: Marcel Veltman
  */
 
-#include "scene/SceneManager.hpp"
+#include "scene/scenemanager.hpp"
 
 scene::SceneManager::SceneManager() {
 

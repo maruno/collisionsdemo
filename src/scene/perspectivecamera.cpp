@@ -1,4 +1,4 @@
-#include "scene/PerspectiveCamera.hpp"
+#include "scene/perspectivecamera.hpp"
 
 #include "glload/gl_3_2.h"
 

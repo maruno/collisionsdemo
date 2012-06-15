@@ -8,7 +8,7 @@
 
 #include "config/globals.hpp"
 
-#include "scene/PerspectiveCamera.hpp"
+#include "scene/perspectivecamera.hpp"
 #include "sceneitems/terrain.hpp"
 
 //HACK for stupid C-functions. Need to edit GLFW-source

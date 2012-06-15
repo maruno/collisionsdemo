@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 
-#include "scene/SceneItem.hpp"
+#include "scene/sceneitem.hpp"
 
 namespace scene {
 	class GravitationalObject : public scene::SceneItem {

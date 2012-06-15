@@ -5,7 +5,7 @@
 #include <list>
 #include <memory>
 
-#include "scene/SceneItem.hpp"
+#include "scene/sceneitem.hpp"
 
 namespace scene {
 	class SceneGroup final {
