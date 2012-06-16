@@ -4,12 +4,16 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-//Looking at the origin from an angle
-const glm::mat4 scene::PerspectiveCamera::view = glm::lookAt<float>(glm::vec3(0.0f, 2.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+#include "scene/scenegroup.hpp"
 
-glm::mat4 scene::PerspectiveCamera::viewProjection;
+using namespace scene;
 
-void scene::PerspectiveCamera::rescale(int width, int height) {
+glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
+
+PerspectiveCamera::PerspectiveCamera(SceneGroup* myWorld) : world(myWorld) {
+}
+
+void PerspectiveCamera::rescale(int width, int height) {
 	glViewport(0, 0, width, height);
 
 	//HOR+
@@ -17,4 +21,14 @@ void scene::PerspectiveCamera::rescale(int width, int height) {
 	glm::mat4 perspective = glm::perspective<float>(60.0f, static_cast<float>(width)/height, 0.3f, 10.0f);
 
 	viewProjection = perspective * view;
+}
+
+void PerspectiveCamera::changeCameraPosition(glm::vec3 position, glm::vec3 direction) {
+	glm::vec3 lookAtCenter =  position + direction;
+	
+	view = glm::lookAt<float>(position, lookAtCenter, glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+void PerspectiveCamera::render() {
+	world->renderScene();
 }

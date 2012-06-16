@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 
 namespace scene {
+	class SceneGroup;
+	
 	/**
 	 * Scene world definition class
 	 *
@@ -11,27 +13,23 @@ namespace scene {
 	 */
 	class PerspectiveCamera {
 		private:
-			static const glm::mat4 view;
-			static glm::mat4 viewProjection;
+			glm::mat4 view, projection, viewProjection;
+			static const glm::vec3 up;
+			
+			SceneGroup* world;
 		public:
+			PerspectiveCamera(SceneGroup* myWorld);
+			
 			/**
 			 * Call this function when the viewport has been rescaled.
 			 *
 			 * @param width New width of the viewport.
 			 * @param height New height of the viewport.
 			 */
-			static void rescale(int width, int height);
-
-			/**
-			 * Get the world matrix.
-			 *
-			 * @return World matrix
-			 */
-			static const glm::mat4& getMatrix();
+			void rescale(int width, int height);
+			void changeCameraPosition(glm::vec3 position, glm::vec3 direction);
+			
+			void render();
 	};
-
-	inline const glm::mat4& PerspectiveCamera::getMatrix() {
-		return viewProjection;
-	}
 }
 #endif // PERSPECTIVECAMERA_HPP
