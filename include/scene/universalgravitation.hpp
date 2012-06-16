@@ -12,7 +12,7 @@ namespace scene {
 			static constexpr double G = 0.0000000000667384;
 			
 			std::vector<GravitationalObject*> gravityObjects;
-			
+		public:
 			inline void addObject(GravitationalObject* gravObject);
 			inline void delObject(GravitationalObject* gravObject);
 			
