@@ -12,9 +12,12 @@ namespace scene {
 			virtual void update() = 0;
 			virtual void draw() = 0;
 
-			glm::vec3 getLocation();
+			inline glm::vec3 getLocation();
 	};
 
+	glm::vec3 SceneItem::getLocation() {
+		return location;
+	}
 }
 
 
