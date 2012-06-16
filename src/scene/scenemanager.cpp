@@ -25,7 +25,7 @@ void SceneManager::startSceneLoop() {
 		});
 		updateMutex.unlock();
 		
-		std::this_thread::sleep_for(std::chrono::milliseconds((1.0f/Globals::updateRate)*1000));
+		std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
 	});
 
 	std::thread renderThread([this]() {
@@ -39,6 +39,6 @@ void SceneManager::startSceneLoop() {
 		
 		glfwSwapBuffers();
 		
-		std::this_thread::sleep_for(std::chrono::milliseconds((1.0f/Globals::frameRate)*1000));
+		std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::frameRate)*1000));
 	});
 }

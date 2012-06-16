@@ -13,5 +13,5 @@ void GravitationalObject::update() {
 	glm::vec3 directionalAcceleration = a * glm::normalize(gravitationalForce);
 	
 	//Newton's first law of motion
-	currentMotion += 1.0f/Globals::updateRate * directionalAcceleration;
+	currentMotion += 1.0f/config::globals::updateRate * directionalAcceleration;
 }
