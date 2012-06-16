@@ -30,7 +30,7 @@ void SceneGroup::updateScene() {
 	}
 }
 
-void SceneGroup::drawScene() {
+void SceneGroup::renderScene() {
 	std::for_each(childItems.begin(), childItems.end(), [](std::unique_ptr<SceneItem>& child) {
 		child->draw();
 	});
@@ -38,7 +38,7 @@ void SceneGroup::drawScene() {
 	if(childGroups != nullptr) {
 		std::for_each(childGroups->begin(), childGroups->end(),
 		[](SceneGroup& child) {
-			child.drawScene();
+			child.renderScene();
 		});
 	}
 }

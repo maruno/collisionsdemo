@@ -19,7 +19,7 @@ namespace scene {
 			SceneGroup(unsigned int octreeLevels);
 
 			void updateScene();
-			void drawScene();
+			void renderScene();
 			
 			inline void addItem(std::unique_ptr<SceneItem> child);
 	};
