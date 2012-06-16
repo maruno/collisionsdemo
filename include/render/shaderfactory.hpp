@@ -19,7 +19,7 @@ namespace render {
 		public:
 			/**
 			 * Returns the requested shader. Shader is returned from flyweight pool if available.
-			 * This function tries to fetch and compile a shader if not in the pool and fails on error.
+			 * This method tries to fetch and compile a shader if not in the pool and fails on error.
 			 *
 			 * @param shaderType Type of the shader as known to OpenGL
 			 * @param shaderName Name of the shader to return, equalling the filename without the glsl-extension

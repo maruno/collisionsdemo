@@ -6,6 +6,11 @@
 #include "scene/sceneitem.hpp"
 
 namespace scene {
+	/**
+	 * This class represents a @ref SceneItem that obeys the laws of physics from Sir Isaac Newton.
+	 * 
+	 * @author Michel Bouwmans
+	 */
 	class GravitationalObject : public scene::SceneItem {
 		private:
 			unsigned int mass;
@@ -13,13 +18,37 @@ namespace scene {
 			glm::vec3 currentMotion;
 
 		public:
+			/**
+			 * Constructor.
+			 * 
+			 * @param myMass Mass of this item.
+			 */
 			GravitationalObject(unsigned int myMass);
-
+			
+			/**
+			 * Request the mass.
+			 * 
+			 * @return Mass of this item.
+			 */
 			inline unsigned int getMass() const;
 
+			/**
+			 * Add a new force to this item.
+			 * 
+			 * @param additionalForce The additional force that works on this item.
+			 */
 			inline void addForce(glm::vec3 additionalForce);
+			
+			/**
+			 * Reset all forces acting upon this item.
+			 */
 			inline void resetForce();
 
+			/**
+			 * Request the current motion.
+			 * 
+			 * @return The current motion of this item.
+			 */
 			inline glm::vec3 getCurrentMotion() const;
 			
 			virtual void update() override;

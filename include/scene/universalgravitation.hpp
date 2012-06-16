@@ -7,6 +7,11 @@
 #include "scene/gravitationalobject.hpp"
 
 namespace scene {
+	/**
+	 * This class applies the law of universal gravitation from Sir Isaac Newton.
+	 * 
+	 * @author Michel Bouwmans
+	 */
 	class UniversalGravitation {
 		private:
 			static constexpr double G = 0.0000000000667384;

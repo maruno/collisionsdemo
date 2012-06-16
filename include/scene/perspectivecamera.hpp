@@ -7,7 +7,7 @@ namespace scene {
 	class SceneGroup;
 	
 	/**
-	 * Scene world definition class
+	 * Main scene camera.
 	 *
 	 * @author Michel Bouwmans
 	 */
@@ -18,6 +18,11 @@ namespace scene {
 			
 			SceneGroup* world;
 		public:
+			/**
+			 * Constructor
+			 * 
+			 * @param myWorld The world that's observed by this camera.
+			 */
 			PerspectiveCamera(SceneGroup* myWorld);
 			
 			/**
@@ -27,8 +32,18 @@ namespace scene {
 			 * @param height New height of the viewport.
 			 */
 			void rescale(int width, int height);
+			
+			/**
+			 * Change the position of the camera in the world.
+			 * 
+			 * @param position New camera position.
+			 * @param direction New direction in which camera is observing.
+			 */
 			void changeCameraPosition(glm::vec3 position, glm::vec3 direction);
 			
+			/**
+			 * Render an image using this camera.
+			 */
 			void render();
 	};
 }
