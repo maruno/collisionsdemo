@@ -11,8 +11,8 @@ include(FindGLFW)
 #Include-directory
 include_directories("${CMAKE_SOURCE_DIR}/include" ${CMAKE_CURRENT_BINARY_DIR})
 
-#Enable C++0xB
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#Enable C++0xB and use libc++
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
 
 #Find required packages
 find_package(OpenGL REQUIRED)
