@@ -5,10 +5,10 @@
 #include <glm/glm.hpp>
 
 namespace scene {
-	
+
 	/**
 	 * Abstract base class for a scene graph item; endnode.
-	 * 
+	 *
 	 * @author Michel Bouwmans
 	 */
 	class SceneItem {
@@ -19,7 +19,7 @@ namespace scene {
 			 * Called every update-tick.
 			 */
 			virtual void update() = 0;
-			
+
 			/**
 			 * Called every render-tick.
 			 */
@@ -27,7 +27,7 @@ namespace scene {
 
 			/**
 			 * Return the location of this item.
-			 * 
+			 *
 			 * @return Item location.
 			 */
 			inline glm::vec3 getLocation();

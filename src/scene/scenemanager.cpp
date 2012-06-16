@@ -24,21 +24,21 @@ void SceneManager::startSceneLoop() {
 			world->updateScene();
 		});
 		updateMutex.unlock();
-		
+
 		std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
 	});
 
 	std::thread renderThread([this]() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		
+
 		renderMutex.lock();
 		std::for_each(cameras.begin(), cameras.end(), [](PerspectiveCamera* camera) {
 			camera->render();
 		});
 		renderMutex.unlock();
-		
+
 		glfwSwapBuffers();
-		
+
 		std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::frameRate)*1000));
 	});
 }

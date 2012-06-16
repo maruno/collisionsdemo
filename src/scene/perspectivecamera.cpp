@@ -25,7 +25,7 @@ void PerspectiveCamera::rescale(int width, int height) {
 
 void PerspectiveCamera::changeCameraPosition(glm::vec3 position, glm::vec3 direction) {
 	glm::vec3 lookAtCenter =  position + direction;
-	
+
 	view = glm::lookAt<float>(position, lookAtCenter, glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
