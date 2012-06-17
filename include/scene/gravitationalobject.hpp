@@ -23,7 +23,7 @@ namespace scene {
 			 *
 			 * @param myMass Mass of this item.
 			 */
-			GravitationalObject(unsigned int myMass);
+			GravitationalObject(glm::vec3 initialLocation, unsigned int myMass);
 
 			/**
 			 * Request the mass.

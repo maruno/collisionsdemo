@@ -4,7 +4,8 @@
 
 using namespace scene;
 
-GravitationalObject::GravitationalObject(unsigned int myMass) : mass(myMass) {
+GravitationalObject::GravitationalObject(glm::vec3 initialLocation, unsigned int myMass)
+	: SceneItem(initialLocation) , mass(myMass) {
 }
 
 void GravitationalObject::update() {
@@ -14,4 +15,7 @@ void GravitationalObject::update() {
 
 	//Newton's first law of motion
 	currentMotion += 1.0f/config::globals::updateRate * directionalAcceleration;
+	
+	//Update location
+	location += currentMotion;
 }

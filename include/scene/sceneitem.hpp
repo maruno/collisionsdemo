@@ -12,9 +12,11 @@ namespace scene {
 	 * @author Michel Bouwmans
 	 */
 	class SceneItem {
-		private:
+		protected:
 			glm::vec3 location;
 		public:
+			SceneItem(glm::vec3 initialLocation);
+			
 			/**
 			 * Called every update-tick.
 			 */
