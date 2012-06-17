@@ -9,12 +9,14 @@ SceneGroup::SceneGroup(unsigned int octreeLevels) {
 }
 
 void SceneGroup::addOctreeLayers(unsigned int levels) {
-	childGroups.reset(new std::array<SceneGroup,8>);
+	if(levels != 0) {
+		childGroups.reset(new std::array<SceneGroup,8>);
 
-	std::for_each(childGroups->begin(), childGroups->end(),
-	[&levels](SceneGroup& child) {
-		child.addOctreeLayers(--levels);
-	});
+		std::for_each(childGroups->begin(), childGroups->end(),
+		[&levels](SceneGroup& child) {
+			child.addOctreeLayers(--levels);
+		});
+	}
 }
 
 void SceneGroup::updateScene() {
