@@ -5,6 +5,8 @@
 #include <list>
 #include <memory>
 
+#include <glm/glm.hpp>
+
 #include "scene/sceneitem.hpp"
 
 namespace scene {
@@ -37,7 +39,7 @@ namespace scene {
 			/**
 			 * Call render on all @ref SceneItem childs in the scene graph.
 			 */
-			void renderScene();
+			void renderScene(glm::mat4& cameraMatrix);
 
 			/**
 			 * Add a @ref SceneItem child to this node.

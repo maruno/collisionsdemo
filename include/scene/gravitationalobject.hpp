@@ -52,7 +52,7 @@ namespace scene {
 			inline glm::vec3 getCurrentMotion() const;
 
 			virtual void update() override;
-			virtual void render() const override = 0;
+			virtual void render(glm::mat4& parentMatrix) const override = 0;
 	};
 
 	void GravitationalObject::addForce(glm::vec3 additionalForce) {

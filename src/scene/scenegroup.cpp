@@ -32,15 +32,15 @@ void SceneGroup::updateScene() {
 	}
 }
 
-void SceneGroup::renderScene() {
-	std::for_each(childItems.begin(), childItems.end(), [](std::unique_ptr<SceneItem>& child) {
-		child->render();
+void SceneGroup::renderScene(glm::mat4& cameraMatrix) {
+	std::for_each(childItems.begin(), childItems.end(), [&](std::unique_ptr<SceneItem>& child) {
+		child->render(cameraMatrix);
 	});
 
 	if(childGroups != nullptr) {
 		std::for_each(childGroups->begin(), childGroups->end(),
-		[](SceneGroup& child) {
-			child.renderScene();
+		[&](SceneGroup& child) {
+			child.renderScene(cameraMatrix);
 		});
 	}
 }
