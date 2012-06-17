@@ -34,7 +34,7 @@ void SceneGroup::updateScene() {
 
 void SceneGroup::renderScene() {
 	std::for_each(childItems.begin(), childItems.end(), [](std::unique_ptr<SceneItem>& child) {
-		child->draw();
+		child->render();
 	});
 
 	if(childGroups != nullptr) {

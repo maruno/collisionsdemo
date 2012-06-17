@@ -23,17 +23,17 @@ namespace scene {
 			/**
 			 * Called every render-tick.
 			 */
-			virtual void draw() = 0;
+			virtual void render() const = 0;
 
 			/**
 			 * Return the location of this item.
 			 *
 			 * @return Item location.
 			 */
-			inline glm::vec3 getLocation();
+			inline glm::vec3 getLocation() const;
 	};
 
-	glm::vec3 SceneItem::getLocation() {
+	glm::vec3 SceneItem::getLocation() const {
 		return location;
 	}
 }
