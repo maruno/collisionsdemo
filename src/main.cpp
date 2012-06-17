@@ -9,21 +9,21 @@
 #include "config/globals.hpp"
 
 #include "scene/perspectivecamera.hpp"
-#include "sceneitems/terrain.hpp"
+#include "scene/scenegroup.hpp"
 
 //HACK for stupid C-functions. Need to edit GLFW-source
-sceneitems::Terrain* terrainPtr;
+//sceneitems::Terrain* terrainPtr;
 
 int main(int argc, char** argv) {
 	glfwInit();
 
-	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, Globals::multiSamples);
+	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, config::globals::multiSamples);
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
 	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	glfwOpenWindow(Globals::initialWidth, Globals::initialHeight, 8, 8, 8, 8, 24, 24, GLFW_WINDOW);
+	glfwOpenWindow(config::globals::initialWidth, config::globals::initialHeight, 8, 8, 8, 8, 24, 24, GLFW_WINDOW);
 	glfwSetWindowTitle("Awesome planetary simulation demo");
 
 	//Load OpenGL functions
@@ -38,15 +38,20 @@ int main(int argc, char** argv) {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//Define world
-	scene::PerspectiveCamera::rescale(Globals::initialWidth, Globals::initialHeight);
+	scene::SceneGroup world;
+	scene::PerspectiveCamera camera(&world);
+	
+	camera.rescale(config::globals::initialWidth, config::globals::initialHeight);
 
-	//Define terrain
+	/*TODO Hack support for lambda's in GLFW
+	 * glfwSetWindowSizeCallback([](int width, int height) {
+		scene::PerspectiveCamera::rescale(width, height);
+	});*/
+	
+	/*//Define terrain
 	sceneitems::Terrain terrain(scene::PerspectiveCamera::getMatrix(), 65, 75);
 	terrainPtr = &terrain;
 
-	glfwSetWindowSizeCallback([](int width, int height) {
-		scene::PerspectiveCamera::rescale(width, height);
-	});
 
 	glfwSetKeyCallback([](int keyId, int keyState) {
 		switch(keyId) {
@@ -79,7 +84,7 @@ int main(int argc, char** argv) {
 		terrain.render();
 
 		glfwSwapBuffers();
-	}
+	}*/
 
 	glfwTerminate();
 }
