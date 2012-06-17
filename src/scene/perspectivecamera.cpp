@@ -8,7 +8,7 @@
 
 using namespace scene;
 
-glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
+const glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
 
 PerspectiveCamera::PerspectiveCamera(SceneGroup* myWorld) : world(myWorld) {
 }
