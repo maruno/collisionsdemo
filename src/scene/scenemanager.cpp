@@ -41,4 +41,6 @@ void SceneManager::startSceneLoop() {
 
 		std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::frameRate)*1000));
 	});
+	
+	renderThread.join();
 }
