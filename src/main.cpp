@@ -1,4 +1,6 @@
 #include <cassert>
+#include <memory>
+#include <thread>
 
 #include <unistd.h>
 
@@ -8,8 +10,13 @@
 
 #include "config/globals.hpp"
 
+#include "scene/scenemanager.hpp"
 #include "scene/perspectivecamera.hpp"
 #include "scene/scenegroup.hpp"
+
+#include "scene/universalgravitation.hpp"
+
+#include "sceneitems/planet.hpp"
 
 //HACK for stupid C-functions. Need to edit GLFW-source
 //sceneitems::Terrain* terrainPtr;
@@ -41,50 +48,27 @@ int main(int argc, char** argv) {
 	scene::SceneGroup world;
 	scene::PerspectiveCamera camera(&world);
 	
+	camera.changeCameraPosition(glm::vec3(500.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 	camera.rescale(config::globals::initialWidth, config::globals::initialHeight);
-
+	
 	/*TODO Hack support for lambda's in GLFW
 	 * glfwSetWindowSizeCallback([](int width, int height) {
 		scene::PerspectiveCamera::rescale(width, height);
 	});*/
 	
-	/*//Define terrain
-	sceneitems::Terrain terrain(scene::PerspectiveCamera::getMatrix(), 65, 75);
-	terrainPtr = &terrain;
-
-
-	glfwSetKeyCallback([](int keyId, int keyState) {
-		switch(keyId) {
-		case GLFW_KEY_LEFT:
-			if(keyState == GLFW_PRESS) {
-				terrainPtr->rotateLeft();
-			} else {
-				terrainPtr->stopRotation();
-			}
-
-			break;
-		case GLFW_KEY_RIGHT:
-			if(keyState == GLFW_PRESS) {
-				terrainPtr->rotateRight();
-			} else {
-				terrainPtr->stopRotation();
-			}
-
-			break;
-		}
-	});
-
-	//Main render loop
-	while(true) {
-		usleep(40000);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-		//HACK till we have a proper scene graph
-		terrain.updateMatrix();
-		terrain.render();
-
-		glfwSwapBuffers();
-	}*/
-
-	glfwTerminate();
+	//TODO Move UniversalGravitation into scene graph!
+	scene::UniversalGravitation universalGravity;
+	
+	scene::GravitationalObject* planeta = new sceneitems::Planet(glm::vec3(0.0f, 0.0f, 0.0f), 20.0f, 1.0f);
+	scene::GravitationalObject* planetb = new sceneitems::Planet(glm::vec3(1500.0f, 0.0f, 0.0f), 8.0f, 1.0f);
+	
+	universalGravity.addObject(planeta);
+	universalGravity.addObject(planetb);
+	
+	world.addItem(std::unique_ptr<scene::SceneItem>(planeta));
+	world.addItem(std::unique_ptr<scene::SceneItem>(planetb));
+	
+	//Start main render loop
+	scene::SceneManager sceneManager(&camera, &world);
+	sceneManager.startSceneLoop();
 }
