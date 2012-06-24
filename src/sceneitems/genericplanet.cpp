@@ -12,6 +12,7 @@ using namespace sceneitems;
 GenericPlanet::GenericPlanet(glm::vec3 initialLocation, unsigned int mySize)
 	: sceneitems::Planet(initialLocation, mySize, 1.0f) {
 	//Set colour to blue
+	glGenBuffers(1, &colourUBO);
 	glBindBuffer(GL_UNIFORM_BUFFER, colourUBO);
 	glm::vec3 colour(0.0f, 0.0f, 1.0f);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec3), glm::value_ptr(colour), GL_STATIC_DRAW);
