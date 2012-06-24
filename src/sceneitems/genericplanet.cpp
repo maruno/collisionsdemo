@@ -17,10 +17,10 @@ GenericPlanet::GenericPlanet(glm::vec3 initialLocation, unsigned int mySize)
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec3), glm::value_ptr(colour), GL_STATIC_DRAW);
 
 	//Create and link shader-pipeline
-	render::ShaderPipeLine shaderPipe("Vertex-transform", "Fragment-Colour-Bucket");
+	render::ShaderPipeLine shaderPipe("Vertex-Transform", "Fragment-Colour");
 	shaderPipe.addShaderAttribute("vertex");
-	shaderPipe.setShaderUniform("mVPMatrix", matrixUBO);
-	shaderPipe.setShaderUniform("colour", colourUBO);
+	shaderPipe.setShaderUniform("mVPMatrixUni", matrixUBO);
+	shaderPipe.setShaderUniform("colourUni", colourUBO);
 
 	shaderPipe.linkPipeLine();
 	shaderProgram = shaderPipe.getShaderProgram();
