@@ -2,6 +2,7 @@
 #define SCENEITEM_HPP_
 
 #include <list>
+#include <mutex>
 
 #include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
@@ -19,6 +20,8 @@ namespace scene {
 			GLuint matrixUBO;
 			GLuint shaderProgram;
 			glm::mat4 modelMatrix;
+			
+			mutable std::mutex locationMutex;
 		public:
 			SceneItem(glm::vec3 initialLocation);
 			
@@ -41,7 +44,11 @@ namespace scene {
 	};
 
 	glm::vec3 SceneItem::getLocation() const {
-		return location;
+		locationMutex.lock();
+		glm::vec3 lastLocation = location;
+		locationMutex.unlock();
+		
+		return lastLocation;
 	}
 }
 

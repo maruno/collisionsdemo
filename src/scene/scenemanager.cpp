@@ -21,9 +21,13 @@ void SceneManager::startSceneLoop() {
 	std::thread updateThread([this]() {
 		while(true) {
 			updateMutex.lock();
+			
+			universalGravity.update();
+			
 			std::for_each(worlds.begin(), worlds.end(), [](SceneGroup* world) {
 				world->updateScene();
 			});
+			
 			updateMutex.unlock();
 
 			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
@@ -47,4 +51,17 @@ void SceneManager::startSceneLoop() {
 	//});
 
 	//renderThread.join();
+}
+
+void SceneManager::addItem(std::unique_ptr<SceneItem> item) {
+	updateMutex.lock();
+	
+	GravitationalObject* gravObject = dynamic_cast<GravitationalObject*>(item.get());
+	if(gravObject != nullptr) {
+		universalGravity.addObject(gravObject);
+	}
+	
+	worlds.front()->addItem(std::move(item));
+	
+	updateMutex.unlock();
 }

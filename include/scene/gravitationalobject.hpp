@@ -1,6 +1,8 @@
 #ifndef GRAVITATIONALOBJECT_HPP
 #define GRAVITATIONALOBJECT_HPP
 
+#include <mutex>
+
 #include <glm/glm.hpp>
 
 #include "scene/sceneitem.hpp"

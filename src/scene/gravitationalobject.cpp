@@ -17,5 +17,7 @@ void GravitationalObject::update() {
 	currentMotion += 1.0f/config::globals::updateRate * directionalAcceleration;
 	
 	//Update location
+	locationMutex.lock();
 	location += currentMotion;
+	locationMutex.unlock();
 }
