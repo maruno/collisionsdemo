@@ -31,7 +31,7 @@ namespace modelloader {
 			 * @param objName Name of the obj-file without extension.
 			 * @return The requested vertex buffer collection.
 			 */
-			const VertexBuffer operator[](std::string objName);
+			const VertexBuffer& operator[](std::string objName);
 
 			/**
 			 * Get the instance of this VertexBufferFactory.

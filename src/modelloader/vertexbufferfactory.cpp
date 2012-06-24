@@ -12,7 +12,7 @@ using namespace modelloader;
 
 VertexBufferFactory VertexBufferFactory::instance;
 
-const VertexBuffer VertexBufferFactory::operator[](std::string objName) {
+const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	//Check for VBO in flyweight pool
 	if(vbopool.find(objName) != vbopool.end()) {
 		return vbopool.at(objName);
@@ -46,5 +46,5 @@ const VertexBuffer VertexBufferFactory::operator[](std::string objName) {
 
 	vbopool.insert(std::pair<std::string, VertexBuffer>(objName, vertexBuffer));
 
-	return vertexBuffer;
+	return vbopool.at(objName);
 }
