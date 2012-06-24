@@ -1,4 +1,4 @@
-#include "sceneitems/planet.hpp"
+#include "sceneitems/genericplanet.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,9 +9,9 @@
 
 using namespace sceneitems;
 
-GLuint Planet::vao = 0;
+GLuint GenericPlanet::vao = 0;
 
-Planet::Planet(glm::vec3 initialLocation, unsigned int mySize, unsigned int density)
+GenericPlanet::GenericPlanet(glm::vec3 initialLocation, unsigned int mySize, unsigned int density)
 	: scene::GravitationalObject(initialLocation, mySize * density * 10000), size(mySize),
 	  vBuffers(modelloader::VertexBufferFactory::getInstance()["sphere"]) {
 
@@ -40,14 +40,14 @@ Planet::Planet(glm::vec3 initialLocation, unsigned int mySize, unsigned int dens
 	shaderProgram = shaderPipe.getShaderProgram();
 }
 
-void Planet::update() {
+void GenericPlanet::update() {
 	scene::GravitationalObject::update();
 	
 	modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(size));
 	modelMatrix = glm::translate(modelMatrix, location);
 }
 
-void Planet::render(glm::mat4& parentMatrix) const {
+void GenericPlanet::render(glm::mat4& parentMatrix) const {
 	//Update the MVP-matrix and buffer this to the UBO
 	glm::mat4 mVPMatrix = parentMatrix * modelMatrix;
 	
