@@ -14,21 +14,24 @@
 using namespace scene;
 
 SceneManager::SceneManager(PerspectiveCamera* primaryCamera, SceneGroup* primaryWorld)
-	: cameras({primaryCamera}), worlds({primaryWorld}) {
+	: cameras( {primaryCamera}), worlds( {primaryWorld}) {
 }
 
 void SceneManager::startSceneLoop() {
 	std::thread updateThread([this]() {
-		updateMutex.lock();
-		std::for_each(worlds.begin(), worlds.end(), [](SceneGroup* world) {
-			world->updateScene();
-		});
-		updateMutex.unlock();
+		while(true) {
+			updateMutex.lock();
+			std::for_each(worlds.begin(), worlds.end(), [](SceneGroup* world) {
+				world->updateScene();
+			});
+			updateMutex.unlock();
 
-		std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
+			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
+		}
 	});
 
-	std::thread renderThread([this]() {
+	//std::thread renderThread([this]() {
+	while(true) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		renderMutex.lock();
@@ -40,7 +43,8 @@ void SceneManager::startSceneLoop() {
 		glfwSwapBuffers();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::frameRate)*1000));
-	});
-	
-	renderThread.join();
+	}
+	//});
+
+	//renderThread.join();
 }
