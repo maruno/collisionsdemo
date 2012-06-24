@@ -59,8 +59,8 @@ int main(int argc, char** argv) {
 	//TODO Move UniversalGravitation into scene graph!
 	scene::UniversalGravitation universalGravity;
 	
-	scene::GravitationalObject* planeta = new sceneitems::GenericPlanet(glm::vec3(0.0f, 0.0f, 0.0f), 20.0f, 1.0f);
-	scene::GravitationalObject* planetb = new sceneitems::GenericPlanet(glm::vec3(1500.0f, 0.0f, 0.0f), 8.0f, 1.0f);
+	scene::GravitationalObject* planeta = new sceneitems::GenericPlanet(glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
+	scene::GravitationalObject* planetb = new sceneitems::GenericPlanet(glm::vec3(1500.0f, 0.0f, 0.0f), 8.0f);
 	
 	universalGravity.addObject(planeta);
 	universalGravity.addObject(planetb);
