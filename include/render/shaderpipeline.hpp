@@ -4,7 +4,7 @@
 #include <string>
 #include <cassert>
 #include <list>
-#include <map>
+#include <queue>
 
 #include "glload/gl_3_2.h"
 
@@ -19,7 +19,7 @@ namespace render {
 			std::string vertexShaderName, geometryShaderName, fragmentShaderName;
 			GLuint shaderProgram;
 			std::list<std::string> attributes;
-			std::map<std::string, GLuint> uniformBindings;
+			std::queue<std::string> uniformBindings;
 
 			void checkLinkError(const GLuint shader) const;
 		public:
@@ -61,12 +61,11 @@ namespace render {
 			void addShaderAttribute(std::string attributeName);
 
 			/**
-			 * Sets a uniform to UBO-binding for the shader pipeline.
+			 * Sets a uniform-binding for the shader pipeline.
 			 *
 			 * @param uniformName Name of the uniform block.
-			 * @param uboId UBO ID to bind to the uniform block.
 			 */
-			void setShaderUniform(std::string uniformName, GLuint uboId);
+			void setShaderUniform(std::string uniformName);
 
 			/**
 			 * Get the shader program associated with this shader pipeline.
@@ -110,11 +109,10 @@ namespace render {
 		attributes.push_back(attributeName);
 	}
 
-	inline void ShaderPipeLine::setShaderUniform(std::string uniformName, GLuint uboId) {
+	inline void ShaderPipeLine::setShaderUniform(std::string uniformName) {
 		assert(uniformName != "");
-
-		uniformBindings.erase(uniformName);
-		uniformBindings.insert(std::pair<std::string, GLuint>(uniformName, uboId));
+		
+		uniformBindings.push(uniformName);
 	}
 }
 #endif // SHADERPIPELINE_HPP

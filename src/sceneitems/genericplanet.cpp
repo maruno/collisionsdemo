@@ -20,8 +20,8 @@ GenericPlanet::GenericPlanet(glm::vec3 initialLocation, unsigned int mySize)
 	//Create and link shader-pipeline
 	render::ShaderPipeLine shaderPipe("Vertex-Transform", "Fragment-Colour");
 	shaderPipe.addShaderAttribute("vertex");
-	shaderPipe.setShaderUniform("mVPMatrixUni", matrixUBO);
-	shaderPipe.setShaderUniform("colourUni", colourUBO);
+	shaderPipe.setShaderUniform("mVPMatrixUni");
+	shaderPipe.setShaderUniform("colourUni");
 
 	shaderPipe.linkPipeLine();
 	shaderProgram = shaderPipe.getShaderProgram();
@@ -39,6 +39,9 @@ void GenericPlanet::render(glm::mat4& parentMatrix) const {
 	//Actual rendering calls
 	glBindVertexArray(vao);
 	glUseProgram(shaderProgram);
+	
+	glBindBufferBase(GL_UNIFORM_BUFFER, 1, matrixUBO);
+	glBindBufferBase(GL_UNIFORM_BUFFER, 2, colourUBO);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vBuffers.getIBO());
 	glDrawElements(GL_TRIANGLES, vBuffers.getNumIndices(), GL_UNSIGNED_INT, 0);

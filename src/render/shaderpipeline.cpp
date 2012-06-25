@@ -52,12 +52,13 @@ void render::ShaderPipeLine::linkPipeLine() {
 
 	//UBO bindings
 	unsigned int numUBOs = 1;
-	for(auto it = uniformBindings.begin(); it!= uniformBindings.end(); ++it) {
-		GLuint uniformBlockIdx = glGetUniformBlockIndex(shaderProgram, it->first.c_str());
-
-		glBindBufferBase(GL_UNIFORM_BUFFER, numUBOs, it->second);
+	while(!uniformBindings.empty()) {
+		auto uniform = uniformBindings.front();
+		
+		GLuint uniformBlockIdx = glGetUniformBlockIndex(shaderProgram, uniform.c_str());
 		glUniformBlockBinding(shaderProgram, uniformBlockIdx, numUBOs);
-
+		
+		uniformBindings.pop();
 		++numUBOs;
 	}
 }
