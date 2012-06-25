@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 	scene::PerspectiveCamera* camera = new scene::PerspectiveCamera(world);
 	scene::SceneManager sceneManager(camera, world);
 	
-	camera->changeCameraPosition(glm::vec3(15.0f, 0.0f, 35.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	camera->changeCameraPosition(glm::vec3(0.0f, 0.0f, 200.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 	camera->rescale(config::globals::initialWidth, config::globals::initialHeight);
 	
 	/*TODO Hack support for lambda's in GLFW
@@ -53,8 +53,8 @@ int main(int argc, char** argv) {
 		scene::PerspectiveCamera::rescale(width, height);
 	});*/
 	
-	scene::SceneItem* planeta = new sceneitems::GenericPlanet(glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
-	scene::SceneItem* planetb = new sceneitems::GenericPlanet(glm::vec3(150.0f, 0.0f, 0.0f), 8.0f);
+	scene::SceneItem* planeta = new sceneitems::GenericPlanet(glm::vec3(0.0f, 0.0f, 0.0f), 50.0f);
+	scene::SceneItem* planetb = new sceneitems::GenericPlanet(glm::vec3(150.0f, 0.0f, 0.0f), 16.0f);
 	
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planeta));
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planetb));
