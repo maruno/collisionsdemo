@@ -1,6 +1,4 @@
-#include <cassert>
 #include <memory>
-#include <thread>
 
 #include <unistd.h>
 
@@ -13,8 +11,6 @@
 #include "scene/scenemanager.hpp"
 #include "scene/perspectivecamera.hpp"
 #include "scene/scenegroup.hpp"
-
-#include "scene/universalgravitation.hpp"
 
 #include "sceneitems/genericplanet.hpp"
 
@@ -45,30 +41,24 @@ int main(int argc, char** argv) {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//Define world
-	scene::SceneGroup world;
-	scene::PerspectiveCamera camera(&world);
+	scene::SceneGroup* world = new scene::SceneGroup;
+	scene::PerspectiveCamera* camera = new scene::PerspectiveCamera(world);
+	scene::SceneManager sceneManager(camera, world);
 	
-	camera.changeCameraPosition(glm::vec3(500.0f, 0.0f, 1000.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-	camera.rescale(config::globals::initialWidth, config::globals::initialHeight);
+	camera->changeCameraPosition(glm::vec3(15.0f, 0.0f, 35.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	camera->rescale(config::globals::initialWidth, config::globals::initialHeight);
 	
 	/*TODO Hack support for lambda's in GLFW
 	 * glfwSetWindowSizeCallback([](int width, int height) {
 		scene::PerspectiveCamera::rescale(width, height);
 	});*/
 	
-	//TODO Move UniversalGravitation into scene graph!
-	scene::UniversalGravitation universalGravity;
+	scene::SceneItem* planeta = new sceneitems::GenericPlanet(glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
+	scene::SceneItem* planetb = new sceneitems::GenericPlanet(glm::vec3(150.0f, 0.0f, 0.0f), 8.0f);
 	
-	scene::GravitationalObject* planeta = new sceneitems::GenericPlanet(glm::vec3(0.0f, 0.0f, 0.0f), 20.0f);
-	scene::GravitationalObject* planetb = new sceneitems::GenericPlanet(glm::vec3(1500.0f, 0.0f, 0.0f), 8.0f);
-	
-	universalGravity.addObject(planeta);
-	universalGravity.addObject(planetb);
-	
-	world.addItem(std::unique_ptr<scene::SceneItem>(planeta));
-	world.addItem(std::unique_ptr<scene::SceneItem>(planetb));
+	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planeta));
+	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planetb));
 	
 	//Start main render loop
-	scene::SceneManager sceneManager(&camera, &world);
 	sceneManager.startSceneLoop();
 }
