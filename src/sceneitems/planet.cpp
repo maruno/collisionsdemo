@@ -26,6 +26,6 @@ Planet::Planet(glm::vec3 initialLocation, unsigned int mySize, unsigned int dens
 void Planet::update() {
 	scene::GravitationalObject::update();
 
-	modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(size));
-	modelMatrix = glm::translate(modelMatrix, location);
+	modelMatrix = glm::translate(glm::mat4(1.0f), location);
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(size));
 }
