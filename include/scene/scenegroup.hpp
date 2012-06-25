@@ -10,6 +10,8 @@
 
 #include "scene/sceneitem.hpp"
 
+#include "scene/collisiondetection/AxisAlignedBoundingCuboid.hpp"
+
 namespace scene {
 	/**
 	 * Scene graph group node.
@@ -21,6 +23,8 @@ namespace scene {
 			std::unique_ptr<std::array<SceneGroup, 8>> childGroups;
 			std::list<std::unique_ptr<SceneItem>> childItems;
 
+			std::unique_ptr<collisiondetection::AxisAlignedBoundingCuboid> constraints;
+
 			void addOctreeLayers(unsigned int levels);
 		public:
 			SceneGroup() = default;
@@ -30,7 +34,7 @@ namespace scene {
 			 *
 			 * @param octreeLevels Number of octree levels that should be used.
 			 */
-			SceneGroup(unsigned int octreeLevels);
+			SceneGroup(unsigned int octreeLevels, scene::collisiondetection::AxisAlignedBoundingCuboid& myConstraints);
 
 			/**
 			 * Call visitation-function on all @ref SceneItem childs in the scene graph.
