@@ -29,8 +29,10 @@ GenericPlanet::GenericPlanet(glm::vec3 initialLocation, unsigned int mySize)
 
 void GenericPlanet::render(glm::mat4& parentMatrix) const {
 	//Update the MVP-matrix and buffer this to the UBO
+	matrixMutex.lock();
 	glm::mat4 mVPMatrix = parentMatrix * modelMatrix;
-
+	matrixMutex.unlock();
+	
 	glBindBuffer(GL_UNIFORM_BUFFER, matrixUBO);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), glm::value_ptr(mVPMatrix), GL_DYNAMIC_DRAW);
 

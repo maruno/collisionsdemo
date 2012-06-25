@@ -22,6 +22,7 @@ namespace scene {
 			glm::mat4 modelMatrix;
 			
 			mutable std::mutex locationMutex;
+			mutable std::mutex matrixMutex;
 		public:
 			SceneItem(glm::vec3 initialLocation);
 			
