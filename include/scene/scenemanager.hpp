@@ -23,12 +23,11 @@ namespace scene {
 	 */
 	class SceneManager {
 		private:
-			std::list<SceneGroup*> worlds;
+			SceneGroup* world;
 			std::list<PerspectiveCamera*> cameras;
 			
 			UniversalGravitation universalGravity;
 
-			std::mutex updateMutex;
 			std::mutex renderMutex;
 		public:
 			/**
@@ -43,20 +42,6 @@ namespace scene {
 			 * Start the multithreaded main scene loop. Framebuffer should be ready.
 			 */
 			void startSceneLoop();
-
-			/**
-			 * Add a world.
-			 *
-			 * @param world New world.
-			 */
-			inline void addWorld(SceneGroup* world);
-
-			/**
-			 * Delete a world.
-			 *
-			 * @param world Old world.
-			 */
-			inline void delWorld(SceneGroup* world);
 
 			/**
 			 * Add a camera.
@@ -79,18 +64,6 @@ namespace scene {
 			 */
 			void addItem(std::unique_ptr<SceneItem> item);
 	};
-
-	void SceneManager::addWorld(SceneGroup* world) {
-		updateMutex.lock();
-		worlds.push_back(world);
-		updateMutex.unlock();
-	}
-
-	void SceneManager::delWorld(SceneGroup* world) {
-		updateMutex.lock();
-		std::remove(worlds.begin(), worlds.end(), world);
-		updateMutex.unlock();
-	}
 
 	void SceneManager::addCamera(PerspectiveCamera* camera) {
 		renderMutex.lock();

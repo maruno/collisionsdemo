@@ -14,23 +14,17 @@
 using namespace scene;
 
 SceneManager::SceneManager(PerspectiveCamera* primaryCamera, SceneGroup* primaryWorld)
-	: cameras( {primaryCamera}), worlds( {primaryWorld}) {
+	: cameras( {primaryCamera}), world(primaryWorld) {
 }
 
 void SceneManager::startSceneLoop() {
 	std::thread updateThread([this]() {
 		while(true) {
-			updateMutex.lock();
-			
 			universalGravity.update();
-			
-			std::for_each(worlds.begin(), worlds.end(), [](SceneGroup* world) {
-				world->visitScene([](std::unique_ptr<SceneItem>& child) {
-					child->update();
-				});
+
+			world->visitScene([](std::unique_ptr<SceneItem>& child) {
+				child->update();
 			});
-			
-			updateMutex.unlock();
 
 			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
 		}
@@ -56,14 +50,10 @@ void SceneManager::startSceneLoop() {
 }
 
 void SceneManager::addItem(std::unique_ptr<SceneItem> item) {
-	updateMutex.lock();
-	
 	GravitationalObject* gravObject = dynamic_cast<GravitationalObject*>(item.get());
 	if(gravObject != nullptr) {
 		universalGravity.addObject(gravObject);
 	}
-	
-	worlds.front()->addItem(std::move(item));
-	
-	updateMutex.unlock();
+
+	world->addItem(std::move(item));
 }
