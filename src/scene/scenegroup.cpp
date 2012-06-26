@@ -19,28 +19,13 @@ void SceneGroup::addOctreeLayers(unsigned int levels) {
 	}
 }
 
-void SceneGroup::updateScene() {
-	std::for_each(childItems.begin(), childItems.end(), [](std::unique_ptr<SceneItem>& child) {
-		child->update();
-	});
-
-	if(childGroups != nullptr) {
-		std::for_each(childGroups->begin(), childGroups->end(),
-		[](SceneGroup& child) {
-			child.updateScene();
-		});
-	}
-}
-
-void SceneGroup::renderScene(glm::mat4& cameraMatrix) {
-	std::for_each(childItems.begin(), childItems.end(), [&](std::unique_ptr<SceneItem>& child) {
-		child->render(cameraMatrix);
-	});
-
+void SceneGroup::visitScene(std::function<void(std::unique_ptr<SceneItem>&)> visitation) {
+	std::for_each(childItems.begin(), childItems.end(), visitation);
+	
 	if(childGroups != nullptr) {
 		std::for_each(childGroups->begin(), childGroups->end(),
 		[&](SceneGroup& child) {
-			child.renderScene(cameraMatrix);
+			child.visitScene(visitation);
 		});
 	}
 }

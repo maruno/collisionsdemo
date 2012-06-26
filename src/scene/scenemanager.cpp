@@ -25,7 +25,9 @@ void SceneManager::startSceneLoop() {
 			universalGravity.update();
 			
 			std::for_each(worlds.begin(), worlds.end(), [](SceneGroup* world) {
-				world->updateScene();
+				world->visitScene([](std::unique_ptr<SceneItem>& child) {
+					child->update();
+				});
 			});
 			
 			updateMutex.unlock();

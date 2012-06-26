@@ -4,6 +4,7 @@
 #include <array>
 #include <list>
 #include <memory>
+#include <functional>
 
 #include <glm/glm.hpp>
 
@@ -32,14 +33,11 @@ namespace scene {
 			SceneGroup(unsigned int octreeLevels);
 
 			/**
-			 * Call update on all @ref SceneItem childs in the scene graph.
+			 * Call visitation-function on all @ref SceneItem childs in the scene graph.
+			 * 
+			 * 
 			 */
-			void updateScene();
-
-			/**
-			 * Call render on all @ref SceneItem childs in the scene graph.
-			 */
-			void renderScene(glm::mat4& cameraMatrix);
+			void visitScene(std::function<void(std::unique_ptr<SceneItem>&)> visitation);
 
 			/**
 			 * Add a @ref SceneItem child to this node.

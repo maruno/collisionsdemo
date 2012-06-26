@@ -27,10 +27,12 @@ void PerspectiveCamera::changeCameraPosition(glm::vec3 position, glm::vec3 direc
 	glm::vec3 lookAtCenter =  position + direction;
 
 	view = glm::lookAt<float>(position, lookAtCenter, glm::vec3(0.0f, 1.0f, 0.0f));
-	
+
 	viewProjection = projection * view;
 }
 
 void PerspectiveCamera::render() {
-	world->renderScene(viewProjection);
+	world->visitScene([this](std::unique_ptr<SceneItem>& child) {
+		child->render(viewProjection);
+	});
 }
