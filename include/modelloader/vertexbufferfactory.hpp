@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 #include "glload/gl_3_2.h"
 
@@ -23,6 +24,13 @@ namespace modelloader {
 
 			static VertexBufferFactory instance;
 			VertexBufferFactory() {};
+			void calculateFaceNormals(std::vector<glm::vec3>& faceNormalsData,
+										const std::vector<float>& verticesData,
+										const std::vector<unsigned int>& indicesData);
+			void calculateVertexNormals(std::vector<glm::vec3>& vertexNormalsData,
+										const std::vector<glm::vec3>& faceNormalsData,
+										const std::vector<float>& verticesData,
+										const std::vector<unsigned int>& indicesData);
 		public:
 			/**
 			 * Access a vertex buffer by name.

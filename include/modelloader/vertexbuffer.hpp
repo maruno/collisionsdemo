@@ -11,7 +11,7 @@ namespace modelloader {
 	 */
 	class VertexBuffer {
 		private:
-			GLuint vBO, iBO;
+			GLuint vBO, iBO, nBO;
 			unsigned int numIndices;
 
 		public:
@@ -22,7 +22,7 @@ namespace modelloader {
 			 * @param myIBO Indice Buffer Object of this vertex buffer collection.
 			 * @param myNumIndices Number of indices associated with this vertex buffer collection.
 			 */
-			VertexBuffer(GLuint myVBO, GLuint myIBO, unsigned int myNumIndices);
+			VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices);
 
 			/**
 			 * Request the 'Vertex'/position Buffer Object.
