@@ -7,6 +7,8 @@
 #include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
 
+#include "scene/collisiondetection/boundingvolume.hpp"
+
 namespace scene {
 
 	/**
@@ -17,14 +19,17 @@ namespace scene {
 	class SceneItem {
 		protected:
 			glm::vec3 location;
+			glm::mat4 modelMatrix;
+			
 			GLuint matrixUBO;
 			GLuint shaderProgram;
-			glm::mat4 modelMatrix;
+			
+			collisiondetection::BoundingVolume& bounds;
 			
 			mutable std::mutex locationMutex;
 			mutable std::mutex matrixMutex;
 		public:
-			SceneItem(glm::vec3 initialLocation);
+			SceneItem(glm::vec3 initialLocation, collisiondetection::BoundingVolume& myBounds);
 			
 			/**
 			 * Called every update-tick.
@@ -42,6 +47,8 @@ namespace scene {
 			 * @return Item location.
 			 */
 			inline glm::vec3 getLocation() const;
+			
+			inline collisiondetection::BoundingVolume& getBounds();
 	};
 
 	glm::vec3 SceneItem::getLocation() const {
@@ -50,6 +57,10 @@ namespace scene {
 		locationMutex.unlock();
 		
 		return lastLocation;
+	}
+	
+	collisiondetection::BoundingVolume& SceneItem::getBounds() {
+		return bounds;
 	}
 }
 

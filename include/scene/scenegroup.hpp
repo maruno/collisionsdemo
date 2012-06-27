@@ -10,7 +10,7 @@
 
 #include "scene/sceneitem.hpp"
 
-#include "scene/collisiondetection/AxisAlignedBoundingCuboid.hpp"
+#include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
 
 namespace scene {
 	/**
@@ -34,7 +34,7 @@ namespace scene {
 			 *
 			 * @param octreeLevels Number of octree levels that should be used.
 			 */
-			SceneGroup(unsigned int octreeLevels, scene::collisiondetection::AxisAlignedBoundingCuboid& myConstraints);
+			SceneGroup(unsigned int octreeLevels, scene::collisiondetection::AxisAlignedBoundingCuboid myConstraints);
 
 			/**
 			 * Call visitation-function on all @ref SceneItem childs in the scene graph.
@@ -44,16 +44,12 @@ namespace scene {
 			void visitScene(std::function<void(std::unique_ptr<SceneItem>&)> visitation);
 
 			/**
-			 * Add a @ref SceneItem child to this node.
+			 * Bubble a @ref SceneItem to the correct group in the scene graph.
 			 *
 			 * @param child Unique pointer to the @ref SceneItem child. The scene graph takes ownership.
 			 */
-			inline void addItem(std::unique_ptr<SceneItem> child);
+			void bubbleItem(std::unique_ptr<SceneItem> item);
 	};
-
-	void SceneGroup::addItem(std::unique_ptr<SceneItem> child) {
-		childItems.push_back(std::move(child));
-	}
 }
 
 #endif // SCENEGROUP_HPP

@@ -9,7 +9,7 @@ using namespace sceneitems;
 GLuint Planet::vao = 0;
 
 Planet::Planet(glm::vec3 initialLocation, unsigned int mySize, unsigned int density)
-	: scene::GravitationalObject(initialLocation, mySize* density * 10000), size(mySize),
+	: bSphere(size, initialLocation), scene::GravitationalObject(initialLocation, mySize* density * 10000, bSphere), size(mySize),
 	  vBuffers(modelloader::VertexBufferFactory::getInstance()["sphere"]) {
 
 	if(vao == 0) {

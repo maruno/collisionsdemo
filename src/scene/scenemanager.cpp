@@ -54,6 +54,6 @@ void SceneManager::addItem(std::unique_ptr<SceneItem> item) {
 	if(gravObject != nullptr) {
 		universalGravity.addObject(gravObject);
 	}
-
-	world->addItem(std::move(item));
+	
+	world->bubbleItem(std::move(item));
 }

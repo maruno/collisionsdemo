@@ -1,10 +1,13 @@
 #include <memory>
+#include <tuple>
 
 #include <unistd.h>
 
 #include "glload/gl_3_2.h"
 #include "glload/gll.hpp"
 #include <GL/glfw.h>
+
+#include <glm/glm.hpp>
 
 #include "config/globals.hpp"
 
@@ -13,6 +16,10 @@
 #include "scene/scenegroup.hpp"
 
 #include "sceneitems/genericplanet.hpp"
+
+#include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
+
+typedef scene::collisiondetection::AxisAlignedBoundingCuboid AABB;
 
 //HACK for stupid C-functions. Need to edit GLFW-source
 //sceneitems::Terrain* terrainPtr;
@@ -41,7 +48,7 @@ int main(int argc, char** argv) {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//Define world
-	scene::SceneGroup* world = new scene::SceneGroup;
+	scene::SceneGroup* world = new scene::SceneGroup(3, AABB(std::make_tuple(glm::vec3(-500.0f, -500.0f, 500.0f), glm::vec3(500.0f, 500.0f, -500.0f))));
 	scene::PerspectiveCamera* camera = new scene::PerspectiveCamera(world);
 	scene::SceneManager sceneManager(camera, world);
 	

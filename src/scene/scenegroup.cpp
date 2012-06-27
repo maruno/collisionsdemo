@@ -2,13 +2,18 @@
 
 #include <algorithm>
 #include <tuple>
+#include <functional>
+#include <cassert>
+
+#include "scene/sceneitem.hpp"
+#include "scene/collisiondetection/collisiondetector.hpp"
 
 using namespace scene;
 
 typedef collisiondetection::AxisAlignedBoundingCuboid AABB;
 typedef std::tuple<glm::vec3, glm::vec3> Diagonal;
 
-SceneGroup::SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAlignedBoundingCuboid& myConstraints)
+SceneGroup::SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAlignedBoundingCuboid myConstraints)
 	: constraints(new AABB(myConstraints)) {
 	addOctreeLayers(octreeLevels);
 }
@@ -18,9 +23,9 @@ void SceneGroup::addOctreeLayers(unsigned int levels) {
 		childGroups.reset(new std::array<SceneGroup,8>);
 
 		//Calculate and set constraints for all childGroups
-		float width = (constraints->getMinX() + constraints->getMaxX()) / 2.0f;
-		float height = (constraints->getMinY() + constraints->getMaxY()) / 2.0f;
-		float depth = (constraints->getMinZ() + constraints->getMaxZ()) / 2.0f;
+		float width = (constraints->getMaxX() - constraints->getMinX()) / 2.0f;
+		float height = (constraints->getMaxY() - constraints->getMinY()) / 2.0f;
+		float depth = (constraints->getMaxZ() - constraints->getMinZ()) / 2.0f;
 
 		glm::vec3 childMinimum(constraints->getMinX(), constraints->getMinY(), constraints->getMaxZ());
 		glm::vec3 childMaximum(constraints->getMinX() + width, constraints->getMinY() + height, constraints->getMaxZ() - depth);
@@ -72,4 +77,29 @@ void SceneGroup::visitScene(std::function<void(std::unique_ptr<SceneItem>&)> vis
 			child.visitScene(visitation);
 		});
 	}
+}
+
+void SceneGroup::bubbleItem(std::unique_ptr<SceneItem> item) {
+	if(childGroups != nullptr) {
+		std::function<bool(SceneGroup&)> itemInGroup = [&item](SceneGroup& child) {
+			return collisiondetection::intersects(*(child.constraints), item->getBounds());
+		};
+		
+		auto viableGroup = std::find_if(childGroups->begin(), childGroups->end(), itemInGroup);
+		
+		assert(viableGroup != childGroups->end());
+		
+		if(viableGroup+1 != childGroups->end()) {
+			auto otherGroup = std::find_if(viableGroup+1, childGroups->end(), itemInGroup);
+			
+			if(otherGroup != childGroups->end()) {
+				childItems.push_back(std::move(item));
+				return;
+			}
+		}
+		
+		viableGroup->bubbleItem(std::move(item));
+	}
+	
+	childItems.push_back(std::move(item));
 }
