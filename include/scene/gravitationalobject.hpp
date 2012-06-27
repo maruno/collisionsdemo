@@ -7,6 +7,8 @@
 
 #include "scene/sceneitem.hpp"
 
+#include "scene/collisiondetection/boundingvolume.hpp"
+
 namespace scene {
 	/**
 	 * This class represents a @ref SceneItem that obeys the laws of physics from Sir Isaac Newton.
@@ -25,7 +27,7 @@ namespace scene {
 			 *
 			 * @param myMass Mass of this item.
 			 */
-			GravitationalObject(glm::vec3 initialLocation, unsigned int myMass);
+			GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, collisiondetection::BoundingVolume& myBounds);
 
 			/**
 			 * Request the mass.

@@ -9,7 +9,7 @@
 
 #include <tuple>
 
-#include "scene/collisiondetection/BoundingVolume.hpp"
+#include "scene/collisiondetection/boundingvolume.hpp"
 #include "glm/glm.hpp"
 
 namespace scene {

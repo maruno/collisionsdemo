@@ -14,6 +14,7 @@ namespace scene{
 		class BoundingVolume {
 			protected:
 				BoundingVolume() = default;
+				virtual ~BoundingVolume() = default;
 		};
 	}
 }

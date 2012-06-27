@@ -9,7 +9,7 @@
 
 #include <glm/glm.hpp>
 
-#include "scene/collisiondetection/BoundingVolume.hpp"
+#include "scene/collisiondetection/boundingvolume.hpp"
 
 namespace scene {
 

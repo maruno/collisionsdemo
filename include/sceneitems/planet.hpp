@@ -7,10 +7,14 @@
 
 #include "modelloader/vertexbuffer.hpp"
 
+#include "scene/collisiondetection/boundingvolume.hpp"
+#include "scene/collisiondetection/boundingsphere.hpp"
+
 namespace sceneitems {
 	class Planet : public scene::GravitationalObject {
 		private:
 			unsigned int size;
+			scene::collisiondetection::BoundingSphere bSphere;
 		protected:
 			const modelloader::VertexBuffer& vBuffers;
 			static GLuint vao;

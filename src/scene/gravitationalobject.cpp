@@ -4,8 +4,8 @@
 
 using namespace scene;
 
-GravitationalObject::GravitationalObject(glm::vec3 initialLocation, unsigned int myMass)
-	: SceneItem(initialLocation) , mass(myMass) {
+GravitationalObject::GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, collisiondetection::BoundingVolume& myBounds)
+	: SceneItem(initialLocation, myBounds), mass(myMass) {
 }
 
 void GravitationalObject::update() {
