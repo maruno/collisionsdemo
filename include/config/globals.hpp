@@ -4,7 +4,7 @@
 namespace config {
 	
 	namespace globals {
-		constexpr unsigned short updateRate = 60;
+		constexpr unsigned short updateRate = 40;
 		constexpr unsigned short frameRate = 35;
 		constexpr unsigned int initialWidth = 1024;
 		constexpr unsigned int initialHeight = 768;
