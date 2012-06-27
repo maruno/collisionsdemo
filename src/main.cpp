@@ -37,6 +37,10 @@ int main(int argc, char** argv) {
 	//Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
+	glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+
 	//Set clear colour to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
