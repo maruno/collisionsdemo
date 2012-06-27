@@ -27,7 +27,7 @@ namespace scene {
 			collisiondetection::BoundingVolume& bounds;
 			
 			mutable std::mutex locationMutex;
-			mutable std::mutex matrixMutex;
+			mutable std::recursive_mutex matrixMutex;
 		public:
 			SceneItem(glm::vec3 initialLocation, collisiondetection::BoundingVolume& myBounds);
 			
@@ -36,6 +36,11 @@ namespace scene {
 			 */
 			virtual void update() = 0;
 
+			/**
+			 * Move the object.
+			 */
+			virtual void move();
+			
 			/**
 			 * Called every render-tick.
 			 */
@@ -49,8 +54,10 @@ namespace scene {
 			inline glm::vec3 getLocation() const;
 			
 			inline collisiondetection::BoundingVolume& getBounds();
+			
+			inline std::recursive_mutex& getMatrixMutex();
 	};
-
+	
 	glm::vec3 SceneItem::getLocation() const {
 		locationMutex.lock();
 		glm::vec3 lastLocation = location;
@@ -62,7 +69,10 @@ namespace scene {
 	collisiondetection::BoundingVolume& SceneItem::getBounds() {
 		return bounds;
 	}
+	
+	std::recursive_mutex& SceneItem::getMatrixMutex() {
+		return matrixMutex;
+	}
 }
-
 
 #endif /* SCENEITEM_HPP_ */

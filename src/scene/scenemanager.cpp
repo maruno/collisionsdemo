@@ -24,8 +24,14 @@ void SceneManager::startSceneLoop() {
 
 			world->visitScene([](std::unique_ptr<SceneItem>& child) {
 				child->update();
+				
+				child->getMatrixMutex().lock();
+				
+				child->move();
+				
+				child->getMatrixMutex().unlock();
 			});
-
+			
 			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
 		}
 	});

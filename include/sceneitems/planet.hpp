@@ -22,7 +22,7 @@ namespace sceneitems {
 			Planet(glm::vec3 initialLocation, unsigned int mySize, unsigned int density);
 			
 			virtual void render(glm::mat4& parentMatrix) const override = 0;
-			virtual void update() override;
+			virtual void move() override;
 	};
 }
 
