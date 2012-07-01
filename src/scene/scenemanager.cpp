@@ -35,8 +35,7 @@ void SceneManager::startSceneLoop() {
 			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
 		}
 	});
-
-	//std::thread renderThread([this]() {
+	
 	while(true) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -50,9 +49,6 @@ void SceneManager::startSceneLoop() {
 
 		std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::frameRate)*1000));
 	}
-	//});
-
-	//renderThread.join();
 }
 
 void SceneManager::addItem(std::unique_ptr<SceneItem> item) {
