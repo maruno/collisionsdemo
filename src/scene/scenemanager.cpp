@@ -9,6 +9,8 @@
 #include "scene/scenegroup.hpp"
 #include "scene/perspectivecamera.hpp"
 
+#include "scene/collisiondetection/collisiondetector.hpp"
+
 #include "config/globals.hpp"
 
 using namespace scene;
@@ -24,18 +26,34 @@ void SceneManager::startSceneLoop() {
 
 			world->visitScene([](std::unique_ptr<SceneItem>& child) {
 				child->update();
-				
+
 				child->getMatrixMutex().lock();
-				
+
 				child->move();
-				
+
 				child->getMatrixMutex().unlock();
 			});
-			
+
+			world->visitGroups([](SceneGroup& group) {
+				if(group.constraints != nullptr) {
+					auto it = group.childItems.begin();
+					while(it != group.childItems.end()) {
+						if(!scene::collisiondetection::intersects(*(group.constraints), (*it)->getBounds())) {
+							std::lock_guard<std::recursive_mutex> guard(group.rootNode->sceneMutex);
+
+							group.rootNode->bubbleItem(std::move(*it));
+							it = group.childItems.erase(it);
+						} else {
+							++it;
+						}
+					}
+				}
+			});
+
 			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
 		}
 	});
-	
+
 	while(true) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -56,6 +74,7 @@ void SceneManager::addItem(std::unique_ptr<SceneItem> item) {
 	if(gravObject != nullptr) {
 		universalGravity.addObject(gravObject);
 	}
-	
+
+	std::lock_guard<std::recursive_mutex> guard(world->rootNode->sceneMutex);
 	world->bubbleItem(std::move(item));
 }

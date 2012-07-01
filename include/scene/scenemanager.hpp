@@ -25,7 +25,7 @@ namespace scene {
 		private:
 			SceneGroup* world;
 			std::list<PerspectiveCamera*> cameras;
-			
+
 			UniversalGravitation universalGravity;
 
 			std::mutex renderMutex;
@@ -56,10 +56,10 @@ namespace scene {
 			 * @param camera Old camera.
 			 */
 			inline void delCamera(PerspectiveCamera* camera);
-			
+
 			/**
 			 * Add an item under scene graph control.
-			 * 
+			 *
 			 * @param item Unique pointer to the @ref SceneItem. The scene graph takes ownership.
 			 */
 			void addItem(std::unique_ptr<SceneItem> item);

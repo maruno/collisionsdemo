@@ -13,9 +13,18 @@ using namespace scene;
 typedef collisiondetection::AxisAlignedBoundingCuboid AABB;
 typedef std::tuple<glm::vec3, glm::vec3> Diagonal;
 
+SceneGroup* SceneGroup::rootNode;
+std::recursive_mutex SceneGroup::sceneMutex;
+
+SceneGroup::SceneGroup() {
+	rootNode = this;
+}
+
 SceneGroup::SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAlignedBoundingCuboid myConstraints)
 	: constraints(new AABB(myConstraints)) {
 	addOctreeLayers(octreeLevels);
+
+	rootNode = this;
 }
 
 void SceneGroup::addOctreeLayers(unsigned int levels) {
@@ -69,8 +78,10 @@ void SceneGroup::addOctreeLayers(unsigned int levels) {
 }
 
 void SceneGroup::visitScene(std::function<void(std::unique_ptr<SceneItem>&)> visitation) {
+	std::lock_guard<std::recursive_mutex> guard(sceneMutex);
+
 	std::for_each(childItems.begin(), childItems.end(), visitation);
-	
+
 	if(childGroups != nullptr) {
 		std::for_each(childGroups->begin(), childGroups->end(),
 		[&](SceneGroup& child) {
@@ -79,27 +90,40 @@ void SceneGroup::visitScene(std::function<void(std::unique_ptr<SceneItem>&)> vis
 	}
 }
 
+void SceneGroup::visitGroups(std::function<void(SceneGroup&)> visitation) {
+	visitation(*this);
+
+	if(childGroups != nullptr) {
+		std::for_each(childGroups->begin(), childGroups->end(),
+		[&](SceneGroup& child) {
+			child.visitGroups(visitation);
+		});
+	}
+}
+
 void SceneGroup::bubbleItem(std::unique_ptr<SceneItem> item) {
+	std::lock_guard<std::recursive_mutex> guard(sceneMutex);
+	
 	if(childGroups != nullptr) {
 		std::function<bool(SceneGroup&)> itemInGroup = [&item](SceneGroup& child) {
 			return collisiondetection::intersects(*(child.constraints), item->getBounds());
 		};
-		
+
 		auto viableGroup = std::find_if(childGroups->begin(), childGroups->end(), itemInGroup);
-		
+
 		assert(viableGroup != childGroups->end());
-		
+
 		if(viableGroup+1 != childGroups->end()) {
 			auto otherGroup = std::find_if(viableGroup+1, childGroups->end(), itemInGroup);
-			
+
 			if(otherGroup != childGroups->end()) {
 				childItems.push_back(std::move(item));
 				return;
 			}
 		}
-		
+
 		viableGroup->bubbleItem(std::move(item));
 	}
-	
+
 	childItems.push_back(std::move(item));
 }

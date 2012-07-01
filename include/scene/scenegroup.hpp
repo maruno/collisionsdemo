@@ -5,6 +5,7 @@
 #include <list>
 #include <memory>
 #include <functional>
+#include <mutex>
 
 #include <glm/glm.hpp>
 
@@ -13,24 +14,31 @@
 #include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
 
 namespace scene {
+	class SceneManager;
+
 	/**
 	 * Scene graph group node.
 	 *
 	 * @author Michel Bouwmans
 	 */
 	class SceneGroup final {
+			friend class SceneManager;
+
 		private:
 			std::unique_ptr<std::array<SceneGroup, 8>> childGroups;
 			std::list<std::unique_ptr<SceneItem>> childItems;
 
 			std::unique_ptr<collisiondetection::AxisAlignedBoundingCuboid> constraints;
 
+			static SceneGroup* rootNode;
+			static std::recursive_mutex sceneMutex;
+
 			void addOctreeLayers(unsigned int levels);
 		public:
-			SceneGroup() = default;
+			SceneGroup();
 
 			/**
-			 * Constructor for the world node.
+			 * Constructor for the root node.
 			 *
 			 * @param octreeLevels Number of octree levels that should be used.
 			 */
@@ -38,10 +46,17 @@ namespace scene {
 
 			/**
 			 * Call visitation-function on all @ref SceneItem childs in the scene graph.
-			 * 
-			 * 
+			 *
+			 * @param visitation Function to call.
 			 */
 			void visitScene(std::function<void(std::unique_ptr<SceneItem>&)> visitation);
+
+			/**
+			 * Call visitation-function on all @ref SceneGroup childs in the scene graph.
+			 *
+			 * @param visitation Function to call.
+			 */
+			void visitGroups(std::function<void(SceneGroup&)> visitation);
 
 			/**
 			 * Bubble a @ref SceneItem to the correct group in the scene graph.
