@@ -12,7 +12,7 @@ using namespace scene;
 
 const glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
 
-char PerspectiveCamera::keyPressed = NO_KEY_PRESSED;
+PerspectiveCamera::KeyPress PerspectiveCamera::keyPressed = NO_KEY_PRESSED;
 
 PerspectiveCamera::PerspectiveCamera(SceneGroup* myWorld) : world(myWorld), direction(0.0f, 0.0f, -1.0f) {
 }
@@ -44,40 +44,40 @@ void PerspectiveCamera::render() {
 void PerspectiveCamera::update() {
 	constexpr float directionUpdate = 1.0f/config::globals::updateRate * config::globals::cameraRotationalSpeed;
 	constexpr float positionUpdate = 1.0f/config::globals::updateRate * config::globals::cameraMovementSpeed;
-	
+
 	switch(keyPressed) {
-		case UP_KEY_PRESSED:
-			updateDirection(directionUpdate, 1, 0, 0);
-			break;
-		case DOWN_KEY_PRESSED:
-			updateDirection(-directionUpdate, 1, 0, 0);
-			break;
-		case LEFT_KEY_PRESSED:
-			updateDirection(directionUpdate, 0, 1, 0);
-			break;
-		case RIGHT_KEY_PRESSED:
-			updateDirection(-directionUpdate, 0, 1, 0);
-			break;
-		case W_KEY_PRESSED:
-			updatePosition(0, 0, -positionUpdate);
-			break;
-		case A_KEY_PRESSED:
-			updatePosition(-positionUpdate, 0, 0);
-			break;
-		case S_KEY_PRESSED:
-			updatePosition(0, 0, positionUpdate);
-			break;
-		case D_KEY_PRESSED:
-			updatePosition(positionUpdate, 0, 0);
-			break;
-		case PAGEUP_KEY_PRESSED:
-			updatePosition(0, positionUpdate, 0);
-			break;
-		case PAGEDOWN_KEY_PRESSED:
-			updatePosition(0, -positionUpdate, 0);
-			break;
-		default:
-			;
+	case UP_KEY_PRESSED:
+		updateDirection(directionUpdate, 1, 0, 0);
+		break;
+	case DOWN_KEY_PRESSED:
+		updateDirection(-directionUpdate, 1, 0, 0);
+		break;
+	case LEFT_KEY_PRESSED:
+		updateDirection(directionUpdate, 0, 1, 0);
+		break;
+	case RIGHT_KEY_PRESSED:
+		updateDirection(-directionUpdate, 0, 1, 0);
+		break;
+	case W_KEY_PRESSED:
+		updatePosition(0, 0, -positionUpdate);
+		break;
+	case A_KEY_PRESSED:
+		updatePosition(-positionUpdate, 0, 0);
+		break;
+	case S_KEY_PRESSED:
+		updatePosition(0, 0, positionUpdate);
+		break;
+	case D_KEY_PRESSED:
+		updatePosition(positionUpdate, 0, 0);
+		break;
+	case PAGEUP_KEY_PRESSED:
+		updatePosition(0, positionUpdate, 0);
+		break;
+	case PAGEDOWN_KEY_PRESSED:
+		updatePosition(0, -positionUpdate, 0);
+		break;
+	default:
+		;
 	}
 
 	changeCameraPosition(position, direction);

@@ -33,10 +33,11 @@ int main(int argc, char** argv) {
 	if(glload::LoadFunctions() == glload::LS_LOAD_FAILED) {
 		return 1;
 	}
-	
+
 	//Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
+	//Backface culling
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
@@ -48,16 +49,17 @@ int main(int argc, char** argv) {
 	scene::SceneGroup* world = new scene::SceneGroup;
 	cameraPtr = new scene::PerspectiveCamera(world);
 	scene::SceneManager sceneManager(cameraPtr, world);
-	
+
 	cameraPtr->changeCameraPosition(glm::vec3(20.0f, 0.0f, 150.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 	cameraPtr->rescale(config::globals::initialWidth, config::globals::initialHeight);
-	
+
 	//TODO Hack support for lambda's in GLFW
 	glfwSetWindowSizeCallback([](int width, int height) {
 		cameraPtr->rescale(width, height);
 	});
+
 	cameraPtr->setKeyPressed(scene::PerspectiveCamera::UP_KEY_PRESSED);
-	//TODO rotate/move camera
+
 	glfwSetKeyCallback([](int key, int action) {
 		switch(key) {
 		case GLFW_KEY_UP:
@@ -130,8 +132,6 @@ int main(int argc, char** argv) {
 				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
 			}
 			break;
-		default:
-			;
 		}
 	});
 
@@ -139,13 +139,13 @@ int main(int argc, char** argv) {
 	scene::SceneItem* planetb = new sceneitems::GenericPlanet(glm::vec3(150.0f, 0.0f, -12.0f), 16.0f);
 	scene::SceneItem* planetc = new sceneitems::GenericPlanet(glm::vec3(-35.0f, 45.0f, 0.0f), 20.0f);
 	scene::SceneItem* planetd = new sceneitems::GenericPlanet(glm::vec3(0.0f, -45.0f, 30.0f), 5.0f);
-	
-	
+
+
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planeta));
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planetb));
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planetc));
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planetd));
-	
+
 	//Start main render loop
 	sceneManager.startSceneLoop();
 }
