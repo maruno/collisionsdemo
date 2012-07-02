@@ -81,11 +81,15 @@ bool scene::collisiondetection::intersects(AxisAlignedBoundingCuboid& cuboid, Bo
 		closestPoint.z = sphere.getLocation().z;
 	}
 
-	float xSquare = closestPoint.x*closestPoint.x;
-	float ySquare = closestPoint.y*closestPoint.y;
-	float zSquare = closestPoint.z*closestPoint.z;
-	float distanceToCentre = std::sqrt(xSquare+ySquare+zSquare);
-	collision = distanceToCentre < sphere.getRadius();
+	if(closestPoint == sphere.getLocation()) {
+		collision = true;
+	} else {
+		float xSquare = closestPoint.x*closestPoint.x;
+		float ySquare = closestPoint.y*closestPoint.y;
+		float zSquare = closestPoint.z*closestPoint.z;
+		float distanceToCentre = std::sqrt(xSquare+ySquare+zSquare);
+		collision = distanceToCentre < sphere.getRadius();
+	}
 
 	return collision;
 }
