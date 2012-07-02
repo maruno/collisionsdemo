@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <thread>
+#include <mutex>
 
 #include "glload/gl_3_2.h"
 #include <GL/glfw.h>
@@ -16,7 +17,7 @@
 using namespace scene;
 
 SceneManager::SceneManager(PerspectiveCamera* primaryCamera, SceneGroup* primaryWorld)
-	: cameras( {primaryCamera}), world(primaryWorld) {
+	: camera(primaryCamera), world(primaryWorld) {
 }
 
 void SceneManager::startSceneLoop() {
@@ -50,9 +51,7 @@ void SceneManager::startSceneLoop() {
 				}
 			});
 
-			std::for_each(cameras.begin(), cameras.end(), [](PerspectiveCamera* camera) {
-				camera->update();
-			});
+			camera->update();
 
 			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
 		}
@@ -61,11 +60,7 @@ void SceneManager::startSceneLoop() {
 	while(true) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		renderMutex.lock();
-		std::for_each(cameras.begin(), cameras.end(), [](PerspectiveCamera* camera) {
-			camera->render();
-		});
-		renderMutex.unlock();
+		camera->render();
 
 		glfwSwapBuffers();
 

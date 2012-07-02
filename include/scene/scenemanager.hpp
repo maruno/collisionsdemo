@@ -3,7 +3,6 @@
 
 #include <list>
 #include <algorithm>
-#include <mutex>
 #include <memory>
 
 #include "scene/universalgravitation.hpp"
@@ -24,11 +23,10 @@ namespace scene {
 	class SceneManager {
 		private:
 			SceneGroup* world;
-			std::list<PerspectiveCamera*> cameras;
+			PerspectiveCamera* camera;
 
 			UniversalGravitation universalGravity;
 
-			std::mutex renderMutex;
 		public:
 			/**
 			 * Constructor.
@@ -44,38 +42,12 @@ namespace scene {
 			void startSceneLoop();
 
 			/**
-			 * Add a camera.
-			 *
-			 * @param camera New camera.
-			 */
-			inline void addCamera(PerspectiveCamera* camera);
-
-			/**
-			 * Delete a camera.
-			 *
-			 * @param camera Old camera.
-			 */
-			inline void delCamera(PerspectiveCamera* camera);
-
-			/**
 			 * Add an item under scene graph control.
 			 *
 			 * @param item Unique pointer to the @ref SceneItem. The scene graph takes ownership.
 			 */
 			void addItem(std::unique_ptr<SceneItem> item);
 	};
-
-	void SceneManager::addCamera(PerspectiveCamera* camera) {
-		renderMutex.lock();
-		cameras.push_back(camera);
-		renderMutex.unlock();
-	}
-
-	void SceneManager::delCamera(PerspectiveCamera* camera) {
-		renderMutex.lock();
-		std::remove(cameras.begin(), cameras.end(), camera);
-		renderMutex.unlock();
-	}
 }
 
 #endif /* SCENEMANAGER_HPP_ */
