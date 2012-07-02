@@ -20,17 +20,23 @@ namespace scene {
 		protected:
 			glm::vec3 location;
 			glm::mat4 modelMatrix;
-			
+
 			GLuint matrixUBO;
 			GLuint shaderProgram;
-			
+
 			collisiondetection::BoundingVolume& bounds;
-			
+
 			mutable std::mutex locationMutex;
 			mutable std::recursive_mutex matrixMutex;
 		public:
+			/**
+			 * Constructor.
+			 *
+			 * @param initialLocation The initial location for this item.
+			 * @param myBounds Bounding volume for this item.
+			 */
 			SceneItem(glm::vec3 initialLocation, collisiondetection::BoundingVolume& myBounds);
-			
+
 			/**
 			 * Called every update-tick.
 			 */
@@ -40,7 +46,7 @@ namespace scene {
 			 * Move the object.
 			 */
 			virtual void move();
-			
+
 			/**
 			 * Called every render-tick.
 			 */
@@ -52,24 +58,34 @@ namespace scene {
 			 * @return Item location.
 			 */
 			inline glm::vec3 getLocation() const;
-			
+
+			/**
+			 * Get the bounding volume for this item.
+			 *
+			 * @return Bounding volume for this item.
+			 */
 			inline collisiondetection::BoundingVolume& getBounds();
-			
+
+			/**
+			 * Get the matrix mutex for this item.
+			 *
+			 * @return Matrix mutex for this item.
+			 */
 			inline std::recursive_mutex& getMatrixMutex();
 	};
-	
+
 	glm::vec3 SceneItem::getLocation() const {
 		locationMutex.lock();
 		glm::vec3 lastLocation = location;
 		locationMutex.unlock();
-		
+
 		return lastLocation;
 	}
-	
+
 	collisiondetection::BoundingVolume& SceneItem::getBounds() {
 		return bounds;
 	}
-	
+
 	std::recursive_mutex& SceneItem::getMatrixMutex() {
 		return matrixMutex;
 	}

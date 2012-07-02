@@ -41,6 +41,7 @@ namespace scene {
 			 * Constructor for the root node.
 			 *
 			 * @param octreeLevels Number of octree levels that should be used.
+			 * @param myConstraints Constraining box of this scene graph.
 			 */
 			SceneGroup(unsigned int octreeLevels, scene::collisiondetection::AxisAlignedBoundingCuboid myConstraints);
 
