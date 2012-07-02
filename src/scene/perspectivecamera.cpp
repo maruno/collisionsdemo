@@ -15,7 +15,7 @@ const float directionUpdate = 1;
 
 char PerspectiveCamera::keyPressed = NO_KEY_PRESSED;
 
-PerspectiveCamera::PerspectiveCamera(SceneGroup* myWorld) : world(myWorld) {
+PerspectiveCamera::PerspectiveCamera(SceneGroup* myWorld) : world(myWorld), direction(0.0f, 0.0f, -1.0f) {
 }
 
 void PerspectiveCamera::rescale(int width, int height) {
