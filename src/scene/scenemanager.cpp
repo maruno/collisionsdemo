@@ -30,6 +30,10 @@ void SceneManager::startSceneLoop() {
 				});
 			});
 			
+			std::for_each(cameras.begin(), cameras.end(), [](PerspectiveCamera* camera) {
+				camera->update();
+			});
+
 			updateMutex.unlock();
 
 			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));

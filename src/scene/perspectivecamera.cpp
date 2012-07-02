@@ -10,6 +10,11 @@ using namespace scene;
 
 const glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
 
+const float positionUpdate = 10;
+const float directionUpdate = 1;
+
+char PerspectiveCamera::keyPressed = NO_KEY_PRESSED;
+
 PerspectiveCamera::PerspectiveCamera(SceneGroup* myWorld) : world(myWorld) {
 }
 
@@ -35,4 +40,58 @@ void PerspectiveCamera::render() {
 	world->visitScene([this](std::unique_ptr<SceneItem>& child) {
 		child->render(viewProjection);
 	});
+}
+
+void PerspectiveCamera::update() {
+	switch(keyPressed) {
+		case UP_KEY_PRESSED:
+			updateDirection(directionUpdate, 1, 0, 0);
+			break;
+		case DOWN_KEY_PRESSED:
+			updateDirection(-directionUpdate, 1, 0, 0);
+			break;
+		case LEFT_KEY_PRESSED:
+			updateDirection(directionUpdate, 0, 0, 1);
+			break;
+		case RIGHT_KEY_PRESSED:
+			updateDirection(-directionUpdate, 0, 0, 1);
+			break;
+		case W_KEY_PRESSED:
+			updatePosition(0, 0, -positionUpdate);
+			break;
+		case A_KEY_PRESSED:
+			updatePosition(-positionUpdate, 0, 0);
+			break;
+		case S_KEY_PRESSED:
+			updatePosition(0, 0, positionUpdate);
+			break;
+		case D_KEY_PRESSED:
+			updatePosition(positionUpdate, 0, 0);
+			break;
+		case PAGEUP_KEY_PRESSED:
+			updatePosition(0, positionUpdate, 0);
+			break;
+		case PAGEDOWN_KEY_PRESSED:
+			updatePosition(0, -positionUpdate, 0);
+			break;
+		default:
+			;
+	}
+
+	changeCameraPosition(position, direction);
+}
+
+void PerspectiveCamera::updatePosition(float dX, float dY, float dZ) {
+	position.x += dX;
+	position.y += dY;
+	position.z += dZ;
+}
+
+void PerspectiveCamera::updateDirection(float angle, float x, float y, float z) {
+	glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(x, y, z));
+	glm::vec4 dir(direction, 1);
+	dir = rotation * dir;
+	direction.x = dir.x;
+	direction.y = dir.y;
+	direction.z = dir.z;
 }
