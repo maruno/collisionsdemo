@@ -2,6 +2,6 @@
 
 using namespace modelloader;
 
-VertexBuffer::VertexBuffer(GLuint myVBO, GLuint myIBO, unsigned int myNumIndices)
-	: vBO(myVBO), iBO(myIBO), numIndices(myNumIndices) {
+VertexBuffer::VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices)
+	: vBO(myVBO), iBO(myIBO), nBO(myNBO), numIndices(myNumIndices) {
 }
