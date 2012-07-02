@@ -6,12 +6,11 @@
 
 #include "scene/scenegroup.hpp"
 
+#include "config/globals.hpp"
+
 using namespace scene;
 
 const glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
-
-const float positionUpdate = 10;
-const float directionUpdate = 1;
 
 char PerspectiveCamera::keyPressed = NO_KEY_PRESSED;
 
@@ -43,6 +42,9 @@ void PerspectiveCamera::render() {
 }
 
 void PerspectiveCamera::update() {
+	constexpr float directionUpdate = 1.0f/config::globals::updateRate * config::globals::cameraRotationalSpeed;
+	constexpr float positionUpdate = 1.0f/config::globals::updateRate * config::globals::cameraMovementSpeed;
+	
 	switch(keyPressed) {
 		case UP_KEY_PRESSED:
 			updateDirection(directionUpdate, 1, 0, 0);
