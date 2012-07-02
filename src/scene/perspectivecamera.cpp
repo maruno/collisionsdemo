@@ -51,10 +51,10 @@ void PerspectiveCamera::update() {
 			updateDirection(-directionUpdate, 1, 0, 0);
 			break;
 		case LEFT_KEY_PRESSED:
-			updateDirection(directionUpdate, 0, 0, 1);
+			updateDirection(directionUpdate, 0, 1, 0);
 			break;
 		case RIGHT_KEY_PRESSED:
-			updateDirection(-directionUpdate, 0, 0, 1);
+			updateDirection(-directionUpdate, 0, 1, 0);
 			break;
 		case W_KEY_PRESSED:
 			updatePosition(0, 0, -positionUpdate);
