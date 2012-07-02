@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <utility>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/normal.hpp>
@@ -13,17 +14,6 @@
 using namespace modelloader;
 
 VertexBufferFactory VertexBufferFactory::instance;
-
-struct face {
-	glm::vec3 point1;
-	glm::vec3 point2;
-	glm::vec3 point3;
-};
-
-typedef std::vector<glm::vec3> face_normals;
-
-//map of vertices with surrounding face normals
-typedef std::map<glm::vec3, face_normals> vertex_facenormals;
 
 const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	//Check for VBO in flyweight pool
@@ -98,7 +88,7 @@ void VertexBufferFactory::calculateFaceNormals(vertex_facenormals& vertexNormals
 
 		glm::vec3 faceNormal = glm::triangleNormal(point1, point2, point3);
 
-		vertex_facenormals::iterator itr = vertexNormalsPrep.find(point1);
+		auto itr = vertexNormalsPrep.find(point1);
 		if(itr == vertexNormalsPrep.end()) {
 			face_normals faceNormals;
 			faceNormals.push_back(faceNormal);
@@ -129,17 +119,16 @@ void VertexBufferFactory::calculateFaceNormals(vertex_facenormals& vertexNormals
 
 void VertexBufferFactory::calculateVertexNormals(std::vector<glm::vec3>& vertexNormalsData,
 													const vertex_facenormals& vertexNormalsPrep) {
-	vertex_facenormals::iterator normalsItr;
-	for(normalsItr = vertexNormalsPrep.begin(); normalsItr != vertexNormalsPrep.end(); ++normalsItr) {
-		face_normals faceNormals = normalsItr->second;
+	std::for_each(vertexNormalsPrep.cbegin(), vertexNormalsPrep.cend(), [&](const std::pair<glm::vec3, face_normals>& kvPair) {
+		face_normals faceNormals = kvPair.second;
 
 		glm::vec3 vertexNormal;
 
 		face_normals::iterator faceItr;
-		for(faceItr = faceNormals.begin(); faceItr!=faceNormals.end(); ++faceItr) {
+		for(faceItr = faceNormals.begin(); faceItr != faceNormals.end(); ++faceItr) {
 			vertexNormal += (*faceItr);
 		}
 
 		vertexNormalsData.push_back(vertexNormal);
-	}
+	});
 }
