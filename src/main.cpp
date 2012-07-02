@@ -58,8 +58,6 @@ int main(int argc, char** argv) {
 		cameraPtr->rescale(width, height);
 	});
 
-	cameraPtr->setKeyPressed(scene::PerspectiveCamera::UP_KEY_PRESSED);
-
 	glfwSetKeyCallback([](int key, int action) {
 		switch(key) {
 		case GLFW_KEY_UP:
