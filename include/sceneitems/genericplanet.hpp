@@ -6,8 +6,6 @@
 
 #include "sceneitems/planet.hpp"
 
-#include "modelloader/vertexbuffer.hpp"
-
 namespace sceneitems {
 	class GenericPlanet : public sceneitems::Planet {
 		private:
@@ -18,7 +16,6 @@ namespace sceneitems {
 			 *
 			 * @param initialLocation The initial location of this planet.
 			 * @param mySize Size in 10km-radius increments.
-			 * @param density Density multiplier.
 			 */
 			GenericPlanet(glm::vec3 initialLocation, unsigned int mySize);
 
