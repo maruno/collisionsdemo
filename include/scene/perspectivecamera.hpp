@@ -12,7 +12,7 @@ namespace scene {
 	 *
 	 * @author Michel Bouwmans
 	 */
-	class PerspectiveCamera {
+	class PerspectiveCamera final {
 		public:
 			enum KeyPress {
 				NO_KEY_PRESSED, UP_KEY_PRESSED, DOWN_KEY_PRESSED, LEFT_KEY_PRESSED,
@@ -21,26 +21,26 @@ namespace scene {
 			};
 
 		private:
+			static PerspectiveCamera* instance;
+			
 			glm::mat4 view, projection, viewProjection;
 			static const glm::vec3 up;
 
 			glm::vec3 position;
 			glm::vec3 direction;
 
-			SceneGroup* world;
-
 			static PerspectiveCamera::KeyPress keyPressed;
 
+			PerspectiveCamera();
+			
 			void updatePosition(float dX, float dY, float dZ);
 			void updateDirection(float angle, float x, float y, float z);
 		public:
-			/**
-			 * Constructor
-			 *
-			 * @param myWorld The world that's observed by this camera.
-			 */
-			PerspectiveCamera(SceneGroup* myWorld);
-
+			PerspectiveCamera(const PerspectiveCamera&) = delete;
+			PerspectiveCamera& operator=(const PerspectiveCamera&) = delete;
+			
+			static inline PerspectiveCamera& getInstance();
+			
 			/**
 			 * Call this function when the viewport has been rescaled.
 			 *
@@ -60,7 +60,7 @@ namespace scene {
 			/**
 			 * Render an image using this camera.
 			 */
-			void render();
+			void render(scene::SceneGroup* world);
 
 			/**
 			 * Update the position and direction of the camera.
@@ -71,5 +71,13 @@ namespace scene {
 				keyPressed = key;
 			};
 	};
+	
+	PerspectiveCamera& PerspectiveCamera::getInstance() {
+		if(instance == nullptr) {
+			instance = new PerspectiveCamera;
+		}
+		
+		return *instance;
+	}
 }
 #endif // PERSPECTIVECAMERA_HPP

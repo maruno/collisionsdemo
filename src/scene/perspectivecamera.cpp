@@ -11,10 +11,10 @@
 using namespace scene;
 
 const glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
-
+PerspectiveCamera* PerspectiveCamera::instance;
 PerspectiveCamera::KeyPress PerspectiveCamera::keyPressed = NO_KEY_PRESSED;
 
-PerspectiveCamera::PerspectiveCamera(SceneGroup* myWorld) : world(myWorld), direction(0.0f, 0.0f, -1.0f) {
+PerspectiveCamera::PerspectiveCamera() : direction(0.0f, 0.0f, -1.0f) {
 }
 
 void PerspectiveCamera::rescale(int width, int height) {
@@ -35,7 +35,7 @@ void PerspectiveCamera::changeCameraPosition(glm::vec3 position, glm::vec3 direc
 	viewProjection = projection * view;
 }
 
-void PerspectiveCamera::render() {
+void PerspectiveCamera::render(SceneGroup* world) {
 	world->visitScene([this](std::unique_ptr<SceneItem>& child) {
 		child->render(viewProjection);
 	});

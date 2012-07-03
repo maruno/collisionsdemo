@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
 	//Define world
 	scene::SceneGroup* world = new scene::SceneGroup(3, AABB(std::make_tuple(glm::vec3(-500.0f, -500.0f, 500.0f), glm::vec3(500.0f, 500.0f, -500.0f))));
 	
-	cameraPtr = new scene::PerspectiveCamera(world);
+	cameraPtr = &(scene::PerspectiveCamera::getInstance());
 	scene::SceneManager sceneManager(cameraPtr, world);
 
 	cameraPtr->changeCameraPosition(glm::vec3(20.0f, 0.0f, 150.0f), glm::vec3(0.0f, 0.0f, -1.0f));
