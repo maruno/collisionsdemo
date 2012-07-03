@@ -32,6 +32,13 @@ namespace modelloader {
 			inline GLuint getVBO() const;
 
 			/**
+			 * Request the Normal Buffer Object.
+			 *
+			 * @return Normal Buffer Object identifier.
+			 */
+			inline GLuint getNBO() const;
+
+			/**
 			 * Request the Indice Buffer Object.
 			 *
 			 * @return Indice Buffer Object identifier.
@@ -48,6 +55,10 @@ namespace modelloader {
 
 	GLuint VertexBuffer::getVBO() const {
 		return vBO;
+	}
+
+	GLuint VertexBuffer::getNBO() const {
+		return nBO;
 	}
 
 	GLuint VertexBuffer::getIBO() const {
