@@ -6,8 +6,6 @@
 namespace modelloader {
 	/**
 	 * Wrapper class that represents a vertex buffer collection.
-	 *
-	 * TODO Convert to VAO structure!?
 	 */
 	class VertexBuffer {
 		private:
