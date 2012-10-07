@@ -23,7 +23,7 @@ namespace scene {
 		private:
 			static PerspectiveCamera* instance;
 			
-			glm::mat4 view, projection, viewProjection;
+			glm::mat4 view, projection;
 			static const glm::vec3 up;
 
 			glm::vec3 position;
@@ -70,6 +70,10 @@ namespace scene {
 			void setKeyPressed(KeyPress key) {
 				keyPressed = key;
 			};
+			
+			inline const glm::vec3& getPosition();
+			
+			inline const glm::mat4& getProjectionMatrix();
 	};
 	
 	PerspectiveCamera& PerspectiveCamera::getInstance() {
@@ -78,6 +82,14 @@ namespace scene {
 		}
 		
 		return *instance;
+	}
+	
+	const glm::vec3& PerspectiveCamera::getPosition() {
+		return position;
+	}
+	
+	const glm::mat4& PerspectiveCamera::getProjectionMatrix() {
+		return projection;
 	}
 }
 #endif // PERSPECTIVECAMERA_HPP

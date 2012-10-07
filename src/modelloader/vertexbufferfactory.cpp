@@ -63,12 +63,12 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 }
 
 void VertexBufferFactory::calculateFaceNormals(vertex_facenormals& vertexNormalsPrep,
-												const std::vector<float>& verticesData,
-												const std::vector<unsigned int>& indicesData) {
+		const std::vector<float>& verticesData,
+		const std::vector<unsigned int>& indicesData) {
 	for(int index = 0; index < indicesData.size(); index += 3) {
-		unsigned int point1ID = indicesData[index];
-		unsigned int point2ID = indicesData[index+1];
-		unsigned int point3ID = indicesData[index+2];
+		unsigned int point1ID = indicesData[index] * 3;
+		unsigned int point2ID = indicesData[index+1] * 3;
+		unsigned int point3ID = indicesData[index+2] * 3;
 
 		glm::vec3 point1;
 		glm::vec3 point2;
@@ -118,11 +118,11 @@ void VertexBufferFactory::calculateFaceNormals(vertex_facenormals& vertexNormals
 }
 
 void VertexBufferFactory::calculateVertexNormals(std::vector<glm::vec3>& vertexNormalsData,
-													const vertex_facenormals& vertexNormalsPrep) {
+		const vertex_facenormals& vertexNormalsPrep) {
 	std::for_each(vertexNormalsPrep.cbegin(), vertexNormalsPrep.cend(), [&](const std::pair<glm::vec3, face_normals>& kvPair) {
 		face_normals faceNormals = kvPair.second;
 
-		glm::vec3 vertexNormal;
+		glm::vec3 vertexNormal(0.0f);
 
 		face_normals::iterator faceItr;
 		for(faceItr = faceNormals.begin(); faceItr != faceNormals.end(); ++faceItr) {

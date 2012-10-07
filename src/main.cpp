@@ -16,8 +16,10 @@
 #include "scene/scenegroup.hpp"
 
 #include "sceneitems/genericplanet.hpp"
+#include "sceneitems/star.hpp"
 
 #include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
+#include <render/sources.hpp>
 
 typedef scene::collisiondetection::AxisAlignedBoundingCuboid AABB;
 
@@ -141,16 +143,20 @@ int main(int argc, char** argv) {
 		}
 	});
 
-	scene::SceneItem* planeta = new sceneitems::GenericPlanet(glm::vec3(0.0f, 0.0f, 0.0f), 16.0f);
-	scene::SceneItem* planetb = new sceneitems::GenericPlanet(glm::vec3(150.0f, 0.0f, -12.0f), 16.0f);
-	scene::SceneItem* planetc = new sceneitems::GenericPlanet(glm::vec3(-35.0f, 45.0f, 0.0f), 20.0f);
-	scene::SceneItem* planetd = new sceneitems::GenericPlanet(glm::vec3(0.0f, -45.0f, 30.0f), 5.0f);
+	//Planets
+	scene::SceneItem* planeta = new sceneitems::GenericPlanet(glm::vec3(-200.0f, 0.0f, -25.0f), 16.0f);
+	scene::SceneItem* planetb = new sceneitems::GenericPlanet(glm::vec3(250.0f, 0.0f, -125.0f), 16.0f);
+	scene::SceneItem* planetc = new sceneitems::GenericPlanet(glm::vec3(-35.0f, 350.0f, 0.0f), 20.0f);
+	scene::SceneItem* planetd = new sceneitems::GenericPlanet(glm::vec3(0.0f, -45.0f, 400.0f), 5.0f);
 
+	//Stars
+	scene::SceneItem* stara = new sceneitems::Star(glm::vec3(0.0f, 0.0f, 0.0f), 150.0f);
 
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planeta));
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planetb));
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planetc));
 	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(planetd));
+	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(stara));
 
 	//Start main render loop
 	sceneManager.startSceneLoop();

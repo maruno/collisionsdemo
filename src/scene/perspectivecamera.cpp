@@ -7,6 +7,7 @@
 #include "scene/scenegroup.hpp"
 
 #include "config/globals.hpp"
+#include "render/sources.hpp"
 
 using namespace scene;
 
@@ -22,22 +23,20 @@ void PerspectiveCamera::rescale(int width, int height) {
 
 	//HOR+
 	//The approximate field of view of a human eye is 95° out, 75° down, 60° in, 60° up
-	projection = glm::perspective<float>(60.0f, static_cast<float>(width)/height, 0.3f, 200.0f);
-
-	viewProjection = projection * view;
+	projection = glm::perspective<float>(60.0f, static_cast<float>(width)/height, 0.3f, 1000.0f);
 }
 
 void PerspectiveCamera::changeCameraPosition(glm::vec3 position, glm::vec3 direction) {
+	render::Sources::getInstance().cameraMoved();
+	
 	glm::vec3 lookAtCenter =  position + direction;
 
 	view = glm::lookAt<float>(position, lookAtCenter, glm::vec3(0.0f, 1.0f, 0.0f));
-
-	viewProjection = projection * view;
 }
 
 void PerspectiveCamera::render(SceneGroup* world) {
 	world->visitScene([this](std::unique_ptr<SceneItem>& child) {
-		child->render(viewProjection);
+		child->render(view);
 	});
 }
 

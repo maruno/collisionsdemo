@@ -10,7 +10,8 @@ namespace config {
 		constexpr unsigned int initialHeight = 768;
 		constexpr unsigned short multiSamples = 8;
 		constexpr unsigned short cameraMovementSpeed = 2;
-		constexpr float cameraRotationalSpeed = 0.1f;
+		constexpr float cameraRotationalSpeed = 0.5f;
+		constexpr float ambianceLight = 0.05f;
 	}
 }
 

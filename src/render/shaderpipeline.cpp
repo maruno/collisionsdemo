@@ -21,8 +21,8 @@ void render::ShaderPipeLine::checkLinkError(const GLuint shader) const {
 		GLint maxLength;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
-		char infoLog[maxLength];
-		glGetProgramInfoLog(shader, maxLength, &maxLength, infoLog);
+		volatile char* infoLog = new char[maxLength];
+		glGetProgramInfoLog(shader, maxLength, &maxLength, (char*) infoLog);
 
 		//TODO Omzetten naar logging!
 		std::cerr << "Shader link error:" << std::endl << infoLog << std::endl;

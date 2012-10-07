@@ -1,9 +1,6 @@
-#include "sceneitems/genericplanet.hpp"
+#include "sceneitems/star.hpp"
 
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include "modelloader/vertexbufferfactory.hpp"
+#include <mutex>
 
 #include "render/shaderpipeline.hpp"
 #include "render/matrixuniform.hpp"
@@ -12,12 +9,13 @@
 
 using namespace sceneitems;
 
-GenericPlanet::GenericPlanet(glm::vec3 initialLocation, unsigned int mySize)
-	: sceneitems::Planet(initialLocation, mySize, 1.0f) {
-	//Set colour to blue
+Star::Star(glm::vec3 initialLocation, unsigned int mySize)
+	: sceneitems::Planet(initialLocation, mySize, 2.5f) {
+	//Set colour to light yellow
 	glGenBuffers(1, &colourUBO);
 	glBindBuffer(GL_UNIFORM_BUFFER, colourUBO);
-	render::ColourInformationUniform colourInfo(glm::vec3(0.0f, 0.0f, 255.0f), 2);
+	render::ColourInformationUniform colourInfo(glm::vec3(255.0f, 254.0f, 176.0f), 0);
+	colourInfo.ambiance = glm::vec3(0.8f);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(render::ColourInformationUniform), &colourInfo, GL_STATIC_DRAW);
 
 	//Create and link shader-pipeline
@@ -30,9 +28,19 @@ GenericPlanet::GenericPlanet(glm::vec3 initialLocation, unsigned int mySize)
 
 	shaderPipe.linkPipeLine();
 	shaderProgram = shaderPipe.getShaderProgram();
+
+	lightSourceId = render::Sources::getInstance().addLightSource(location, 0.5f);
 }
 
-void GenericPlanet::render(glm::mat4& parentMatrix) const {
+void Star::update() {
+	Planet::update();
+
+	std::lock_guard<std::mutex> guard(locationMutex);
+
+	render::Sources::getInstance().moveLightSource(lightSourceId, location);
+}
+
+void Star::render(glm::mat4& parentMatrix) const {
 	//Update the MVP-matrix and buffer this to the UBO
 	matrixMutex.lock();
 	glm::mat4 mVMatrix = parentMatrix * modelMatrix;

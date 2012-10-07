@@ -19,7 +19,7 @@ namespace sceneitems {
 			const modelloader::VertexBuffer& vBuffers;
 			static GLuint vao;
 		public:
-			Planet(glm::vec3 initialLocation, unsigned int mySize, unsigned int density);
+			Planet(glm::vec3 initialLocation, unsigned int mySize, float density);
 			
 			virtual void render(glm::mat4& parentMatrix) const override = 0;
 			virtual void move() override;

@@ -17,8 +17,8 @@ void render::ShaderFactory::checkShaderError(GLuint shader) {
 		GLint maxLength;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
-		char infoLog[maxLength];
-		glGetShaderInfoLog(shader, maxLength, &maxLength, infoLog);
+		volatile char* infoLog = new char[maxLength];
+		glGetShaderInfoLog(shader, maxLength, &maxLength, (GLchar*)infoLog);
 
 		//TODO Omzetten naar logging!
 		std::cerr << "Shader compile error:" << std::endl << infoLog << std::endl;
