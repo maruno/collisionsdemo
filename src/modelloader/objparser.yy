@@ -7,7 +7,7 @@
 %define namespace "modelloader"
 %define parser_class_name "ObjParser"
 
-%parse-param {std::vector<float>& verticesData}
+%parse-param {std::vector<glm::vec3>& verticesData}
 %parse-param {std::vector<unsigned int>& indicesData}
 %parse-param {std::tuple<glm::vec3, glm::vec3>& extremes}
 %parse-param {modelloader::ObjLexer& lexer}
@@ -38,7 +38,7 @@
 	static int yylex(modelloader::ObjParser::semantic_type* yylval, modelloader::ObjParser::location_type* yylloc,
 			modelloader::ObjLexer& lexer);
 	
-	void addVertex(float x, float y, float z, std::vector<float>& verticesData, std::tuple<glm::vec3, glm::vec3>& extremes);
+	void addVertex(float x, float y, float z, std::vector<glm::vec3>& verticesData, std::tuple<glm::vec3, glm::vec3>& extremes);
 }
 
 %token NL VERTEX FACE FLOAT INTEGER INDEXDELIMITER
@@ -77,9 +77,7 @@ vertex : VERTEX FLOAT FLOAT FLOAT {
 		extremes = std::tuple<glm::vec3, glm::vec3>(currentMinExtreme, newMaxExtreme);
 	}
 	
-	verticesData.push_back(x);
-	verticesData.push_back(y);
-	verticesData.push_back(z);
+	verticesData.emplace_back(x, y, z);
 };
 
 face : FACE INTEGER INTEGER INTEGER {

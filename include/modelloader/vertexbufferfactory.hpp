@@ -12,12 +12,6 @@
 
 namespace modelloader {
 
-struct face {
-	glm::vec3 point1;
-	glm::vec3 point2;
-	glm::vec3 point3;
-};
-
 struct vec3Comparator {
 	bool operator() (const glm::vec3& lhs, const glm::vec3& rhs) const {
 		bool less = false;
@@ -30,11 +24,6 @@ struct vec3Comparator {
 		return less;
 	}
 };
-
-typedef std::vector<glm::vec3> face_normals;
-
-//map of vertices with surrounding face normals
-typedef std::map<glm::vec3, face_normals, vec3Comparator> vertex_facenormals;
 
 	/**
 	 * Factory class for vertex buffers.
@@ -49,12 +38,9 @@ typedef std::map<glm::vec3, face_normals, vec3Comparator> vertex_facenormals;
 			std::map<const std::string, VertexBuffer> vbopool;
 
 			static VertexBufferFactory instance;
-			VertexBufferFactory() {};
-			void calculateFaceNormals(vertex_facenormals& vertexNormalsPrep,
-										const std::vector<float>& verticesData,
-										const std::vector<unsigned int>& indicesData);
-			void calculateVertexNormals(std::vector<glm::vec3>& vertexNormalsData,
-										const vertex_facenormals& vertexNormalsPrep);
+			VertexBufferFactory() = default;
+			
+			std::vector<glm::vec3> calculateVertexNormals(std::vector<unsigned int>& indicesData, std::vector<glm::vec3>& verticesData);
 		public:
 			/**
 			 * Access a vertex buffer by name.
