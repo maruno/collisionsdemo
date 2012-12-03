@@ -58,6 +58,6 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	return vbopool.at(objName);
 }
 
-std::vector<glm::vec3> VertexBufferFactory::calculateVertexNormals(std::vector<unsigned int>& indicesData, std::vector<glm::vec3>& verticesData) {
+std::vector<glm::vec3> VertexBufferFactory::calculateVertexNormals(const std::vector<unsigned int>& indicesData, const std::vector<glm::vec3>& verticesData) {
 	
 }

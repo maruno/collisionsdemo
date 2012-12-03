@@ -40,7 +40,7 @@ struct vec3Comparator {
 			static VertexBufferFactory instance;
 			VertexBufferFactory() = default;
 			
-			std::vector<glm::vec3> calculateVertexNormals(std::vector<unsigned int>& indicesData, std::vector<glm::vec3>& verticesData);
+			std::vector<glm::vec3> calculateVertexNormals(const std::vector<unsigned int>& indicesData, const std::vector<glm::vec3>& verticesData);
 		public:
 			/**
 			 * Access a vertex buffer by name.
