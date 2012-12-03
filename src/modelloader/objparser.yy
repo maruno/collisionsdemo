@@ -81,9 +81,9 @@ vertex : VERTEX FLOAT FLOAT FLOAT {
 };
 
 face : FACE INTEGER INTEGER INTEGER {
-	indicesData.push_back(boost::lexical_cast<unsigned int>($2));
-	indicesData.push_back(boost::lexical_cast<unsigned int>($3));
-	indicesData.push_back(boost::lexical_cast<unsigned int>($4));
+	indicesData.push_back(boost::lexical_cast<unsigned int>($2)-1);
+	indicesData.push_back(boost::lexical_cast<unsigned int>($3)-1);
+	indicesData.push_back(boost::lexical_cast<unsigned int>($4)-1);
 };
 
 %%
