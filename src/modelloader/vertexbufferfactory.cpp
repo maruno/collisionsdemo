@@ -59,5 +59,28 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 }
 
 std::vector<glm::vec3> VertexBufferFactory::calculateVertexNormals(const std::vector<unsigned int>& indicesData, const std::vector<glm::vec3>& verticesData) {
+	std::map<glm::vec3, glm::vec3, Vec3Comparator> vertexNormalsMap;
 	
+	for(auto it = indicesData.cbegin(); it != indicesData.cend(); ++it) {
+		const glm::vec3& p1 = verticesData.at(*it);
+		const glm::vec3& p2 = verticesData.at(*++it);
+		const glm::vec3& p3 = verticesData.at(*++it);
+		
+		glm::vec3 faceNormal = glm::triangleNormal(p1, p2, p3);
+		
+		vertexNormalsMap[p1] += faceNormal;
+		vertexNormalsMap[p2] += faceNormal;
+		vertexNormalsMap[p3] += faceNormal;
+	}
+	
+	std::vector<glm::vec3> vertexNormals;
+	
+	std::for_each(indicesData.begin(), indicesData.end(), [&](const unsigned int& idx){
+		const glm::vec3& vertex = verticesData.at(idx);
+		const glm::vec3& vertexNormal = vertexNormalsMap.at(vertex);
+		
+		vertexNormals.push_back(vertexNormal);
+	});
+	
+	return std::move(vertexNormals);
 }

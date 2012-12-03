@@ -12,7 +12,7 @@
 
 namespace modelloader {
 
-struct vec3Comparator {
+struct Vec3Comparator {
 	bool operator() (const glm::vec3& lhs, const glm::vec3& rhs) const {
 		bool less = false;
 		if(lhs.x < rhs.x)
