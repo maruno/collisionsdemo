@@ -11,20 +11,6 @@
 #include "modelloader/vertexbuffer.hpp"
 
 namespace modelloader {
-
-struct Vec3Comparator {
-	bool operator() (const glm::vec3& lhs, const glm::vec3& rhs) const {
-		bool less = false;
-		if(lhs.x < rhs.x)
-			less = true;
-		else if(lhs.y < rhs.y)
-			less = true;
-		else if(lhs.z < rhs.z)
-			less = true;
-		return less;
-	}
-};
-
 	/**
 	 * Factory class for vertex buffers.
 	 *

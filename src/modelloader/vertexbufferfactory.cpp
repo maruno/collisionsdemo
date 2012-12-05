@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <utility>
 
 #include <glm/glm.hpp>
@@ -10,6 +10,8 @@
 
 #include "src/modelloader/objparser.yy.hpp"
 #include "modelloader/objlexer.hpp"
+
+#include "util/hash.hpp"
 
 using namespace modelloader;
 
@@ -59,7 +61,7 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 }
 
 std::vector<glm::vec3> VertexBufferFactory::calculateVertexNormals(const std::vector<unsigned int>& indicesData, const std::vector<glm::vec3>& verticesData) {
-	std::map<glm::vec3, glm::vec3, Vec3Comparator> vertexNormalsMap;
+	std::unordered_map<glm::vec3, glm::vec3> vertexNormalsMap;
 	
 	for(auto it = indicesData.cbegin(); it != indicesData.cend(); ++it) {
 		const glm::vec3& p1 = verticesData.at(*it);
