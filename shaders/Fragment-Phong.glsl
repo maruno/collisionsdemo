@@ -57,5 +57,5 @@ void main(void) {
 		}
 	}
 	
-	fragColour = vec4(N, 1.);
+	fragColour = vec4(Ir, 1.);
 }
