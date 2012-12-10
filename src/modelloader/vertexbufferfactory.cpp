@@ -44,7 +44,7 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bos[1]);
 
 	//Buffer vertices to VBO
-	glBufferData(GL_ARRAY_BUFFER, verticesData.size() * sizeof(float), &(verticesData.front()), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verticesData.size() * sizeof(glm::vec3), &(verticesData.front()), GL_STATIC_DRAW);
 
 	//Buffer indices to IBO
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesData.size() * sizeof(unsigned int), &(indicesData.front()), GL_STATIC_DRAW);
