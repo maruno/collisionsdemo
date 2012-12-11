@@ -1,42 +1,36 @@
-#ifndef SOURCES_HPP
-#define SOURCES_HPP
+#ifndef LIGHTMANAGER_HPP
+#define LIGHTMANAGER_HPP
 
 #include <stdexcept>
+#include <array>
 
 #include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
 
 namespace render {
-	struct SourcesUni {
-		glm::vec3 viewSource;
-		int padding;
-		glm::vec4 lightSource[10]; //a = Intensity of incident light
-	};
-
 	class MaxLightsReached : public std::runtime_error {
 		public:
 			MaxLightsReached() : runtime_error("The maximum number of lights (10) has been reached.") {};
 	};
 	
-	class Sources final {
+	class LightManager final {
 		private:
-			static Sources* instance;
+			static LightManager* instance;
 			
-			SourcesUni sourcesUni;
+			std::array<glm::vec4, 10> lightSources; //a = Intensity of incident light
 			unsigned int numLightSources;
 			
 			GLuint uBO;
-			
 			bool needsUpload;
 			
-			Sources();
+			LightManager();
 		public:
-			Sources(const Sources&) = delete;
-			Sources& operator=(const Sources&) = delete;
+			LightManager(const LightManager&) = delete;
+			LightManager& operator=(const LightManager&) = delete;
 			
-			static inline Sources& getInstance();
+			static inline LightManager& getInstance();
 			
-			void cameraMoved();
+			//void cameraMoved();
 			
 			unsigned int addLightSource(const glm::vec3& lightLocation, float lightIntensity);
 			void moveLightSource(unsigned int lightSourceId, const glm::vec3& lightLocation);
@@ -46,17 +40,17 @@ namespace render {
 			inline GLuint getUBO();
 	};
 	
-	Sources& Sources::getInstance() {
+	LightManager& LightManager::getInstance() {
 		if(instance == nullptr) {
-			instance = new Sources;
+			instance = new LightManager;
 		}
 		
 		return *instance;
 	}
 	
-	GLuint Sources::getUBO() {
+	GLuint LightManager::getUBO() {
 		return uBO;
 	}
 }
 
-#endif // SOURCES_HPP
+#endif // LIGHTMANAGER_HPP

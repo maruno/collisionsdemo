@@ -19,7 +19,6 @@
 #include "sceneitems/star.hpp"
 
 #include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
-#include <render/sources.hpp>
 
 typedef scene::collisiondetection::AxisAlignedBoundingCuboid AABB;
 

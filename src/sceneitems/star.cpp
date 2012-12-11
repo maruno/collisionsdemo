@@ -5,7 +5,7 @@
 #include "render/shaderpipeline.hpp"
 #include "render/matrixuniform.hpp"
 #include "render/colourinformationuniform.hpp"
-#include "render/sources.hpp"
+#include "render/lightmanager.hpp"
 
 using namespace sceneitems;
 
@@ -24,12 +24,13 @@ Star::Star(glm::vec3 initialLocation, unsigned int mySize)
 	shaderPipe.addShaderAttribute("normal");
 	shaderPipe.setShaderUniform("matrixUni");
 	shaderPipe.setShaderUniform("colourInformationUni");
-	shaderPipe.setShaderUniform("sourcesUni");
+	shaderPipe.setShaderUniform("lightsUni");
+	shaderPipe.setShaderUniform("cameraUni");
 
 	shaderPipe.linkPipeLine();
 	shaderProgram = shaderPipe.getShaderProgram();
 
-	lightSourceId = render::Sources::getInstance().addLightSource(location, 0.5f);
+	lightSourceId = render::LightManager::getInstance().addLightSource(location, 0.5f);
 }
 
 void Star::update() {
@@ -37,7 +38,7 @@ void Star::update() {
 
 	std::lock_guard<std::mutex> guard(locationMutex);
 
-	render::Sources::getInstance().moveLightSource(lightSourceId, location);
+	render::LightManager::getInstance().moveLightSource(lightSourceId, location);
 }
 
 void Star::render(glm::mat4& parentMatrix) const {
@@ -57,7 +58,8 @@ void Star::render(glm::mat4& parentMatrix) const {
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, 1, matrixUBO);
 	glBindBufferBase(GL_UNIFORM_BUFFER, 2, colourUBO);
-	glBindBufferBase(GL_UNIFORM_BUFFER, 3, render::Sources::getInstance().getUBO());
+	glBindBufferBase(GL_UNIFORM_BUFFER, 3, render::LightManager::getInstance().getUBO());
+	glBindBufferBase(GL_UNIFORM_BUFFER, 4, scene::PerspectiveCamera::getInstance().getUBO());
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vBuffers.getIBO());
 	glDrawElements(GL_TRIANGLES, vBuffers.getNumIndices(), GL_UNSIGNED_INT, 0);

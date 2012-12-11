@@ -7,7 +7,7 @@
 #include "scene/scenegroup.hpp"
 
 #include "config/globals.hpp"
-#include "render/sources.hpp"
+#include "render/lightmanager.hpp"
 
 using namespace scene;
 
@@ -15,7 +15,8 @@ const glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
 PerspectiveCamera* PerspectiveCamera::instance;
 PerspectiveCamera::KeyPress PerspectiveCamera::keyPressed = NO_KEY_PRESSED;
 
-PerspectiveCamera::PerspectiveCamera() : direction(0.0f, 0.0f, -1.0f) {
+PerspectiveCamera::PerspectiveCamera() : direction{0.0f, 0.0f, -1.0f}, needsUpload{true} {
+	glGenBuffers(1, &uBO);
 }
 
 void PerspectiveCamera::rescale(int width, int height) {
@@ -27,14 +28,14 @@ void PerspectiveCamera::rescale(int width, int height) {
 }
 
 void PerspectiveCamera::changeCameraPosition(glm::vec3 position, glm::vec3 direction) {
-	render::Sources::getInstance().cameraMoved();
-	
 	glm::vec3 lookAtCenter =  position + direction;
 
 	view = glm::lookAt<float>(position, lookAtCenter, glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void PerspectiveCamera::render(SceneGroup* world) {
+	upload();
+	
 	world->visitScene([this](std::unique_ptr<SceneItem>& child) {
 		child->render(view);
 	});
@@ -80,6 +81,15 @@ void PerspectiveCamera::update() {
 	}
 
 	changeCameraPosition(position, direction);
+}
+
+void PerspectiveCamera::upload() {
+	if(needsUpload) {
+		glBindBuffer(GL_UNIFORM_BUFFER, uBO);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec3), &position, GL_DYNAMIC_DRAW);
+		
+		needsUpload = false;
+	}
 }
 
 void PerspectiveCamera::updatePosition(float dX, float dY, float dZ) {

@@ -12,7 +12,7 @@
 
 #include "scene/collisiondetection/collisiondetector.hpp"
 
-#include "render/sources.hpp"
+#include "render/lightmanager.hpp"
 
 #include "config/globals.hpp"
 
@@ -62,7 +62,7 @@ void SceneManager::startSceneLoop() {
 	while(true) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		render::Sources::getInstance().upload();
+		render::LightManager::getInstance().upload();
 		camera->render(world);
 
 		glfwSwapBuffers();

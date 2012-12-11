@@ -2,9 +2,12 @@
 
 layout(std140) uniform;
 
-uniform sourcesUni {
-	vec3 viewSource;
+uniform lightsUni {
 	vec4 lightSource[10];
+};
+
+uniform cameraUni {
+	vec3 viewSource;
 };
 
 uniform colourInformationUni {

@@ -1,6 +1,7 @@
 #ifndef PERSPECTIVECAMERA_HPP
 #define PERSPECTIVECAMERA_HPP
 
+#include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
 
 namespace scene {
@@ -31,7 +32,12 @@ namespace scene {
 
 			static PerspectiveCamera::KeyPress keyPressed;
 
+			GLuint uBO;
+			bool needsUpload;
+			
 			PerspectiveCamera();
+			
+			void upload();
 			
 			void updatePosition(float dX, float dY, float dZ);
 			void updateDirection(float angle, float x, float y, float z);
@@ -62,6 +68,8 @@ namespace scene {
 			 */
 			void render(scene::SceneGroup* world);
 
+			inline GLuint getUBO();
+			
 			/**
 			 * Update the position and direction of the camera.
 			 */
@@ -90,6 +98,10 @@ namespace scene {
 	
 	const glm::mat4& PerspectiveCamera::getProjectionMatrix() {
 		return projection;
+	}
+	
+	GLuint PerspectiveCamera::getUBO() {
+		return uBO;
 	}
 }
 #endif // PERSPECTIVECAMERA_HPP
