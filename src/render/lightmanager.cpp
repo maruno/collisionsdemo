@@ -23,7 +23,7 @@ unsigned int LightManager::addLightSource(const glm::vec3& lightLocation, float 
 	
 	numLightSources++;
 	
-	lightSources[numLightSources] = glm::vec4(lightLocation, lightIntensity);
+	lightSources[numLightSources-1] = glm::vec4(lightLocation, lightIntensity);
 	
 	needsUpload = true;
 	
