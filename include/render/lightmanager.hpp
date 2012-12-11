@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <array>
+#include <memory>
 
 #include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
@@ -15,7 +16,7 @@ namespace render {
 	
 	class LightManager final {
 		private:
-			static LightManager* instance;
+			static std::unique_ptr<LightManager> instance;
 			
 			std::array<glm::vec4, 10> lightSources; //a = Intensity of incident light
 			unsigned int numLightSources;
@@ -42,7 +43,7 @@ namespace render {
 	
 	LightManager& LightManager::getInstance() {
 		if(instance == nullptr) {
-			instance = new LightManager;
+			instance.reset(new LightManager);
 		}
 		
 		return *instance;

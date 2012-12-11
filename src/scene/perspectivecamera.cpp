@@ -12,7 +12,7 @@
 using namespace scene;
 
 const glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
-PerspectiveCamera* PerspectiveCamera::instance;
+std::unique_ptr<PerspectiveCamera> PerspectiveCamera::instance;
 PerspectiveCamera::KeyPress PerspectiveCamera::keyPressed = NO_KEY_PRESSED;
 
 PerspectiveCamera::PerspectiveCamera() : direction{0.0f, 0.0f, -1.0f}, needsUpload{true} {

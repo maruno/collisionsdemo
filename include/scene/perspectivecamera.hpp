@@ -1,6 +1,8 @@
 #ifndef PERSPECTIVECAMERA_HPP
 #define PERSPECTIVECAMERA_HPP
 
+#include <memory>
+
 #include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
 
@@ -22,7 +24,7 @@ namespace scene {
 			};
 
 		private:
-			static PerspectiveCamera* instance;
+			static std::unique_ptr<PerspectiveCamera> instance;
 			
 			glm::mat4 view, projection;
 			static const glm::vec3 up;
@@ -86,7 +88,7 @@ namespace scene {
 	
 	PerspectiveCamera& PerspectiveCamera::getInstance() {
 		if(instance == nullptr) {
-			instance = new PerspectiveCamera;
+			instance.reset(new PerspectiveCamera);
 		}
 		
 		return *instance;

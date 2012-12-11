@@ -4,7 +4,7 @@
 
 using namespace render;
 
-LightManager* LightManager::instance;
+std::unique_ptr<LightManager> LightManager::instance;
 
 LightManager::LightManager(): needsUpload(true), numLightSources(0) {
 	glGenBuffers(1, &uBO);
