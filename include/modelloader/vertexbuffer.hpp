@@ -10,6 +10,7 @@ namespace modelloader {
 	class VertexBuffer {
 		private:
 			GLuint vBO, iBO, nBO;
+			GLuint vao;
 			unsigned int numIndices;
 
 		public:
@@ -49,6 +50,11 @@ namespace modelloader {
 			 * @return Number of indices.
 			 */
 			inline unsigned int getNumIndices() const;
+			
+			/**
+			 * Bind the buffers from this vertex buffer collection for use.
+			 */
+			void bindBuffers() const;
 	};
 
 	GLuint VertexBuffer::getVBO() const {

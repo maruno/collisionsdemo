@@ -53,7 +53,7 @@ void Star::render(glm::mat4& parentMatrix) const {
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(render::MatrixUniform), &matrixUni, GL_DYNAMIC_DRAW);
 
 	//Actual rendering calls
-	glBindVertexArray(vao);
+	vBuffers.bindBuffers();
 	glUseProgram(shaderProgram);
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, 1, matrixUBO);
@@ -61,6 +61,5 @@ void Star::render(glm::mat4& parentMatrix) const {
 	glBindBufferBase(GL_UNIFORM_BUFFER, 3, render::LightManager::getInstance().getUBO());
 	glBindBufferBase(GL_UNIFORM_BUFFER, 4, scene::PerspectiveCamera::getInstance().getUBO());
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vBuffers.getIBO());
 	glDrawElements(GL_TRIANGLES, vBuffers.getNumIndices(), GL_UNSIGNED_INT, 0);
 }

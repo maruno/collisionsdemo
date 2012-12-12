@@ -27,7 +27,7 @@ namespace scene {
 			 *
 			 * @param myMass Mass of this item.
 			 */
-			GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, collisiondetection::BoundingVolume& myBounds);
+			GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName, scene::collisiondetection::BoundingVolume& myBounds);
 
 			/**
 			 * Request the mass.

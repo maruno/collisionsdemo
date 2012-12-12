@@ -15,9 +15,7 @@ namespace sceneitems {
 		private:
 			unsigned int size;
 			scene::collisiondetection::BoundingSphere bSphere;
-		protected:
-			const modelloader::VertexBuffer& vBuffers;
-			static GLuint vao;
+
 		public:
 			Planet(glm::vec3 initialLocation, unsigned int mySize, float density);
 			

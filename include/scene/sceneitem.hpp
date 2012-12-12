@@ -9,6 +9,8 @@
 
 #include "scene/collisiondetection/boundingvolume.hpp"
 
+#include "modelloader/vertexbuffer.hpp"
+
 namespace scene {
 
 	/**
@@ -24,7 +26,8 @@ namespace scene {
 			GLuint matrixUBO;
 			GLuint shaderProgram;
 
-			collisiondetection::BoundingVolume& bounds;
+			const modelloader::VertexBuffer& vBuffers;
+			const collisiondetection::BoundingVolume& bounds;
 
 			mutable std::mutex locationMutex;
 			mutable std::recursive_mutex matrixMutex;
@@ -35,7 +38,7 @@ namespace scene {
 			 * @param initialLocation The initial location for this item.
 			 * @param myBounds Bounding volume for this item.
 			 */
-			SceneItem(glm::vec3 initialLocation, collisiondetection::BoundingVolume& myBounds);
+			SceneItem(glm::vec3 initialLocation, std::string objectName, scene::collisiondetection::BoundingVolume& myBounds);
 
 			/**
 			 * Called every update-tick.
@@ -64,7 +67,7 @@ namespace scene {
 			 *
 			 * @return Bounding volume for this item.
 			 */
-			inline collisiondetection::BoundingVolume& getBounds();
+			inline const collisiondetection::BoundingVolume& getBounds() const;
 
 			/**
 			 * Get the matrix mutex for this item.
@@ -82,7 +85,7 @@ namespace scene {
 		return lastLocation;
 	}
 
-	collisiondetection::BoundingVolume& SceneItem::getBounds() {
+	const collisiondetection::BoundingVolume& SceneItem::getBounds() const {
 		return bounds;
 	}
 

@@ -1,11 +1,13 @@
 #include "scene/gravitationalobject.hpp"
 
+#include <string>
+
 #include "config/globals.hpp"
 
 using namespace scene;
 
-GravitationalObject::GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, collisiondetection::BoundingVolume& myBounds)
-	: SceneItem(initialLocation, myBounds), mass(myMass) {
+GravitationalObject::GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName, collisiondetection::BoundingVolume& myBounds)
+	: SceneItem(initialLocation, objectName, myBounds), mass(myMass) {
 }
 
 void GravitationalObject::update() {
