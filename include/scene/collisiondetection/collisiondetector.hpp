@@ -20,13 +20,15 @@ namespace scene {
 		/**
 		 * Returns true when the bounding volumes collide.
 		 */
-		bool intersects(BoundingVolume& a, BoundingVolume& b);
+		bool intersects(const BoundingVolume& a, const BoundingVolume& b);
 
-		bool intersects(BoundingSphere& a, BoundingSphere& b);
+		bool intersects(const scene::collisiondetection::BoundingVolume& a, const scene::collisiondetection::BoundingVolume& b);
 
-		bool intersects(AxisAlignedBoundingCuboid& a, AxisAlignedBoundingCuboid& b);
+		bool intersects(const AxisAlignedBoundingCuboid& a, const AxisAlignedBoundingCuboid& b);
 
-		bool intersects(AxisAlignedBoundingCuboid& cuboid, BoundingSphere& sphere);
+		bool intersects(const BoundingSphere& a, const BoundingSphere& b);
+
+		bool intersects(const AxisAlignedBoundingCuboid& cuboid, const BoundingSphere& sphere);
 	}
 }
 

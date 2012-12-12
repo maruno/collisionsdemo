@@ -20,13 +20,12 @@ namespace scene {
 			public:
 				AxisAlignedBoundingCuboid(std::tuple<glm::vec3, glm::vec3> diagonal);
 				virtual ~AxisAlignedBoundingCuboid();
-				glm::vec3* getPoints(){ return points; };
-				float getMinX(){ return points[0].x; };
-				float getMinY(){ return points[2].y; };
-				float getMinZ(){ return points[4].z; };
-				float getMaxX(){ return points[1].x; };
-				float getMaxY(){ return points[0].y; };
-				float getMaxZ(){ return points[0].z; };
+				float getMinX() const { return points[0].x; };
+				float getMinY() const { return points[2].y; };
+				float getMinZ() const { return points[4].z; };
+				float getMaxX() const { return points[1].x; };
+				float getMaxY() const { return points[0].y; };
+				float getMaxZ() const { return points[0].z; };
 			private:
 				glm::vec3 points[8];
 		};

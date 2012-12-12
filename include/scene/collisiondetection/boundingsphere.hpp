@@ -19,8 +19,8 @@ namespace scene {
 			public:
 				BoundingSphere(float radius, glm::vec3 centreLocation);
 				virtual ~BoundingSphere();
-				inline glm::vec3 getLocation() { return location; };
-				inline float getRadius() { return radius; };
+				inline glm::vec3 getLocation() const { return location; };
+				inline float getRadius() const { return radius; };
 			private:
 				float radius;
 				glm::vec3 location;
