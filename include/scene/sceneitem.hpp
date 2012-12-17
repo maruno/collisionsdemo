@@ -78,11 +78,9 @@ namespace scene {
 	};
 
 	glm::vec3 SceneItem::getLocation() const {
-		locationMutex.lock();
-		glm::vec3 lastLocation = location;
-		locationMutex.unlock();
+		std::unique_lock<std::mutex> lock(locationMutex);
 
-		return lastLocation;
+		return location;
 	}
 
 	const collisiondetection::BoundingVolume& SceneItem::getBounds() const {
