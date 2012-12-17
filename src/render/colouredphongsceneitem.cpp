@@ -1,23 +1,27 @@
-#include "sceneitems/star.hpp"
+#include "render/colouredphongsceneitem.hpp"
 
 #include <mutex>
 
-#include "render/shaderpipeline.hpp"
-#include "render/matrixuniform.hpp"
-#include "render/colourinformationuniform.hpp"
 #include "render/lightmanager.hpp"
+#include "render/shaderpipeline.hpp"
 
-using namespace sceneitems;
+#include "render/colourinformationuniform.hpp"
+#include "render/matrixuniform.hpp"
 
-Star::Star(glm::vec3 initialLocation, unsigned int mySize)
-	: sceneitems::Planet(initialLocation, mySize, 2.5f) {
-	//Set colour to light yellow
-	glGenBuffers(1, &colourUBO);
-	glBindBuffer(GL_UNIFORM_BUFFER, colourUBO);
-	render::ColourInformationUniform colourInfo(glm::vec3(255.0f, 254.0f, 176.0f), 0);
-	colourInfo.ambiance = glm::vec3(0.8f);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(render::ColourInformationUniform), &colourInfo, GL_STATIC_DRAW);
+#include "scene/perspectivecamera.hpp"
 
+using namespace render;
+
+ColouredPhongSceneItem::ColouredPhongSceneItem(glm::vec3 initialLocation, std::string objectName,
+			       scene::collisiondetection::BoundingVolume& myBounds,
+			       ColourInformationUniform colour)
+	: scene::SceneItem(initialLocation, objectName, myBounds) {
+	
+	//Buffer the colour
+	glGenBuffers(1, &colourInfoUBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, colourInfoUBO);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(render::ColourInformationUniform), &colour, GL_STATIC_DRAW);
+	
 	//Create and link shader-pipeline
 	render::ShaderPipeLine shaderPipe("Vertex-Transform", "Fragment-Phong");
 	shaderPipe.addShaderAttribute("vertex");
@@ -29,23 +33,13 @@ Star::Star(glm::vec3 initialLocation, unsigned int mySize)
 
 	shaderPipe.linkPipeLine();
 	shaderProgram = shaderPipe.getShaderProgram();
-
-	lightSourceId = render::LightManager::getInstance().addLightSource(location, 0.5f);
 }
 
-void Star::update() {
-	Planet::update();
-
-	std::lock_guard<std::mutex> guard(locationMutex);
-
-	render::LightManager::getInstance().moveLightSource(lightSourceId, location);
-}
-
-void Star::render(glm::mat4& parentMatrix) const {
+void ColouredPhongSceneItem::render(glm::mat4& parentMatrix) const {
 	//Update the MVP-matrix and buffer this to the UBO
-	matrixMutex.lock();
+	std::unique_lock<std::recursive_mutex> matrixLock(matrixMutex);
 	glm::mat4 mVMatrix = parentMatrix * modelMatrix;
-	matrixMutex.unlock();
+	matrixLock.unlock();
 
 	render::MatrixUniform matrixUni(mVMatrix);
 
@@ -57,7 +51,7 @@ void Star::render(glm::mat4& parentMatrix) const {
 	glUseProgram(shaderProgram);
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, 1, matrixUBO);
-	glBindBufferBase(GL_UNIFORM_BUFFER, 2, colourUBO);
+	glBindBufferBase(GL_UNIFORM_BUFFER, 2, colourInfoUBO);
 	glBindBufferBase(GL_UNIFORM_BUFFER, 3, render::LightManager::getInstance().getUBO());
 	glBindBufferBase(GL_UNIFORM_BUFFER, 4, scene::PerspectiveCamera::getInstance().getUBO());
 
