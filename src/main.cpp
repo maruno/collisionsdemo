@@ -66,76 +66,7 @@ int main(int argc, char** argv) {
 
 	glfwSetKeyCallback([](int key, int action) {
 		switch(key) {
-		case GLFW_KEY_UP:
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::UP_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
-		case GLFW_KEY_DOWN:
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::DOWN_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
-		case GLFW_KEY_LEFT:
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::LEFT_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
-		case GLFW_KEY_RIGHT:
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::RIGHT_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
-		case 'W':
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::W_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
-		case 'A':
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::A_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
-		case 'S':
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::S_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
-		case 'D':
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::D_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
-		case GLFW_KEY_PAGEUP:
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::PAGEUP_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
-		case GLFW_KEY_PAGEDOWN:
-			if(action == GLFW_PRESS) {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::PAGEDOWN_KEY_PRESSED);
-			} else {
-				cameraPtr->setKeyPressed(scene::PerspectiveCamera::NO_KEY_PRESSED);
-			}
-			break;
+			//TODO Switch keys for control
 		}
 	});
 

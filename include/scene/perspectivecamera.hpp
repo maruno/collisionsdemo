@@ -16,13 +16,6 @@ namespace scene {
 	 * @author Michel Bouwmans
 	 */
 	class PerspectiveCamera final {
-		public:
-			enum KeyPress {
-				NO_KEY_PRESSED, UP_KEY_PRESSED, DOWN_KEY_PRESSED, LEFT_KEY_PRESSED,
-				RIGHT_KEY_PRESSED, W_KEY_PRESSED, A_KEY_PRESSED, S_KEY_PRESSED,
-				D_KEY_PRESSED, PAGEUP_KEY_PRESSED, PAGEDOWN_KEY_PRESSED
-			};
-
 		private:
 			static std::unique_ptr<PerspectiveCamera> instance;
 			
@@ -31,8 +24,6 @@ namespace scene {
 
 			glm::vec3 position;
 			glm::vec3 direction;
-
-			static PerspectiveCamera::KeyPress keyPressed;
 
 			GLuint uBO;
 			bool needsUpload;
@@ -77,10 +68,6 @@ namespace scene {
 			 */
 			void update();
 
-			void setKeyPressed(KeyPress key) {
-				keyPressed = key;
-			};
-			
 			inline const glm::vec3& getPosition();
 			
 			inline const glm::mat4& getProjectionMatrix();
