@@ -23,7 +23,6 @@ namespace scene {
 	class SceneManager {
 		private:
 			SceneGroup* world;
-			PerspectiveCamera* camera;
 
 			UniversalGravitation universalGravity;
 
@@ -34,7 +33,7 @@ namespace scene {
 			 * @param primaryCamera Camera for primaryWorld.
 			 * @param primaryWorld Primary world for this scene graph.
 			 */
-			SceneManager(PerspectiveCamera* primaryCamera, SceneGroup* primaryWorld);
+			SceneManager(scene::SceneGroup* primaryWorld);
 
 			/**
 			 * Start the multithreaded main scene loop. Framebuffer should be ready.

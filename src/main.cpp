@@ -19,9 +19,6 @@
 
 typedef scene::collisiondetection::AxisAlignedBoundingCuboid AABB;
 
-//HACK for stupid C-functions. Need to edit GLFW-source
-scene::PerspectiveCamera* cameraPtr;
-
 int main(int argc, char** argv) {
 	glfwInit();
 
@@ -53,15 +50,14 @@ int main(int argc, char** argv) {
 	//Define world
 	scene::SceneGroup* world = new scene::SceneGroup(3, AABB(std::make_tuple(glm::vec3(-500.0f, -500.0f, 500.0f), glm::vec3(500.0f, 500.0f, -500.0f))));
 	
-	cameraPtr = &(scene::PerspectiveCamera::getInstance());
-	scene::SceneManager sceneManager(cameraPtr, world);
+	scene::PerspectiveCamera& camera = scene::PerspectiveCamera::getInstance();
+	scene::SceneManager sceneManager(world);
 
-	cameraPtr->changeCameraPosition(glm::vec3(20.0f, 0.0f, 150.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-	cameraPtr->rescale(config::globals::initialWidth, config::globals::initialHeight);
+	camera.changeCameraPosition(glm::vec3(20.0f, 0.0f, 150.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	camera.rescale(config::globals::initialWidth, config::globals::initialHeight);
 
-	//TODO Hack support for lambda's in GLFW
 	glfwSetWindowSizeCallback([](int width, int height) {
-		cameraPtr->rescale(width, height);
+		scene::PerspectiveCamera::getInstance().rescale(width, height);
 	});
 
 	glfwSetKeyCallback([](int key, int action) {

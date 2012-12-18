@@ -18,12 +18,14 @@
 
 using namespace scene;
 
-SceneManager::SceneManager(PerspectiveCamera* primaryCamera, SceneGroup* primaryWorld)
-	: camera(primaryCamera), world(primaryWorld) {
+SceneManager::SceneManager(SceneGroup* primaryWorld)
+	: world(primaryWorld) {
 }
 
 void SceneManager::startSceneLoop() {
-	std::thread updateThread([this]() {
+	scene::PerspectiveCamera& camera = scene::PerspectiveCamera::getInstance();
+	
+	std::thread updateThread([this, &camera]() {
 		while(true) {
 			universalGravity.update();
 
@@ -53,7 +55,7 @@ void SceneManager::startSceneLoop() {
 				}
 			});
 
-			camera->update();
+			camera.update();
 
 			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
 		}
@@ -63,7 +65,7 @@ void SceneManager::startSceneLoop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		render::LightManager::getInstance().upload();
-		camera->render(world);
+		camera.render(world);
 
 		glfwSwapBuffers();
 
