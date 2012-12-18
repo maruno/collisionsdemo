@@ -20,8 +20,8 @@ namespace scene {
 			static std::unique_ptr<PerspectiveCamera> instance;
 			
 			glm::mat4 view, projection;
-			static const glm::vec3 up;
-
+			
+			glm::vec3 up;
 			glm::vec3 position;
 			glm::vec3 direction;
 

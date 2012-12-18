@@ -11,10 +11,9 @@
 
 using namespace scene;
 
-const glm::vec3 PerspectiveCamera::up(0.0f, 1.0f, 0.0f);
 std::unique_ptr<PerspectiveCamera> PerspectiveCamera::instance;
 
-PerspectiveCamera::PerspectiveCamera() : direction{0.0f, 0.0f, -1.0f}, needsUpload{true} {
+PerspectiveCamera::PerspectiveCamera() : direction{0.0f, 0.0f, -1.0f}, up{0.0f, 1.0f, 0.0f}, needsUpload{true} {
 	glGenBuffers(1, &uBO);
 }
 
