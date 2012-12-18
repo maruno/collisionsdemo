@@ -17,8 +17,6 @@
 
 #include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
 
-typedef scene::collisiondetection::AxisAlignedBoundingCuboid AABB;
-
 int main(int argc, char** argv) {
 	glfwInit();
 
@@ -48,10 +46,8 @@ int main(int argc, char** argv) {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//Define world
-	scene::SceneGroup* world = new scene::SceneGroup(3, AABB(std::make_tuple(glm::vec3(-500.0f, -500.0f, 500.0f), glm::vec3(500.0f, 500.0f, -500.0f))));
-	
 	scene::PerspectiveCamera& camera = scene::PerspectiveCamera::getInstance();
-	scene::SceneManager sceneManager(world);
+	scene::SceneManager sceneManager;
 
 	camera.changeCameraPosition(glm::vec3(20.0f, 0.0f, 150.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 	camera.rescale(config::globals::initialWidth, config::globals::initialHeight);

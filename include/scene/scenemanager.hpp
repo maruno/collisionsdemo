@@ -8,10 +8,9 @@
 #include "scene/universalgravitation.hpp"
 #include "scene/sceneitem.hpp"
 
-namespace scene {
-	class SceneGroup;
-	class PerspectiveCamera;
+#include "scene/scenegroup.hpp"
 
+namespace scene {
 	/**
 	 * Management class for the scene graph.
 	 *
@@ -22,18 +21,15 @@ namespace scene {
 	 */
 	class SceneManager {
 		private:
-			SceneGroup* world;
+			SceneGroup world;
 
 			UniversalGravitation universalGravity;
 
 		public:
 			/**
 			 * Constructor.
-			 *
-			 * @param primaryCamera Camera for primaryWorld.
-			 * @param primaryWorld Primary world for this scene graph.
 			 */
-			SceneManager(scene::SceneGroup* primaryWorld);
+			SceneManager();
 
 			/**
 			 * Start the multithreaded main scene loop. Framebuffer should be ready.
