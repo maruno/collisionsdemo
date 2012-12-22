@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	glfwOpenWindow(config::globals::initialWidth, config::globals::initialHeight, 8, 8, 8, 8, 24, 24, GLFW_WINDOW);
+	glfwOpenWindow(config::globals::initialWidth, config::globals::initialHeight, 8, 8, 8, 8, 8, 8, GLFW_WINDOW);
 	glfwSetWindowTitle("Awesome planetary simulation demo");
 
 	//Load OpenGL functions
