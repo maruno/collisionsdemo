@@ -1,12 +1,12 @@
-#include "render/colouredphongsceneitem.hpp"
+#include "colouredphongsceneitem.hpp"
 
 #include <mutex>
 
-#include "render/lightmanager.hpp"
-#include "render/shaderpipeline.hpp"
+#include "lightmanager.hpp"
+#include "shaderpipeline.hpp"
 
-#include "render/colourinformationuniform.hpp"
-#include "render/matrixuniform.hpp"
+#include "colourinformationuniform.hpp"
+#include "matrixuniform.hpp"
 
 #include "scene/perspectivecamera.hpp"
 

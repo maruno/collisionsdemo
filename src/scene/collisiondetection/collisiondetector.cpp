@@ -1,4 +1,4 @@
-#include "scene/collisiondetection/collisiondetector.hpp"
+#include "collisiondetector.hpp"
 
 using namespace scene::collisiondetection;
 

@@ -1,4 +1,4 @@
-#include "scene/sceneitem.hpp"
+#include "sceneitem.hpp"
 
 #include <mutex>
 

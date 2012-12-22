@@ -1,4 +1,4 @@
-#include "scene/scenemanager.hpp"
+#include "scenemanager.hpp"
 
 #include <chrono>
 #include <thread>
@@ -7,10 +7,10 @@
 #include "glload/gl_3_2.h"
 #include <GL/glfw.h>
 
-#include "scene/scenegroup.hpp"
-#include "scene/perspectivecamera.hpp"
+#include "scenegroup.hpp"
+#include "perspectivecamera.hpp"
 
-#include "scene/collisiondetection/collisiondetector.hpp"
+#include "collisiondetection/collisiondetector.hpp"
 
 #include "render/lightmanager.hpp"
 

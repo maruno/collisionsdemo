@@ -1,4 +1,4 @@
-#include "scene/universalgravitation.hpp"
+#include "universalgravitation.hpp"
 
 #include <glm/glm.hpp>
 #include <algorithm>

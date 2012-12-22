@@ -1,4 +1,4 @@
-#include "modelloader/vertexbuffer.hpp"
+#include "vertexbuffer.hpp"
 
 using namespace modelloader;
 

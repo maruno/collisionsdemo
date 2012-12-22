@@ -1,4 +1,4 @@
-#include "modelloader/vertexbufferfactory.hpp"
+#include "vertexbufferfactory.hpp"
 
 #include <fstream>
 #include <vector>
@@ -9,7 +9,7 @@
 #include <glm/gtx/normal.hpp>
 
 #include "src/modelloader/objparser.yy.hpp"
-#include "modelloader/objlexer.hpp"
+#include "objlexer.hpp"
 
 #include "util/hash.hpp"
 

@@ -5,8 +5,8 @@
 #include <functional>
 #include <cassert>
 
-#include "scene/sceneitem.hpp"
-#include "scene/collisiondetection/collisiondetector.hpp"
+#include "sceneitem.hpp"
+#include "collisiondetection/collisiondetector.hpp"
 
 using namespace scene;
 

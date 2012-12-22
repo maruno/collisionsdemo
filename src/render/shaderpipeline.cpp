@@ -1,8 +1,8 @@
-#include "render/shaderpipeline.hpp"
+#include "shaderpipeline.hpp"
 
 #include <iostream>
 
-#include "render/shaderfactory.hpp"
+#include "shaderfactory.hpp"
 
 render::ShaderPipeLine::ShaderPipeLine(const std::string myVertexShaderName, const std::string myFragmentShaderName) {
 	setVertexShader(myVertexShaderName);

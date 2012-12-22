@@ -4,7 +4,7 @@
  *      Author: Marcel Veltman
  */
 
-#include "scene/collisiondetection/boundingsphere.hpp"
+#include "boundingsphere.hpp"
 
 scene::collisiondetection::BoundingSphere::BoundingSphere(float radius, glm::vec3 centreLocation) {
 	this->radius = radius;

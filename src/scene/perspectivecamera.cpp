@@ -1,10 +1,10 @@
-#include "scene/perspectivecamera.hpp"
+#include "perspectivecamera.hpp"
 
 #include "glload/gl_3_2.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "scene/scenegroup.hpp"
+#include "scenegroup.hpp"
 
 #include "config/globals.hpp"
 #include "render/lightmanager.hpp"

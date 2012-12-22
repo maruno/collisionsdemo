@@ -1,4 +1,4 @@
-#include "scene/gravitationalobject.hpp"
+#include "gravitationalobject.hpp"
 
 #include <string>
 

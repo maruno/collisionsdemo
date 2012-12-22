@@ -4,7 +4,7 @@
  *      Author: Marcel Veltman
  */
 
-#include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
+#include "axisalignedboundingcuboid.hpp"
 
 scene::collisiondetection::AxisAlignedBoundingCuboid::AxisAlignedBoundingCuboid(std::tuple<glm::vec3, glm::vec3> diagonal) {
 	glm::vec3 ex1 = std::get<0>(diagonal);

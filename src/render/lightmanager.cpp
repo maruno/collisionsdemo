@@ -1,4 +1,4 @@
-#include "render/lightmanager.hpp"
+#include "lightmanager.hpp"
 
 #include "scene/perspectivecamera.hpp"
 
