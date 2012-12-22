@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "scene/gravitationalobject.hpp"
+#include "renderer/scene/gravitationalobject.hpp"
 
 namespace scene {
 	/**

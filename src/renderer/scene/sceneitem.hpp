@@ -7,7 +7,7 @@
 #include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
 
-#include "scene/collisiondetection/boundingvolume.hpp"
+#include "renderer/scene/collisiondetection/boundingvolume.hpp"
 
 #include "modelloader/vertexbuffer.hpp"
 

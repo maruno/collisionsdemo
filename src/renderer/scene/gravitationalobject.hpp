@@ -5,9 +5,9 @@
 
 #include <glm/glm.hpp>
 
-#include "scene/sceneitem.hpp"
+#include "renderer/scene/sceneitem.hpp"
 
-#include "scene/collisiondetection/boundingvolume.hpp"
+#include "renderer/scene/collisiondetection/boundingvolume.hpp"
 
 namespace scene {
 	/**

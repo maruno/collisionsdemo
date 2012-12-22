@@ -5,10 +5,10 @@
 #include <algorithm>
 #include <memory>
 
-#include "scene/universalgravitation.hpp"
-#include "scene/sceneitem.hpp"
+#include "renderer/scene/universalgravitation.hpp"
+#include "renderer/scene/sceneitem.hpp"
 
-#include "scene/scenegroup.hpp"
+#include "renderer/scene/scenegroup.hpp"
 
 namespace scene {
 	/**

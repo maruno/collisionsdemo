@@ -9,9 +9,9 @@
 
 #include <glm/glm.hpp>
 
-#include "scene/sceneitem.hpp"
+#include "renderer/scene/sceneitem.hpp"
 
-#include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
+#include "renderer/scene/collisiondetection/axisalignedboundingcuboid.hpp"
 
 namespace scene {
 	class SceneManager;

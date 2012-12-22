@@ -11,11 +11,11 @@
 
 #include "config/globals.hpp"
 
-#include "scene/scenemanager.hpp"
-#include "scene/perspectivecamera.hpp"
-#include "scene/scenegroup.hpp"
+#include "renderer/scene/scenemanager.hpp"
+#include "renderer/scene/perspectivecamera.hpp"
+#include "renderer/scene/scenegroup.hpp"
 
-#include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
+#include "renderer/scene/collisiondetection/axisalignedboundingcuboid.hpp"
 
 int main(int argc, char** argv) {
 	glfwInit();

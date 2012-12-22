@@ -1,13 +1,13 @@
 #ifndef REDER_COLOUREDPHONGSCENEITEM_HPP
 #define REDER_COLOUREDPHONGSCENEITEM_HPP
 
-#include "scene/sceneitem.hpp"
+#include "renderer/scene/sceneitem.hpp"
 
 #include <string>
 
 #include "glload/gl_3_2.h"
 
-#include "render/colourinformationuniform.hpp"
+#include "renderer/render/colourinformationuniform.hpp"
 
 namespace render {
 	class ColouredPhongSceneItem : public scene::SceneItem {
