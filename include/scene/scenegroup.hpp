@@ -15,6 +15,7 @@
 
 namespace scene {
 	class SceneManager;
+	class SceneGroup;
 
 	/**
 	 * Scene graph group node.
@@ -22,10 +23,10 @@ namespace scene {
 	 * @author Michel Bouwmans
 	 */
 	class SceneGroup final {
-			friend class SceneManager;
+		friend class SceneManager;
 
 		private:
-			std::unique_ptr<std::array<SceneGroup, 8>> childGroups;
+			std::array<SceneGroup, 8>* childGroups;
 			std::list<std::unique_ptr<SceneItem>> childItems;
 
 			std::unique_ptr<collisiondetection::AxisAlignedBoundingCuboid> constraints;
@@ -65,6 +66,8 @@ namespace scene {
 			 * @param child Unique pointer to the @ref SceneItem child. The scene graph takes ownership.
 			 */
 			void bubbleItem(std::unique_ptr<SceneItem> item);
+
+			~SceneGroup();
 	};
 }
 

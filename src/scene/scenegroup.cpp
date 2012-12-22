@@ -16,7 +16,7 @@ typedef std::tuple<glm::vec3, glm::vec3> Diagonal;
 SceneGroup* SceneGroup::rootNode;
 std::recursive_mutex SceneGroup::sceneMutex;
 
-SceneGroup::SceneGroup() {
+SceneGroup::SceneGroup() : childGroups{nullptr} {
 	rootNode = this;
 }
 
@@ -29,7 +29,7 @@ SceneGroup::SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAligne
 
 void SceneGroup::addOctreeLayers(unsigned int levels) {
 	if(levels != 0) {
-		childGroups.reset(new std::array<SceneGroup,8>);
+		childGroups = new std::array<SceneGroup,8>;
 
 		//Calculate and set constraints for all childGroups
 		float width = (constraints->getMaxX() - constraints->getMinX()) / 2.0f;
@@ -126,4 +126,10 @@ void SceneGroup::bubbleItem(std::unique_ptr<SceneItem> item) {
 	}
 
 	childItems.push_back(std::move(item));
+}
+
+SceneGroup::~SceneGroup() {
+	if(childGroups != nullptr) {
+		delete childGroups;
+	}
 }
