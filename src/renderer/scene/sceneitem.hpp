@@ -36,6 +36,7 @@ namespace scene {
 		 * Constructor.
 		 *
 		 * @param initialLocation The initial location for this item.
+		 * @param objectName Name of the obj-file without extension.
 		 * @param myBounds Bounding volume for this item.
 		 */
 		SceneItem(glm::vec3 initialLocation, std::string objectName, scene::collisiondetection::BoundingVolume& myBounds);
