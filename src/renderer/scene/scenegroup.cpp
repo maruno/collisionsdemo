@@ -6,7 +6,6 @@
 #include <cassert>
 
 #include "sceneitem.hpp"
-#include "collisiondetection/collisiondetector.hpp"
 
 using namespace scene;
 
