@@ -28,48 +28,48 @@ namespace modelloader {
 			 *
 			 * @return 'Vertex'/position Buffer Object identifier.
 			 */
-			inline GLuint getVBO() const;
+			inline const GLuint getVBO() const;
 
 			/**
 			 * Request the Normal Buffer Object.
 			 *
 			 * @return Normal Buffer Object identifier.
 			 */
-			inline GLuint getNBO() const;
+			inline const GLuint getNBO() const;
 
 			/**
 			 * Request the Indice Buffer Object.
 			 *
 			 * @return Indice Buffer Object identifier.
 			 */
-			inline GLuint getIBO() const;
+			inline const GLuint getIBO() const;
 
 			/**
 			 * Request the number of indices.
 			 *
 			 * @return Number of indices.
 			 */
-			inline unsigned int getNumIndices() const;
-			
+			inline const unsigned int getNumIndices() const;
+
 			/**
 			 * Bind the buffers from this vertex buffer collection for use.
 			 */
 			void bindBuffers() const;
 	};
 
-	GLuint VertexBuffer::getVBO() const {
+	const GLuint VertexBuffer::getVBO() const {
 		return vBO;
 	}
 
-	GLuint VertexBuffer::getNBO() const {
+	const GLuint VertexBuffer::getNBO() const {
 		return nBO;
 	}
 
-	GLuint VertexBuffer::getIBO() const {
+	const GLuint VertexBuffer::getIBO() const {
 		return iBO;
 	}
 
-	unsigned int VertexBuffer::getNumIndices() const {
+	const unsigned int VertexBuffer::getNumIndices() const {
 		return numIndices;
 	}
 }
