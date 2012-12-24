@@ -7,7 +7,7 @@
 #include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
 
-#include "renderer/scene/collisiondetection/boundingvolume.hpp"
+#include "collisiondetection/boundingvolume.hpp"
 
 #include "modelloader/vertexbuffer.hpp"
 
@@ -39,7 +39,7 @@ namespace scene {
 		 * @param objectName Name of the obj-file without extension.
 		 * @param myBounds Bounding volume for this item.
 		 */
-		SceneItem(glm::vec3 initialLocation, std::string objectName, scene::collisiondetection::BoundingVolume& myBounds);
+		SceneItem(glm::vec3 initialLocation, std::string objectName, collisiondetection::BoundingVolume& myBounds);
 
 		/**
 		 * Called every update-tick.

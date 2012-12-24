@@ -11,7 +11,7 @@
 
 #include "renderer/scene/sceneitem.hpp"
 
-#include "renderer/scene/collisiondetection/AxisAlignedBoundingBox.hpp"
+#include "collisiondetection/axisalignedboundingbox.hpp"
 
 namespace scene {
 	class SceneManager;
@@ -44,7 +44,7 @@ namespace scene {
 		 * @param octreeLevels Number of octree levels that should be used.
 		 * @param myConstraints Constraining box of this scene graph.
 		 */
-		SceneGroup(unsigned int octreeLevels, scene::collisiondetection::AxisAlignedBoundingBox myConstraints);
+		SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAlignedBoundingBox myConstraints);
 
 		/**
 		 * Call visitation-function on all @ref SceneItem childs in the scene graph.

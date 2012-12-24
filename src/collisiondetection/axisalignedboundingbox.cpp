@@ -4,24 +4,16 @@
 
 #include "util/comparison.hpp"
 
-/*
- float minX const { return points[0].x; };
- float minY const { return points[2].y; };
- float minZ const { return points[4].z; };
- float maxX const { return points[1].x; };
- float maxY const { return points[0].y; };
- float maxZ const { return points[0].z; };
+using namespace collisiondetection;
 
- */
-
-scene::collisiondetection::AxisAlignedBoundingBox::AxisAlignedBoundingBox(std::tuple<glm::vec3, glm::vec3> diagonal)
+AxisAlignedBoundingBox::AxisAlignedBoundingBox(std::tuple<glm::vec3, glm::vec3> diagonal)
 : minX(std::get<0>(diagonal).x), maxX(std::get<1>(diagonal).x), minY(std::get<0>(diagonal).y), maxY(std::get<1>(diagonal).y), minZ(std::get<1>(diagonal).z), maxZ(std::get<0>(diagonal).z) {
 }
 
-scene::collisiondetection::AxisAlignedBoundingBox::~AxisAlignedBoundingBox() {
+AxisAlignedBoundingBox::~AxisAlignedBoundingBox() {
 }
 
-bool scene::collisiondetection::AxisAlignedBoundingBox::intersects(const scene::collisiondetection::BoundingVolume& other) const {
+bool AxisAlignedBoundingBox::intersects(const BoundingVolume& other) const {
 	if(typeid(other) == typeid(AxisAlignedBoundingBox)) {
 		const AxisAlignedBoundingBox& otherbox = static_cast<const AxisAlignedBoundingBox&>(other);
 		

@@ -1,3 +1,4 @@
+add_subdirectory(collisiondetection)
 add_subdirectory(modelloader)
 add_subdirectory(renderer)
 

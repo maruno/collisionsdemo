@@ -16,7 +16,7 @@ namespace render {
 
 	 public:
 		ColouredPhongSceneItem(glm::vec3 initialLocation, std::string objectName,
-				       scene::collisiondetection::BoundingVolume& myBounds,
+				       collisiondetection::BoundingVolume& myBounds,
 		                       ColourInformationUniform colour);
 
 		virtual void render(glm::mat4& parentMatrix) const final override;

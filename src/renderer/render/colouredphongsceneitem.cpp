@@ -13,8 +13,7 @@
 using namespace render;
 
 ColouredPhongSceneItem::ColouredPhongSceneItem(glm::vec3 initialLocation, std::string objectName,
-			       scene::collisiondetection::BoundingVolume& myBounds,
-			       ColourInformationUniform colour)
+			       collisiondetection::BoundingVolume& myBounds, ColourInformationUniform colour)
 	: scene::SceneItem(initialLocation, objectName, myBounds) {
 	
 	//Buffer the colour
