@@ -53,7 +53,7 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	glBindBuffer(GL_ARRAY_BUFFER, bos[2]);
 	glBufferData(GL_ARRAY_BUFFER, vertexNormalsData.size()*sizeof(glm::vec3), &(vertexNormalsData.front()), GL_STATIC_DRAW);
 
-	vbopool.emplace(std::make_pair(std::string(objName), VertexBuffer{bos[0], bos[1], bos[2], indicesData.size(), extremes}));
+	vbopool.emplace(std::make_pair(std::string(objName), std::move(VertexBuffer{bos[0], bos[1], bos[2], indicesData.size(), extremes})));
 
 	return vbopool.at(objName);
 }

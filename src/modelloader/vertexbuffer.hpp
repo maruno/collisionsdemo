@@ -2,10 +2,13 @@
 #define VERTEXBUFFER_HPP
 
 #include <tuple>
+#include <memory>
 
 #include <glm/glm.hpp>
 
 #include "glload/gl_3_2.h"
+
+#include "collisiondetection/boundingvolume.hpp"
 
 namespace modelloader {
 	/**
@@ -17,6 +20,7 @@ namespace modelloader {
 		GLuint vao;
 		unsigned int numIndices;
 		const std::tuple<glm::vec3, glm::vec3> extremes;
+		std::unique_ptr<collisiondetection::BoundingVolume> bounds;
 
 	 public:
 		/**
@@ -27,6 +31,11 @@ namespace modelloader {
 		 * @param myNumIndices Number of indices associated with this vertex buffer collection.
 		 */
 		VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices, std::tuple<glm::vec3, glm::vec3> myExtremes);
+
+		/**
+		 * Move constructor.
+		 */
+		VertexBuffer(VertexBuffer&& other);
 
 		/**
 		 * Request the 'Vertex'/position Buffer Object.
@@ -64,6 +73,13 @@ namespace modelloader {
 		inline const std::tuple<glm::vec3, glm::vec3>& getExtremes() const;
 
 		/**
+		 * Request the bounds of the 3D-model
+		 *
+		 * @return BoundingVolume attached to the 3D-model
+		 */
+		inline const collisiondetection::BoundingVolume& getBounds() const;
+
+		/**
 		 * Bind the buffers from this vertex buffer collection for use.
 		 */
 		void bindBuffers() const;
@@ -87,6 +103,10 @@ namespace modelloader {
 
 	const std::tuple<glm::vec3, glm::vec3>& VertexBuffer::getExtremes() const {
 		return extremes;
+	}
+
+	const collisiondetection::BoundingVolume& VertexBuffer::getBounds() const {
+		return *bounds;
 	}
 }
 

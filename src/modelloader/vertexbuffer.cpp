@@ -1,9 +1,15 @@
 #include "vertexbuffer.hpp"
 
+#include "collisiondetection/axisalignedboundingbox.hpp"
+
 using namespace modelloader;
 
+VertexBuffer::VertexBuffer(VertexBuffer&& other) : vBO{other.vBO}, iBO{other.iBO}, nBO{other.nBO}, numIndices{other.numIndices}, extremes{other.extremes},
+bounds(std::move(other.bounds)){
+}
+
 VertexBuffer::VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices, std::tuple<glm::vec3, glm::vec3> myExtremes)
-: vBO(myVBO), iBO(myIBO), nBO(myNBO), numIndices(myNumIndices), extremes(myExtremes) {
+: vBO(myVBO), iBO(myIBO), nBO(myNBO), numIndices(myNumIndices), extremes(myExtremes), bounds{new collisiondetection::AxisAlignedBoundingBox(extremes)} {
 	//Generate VAO
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
