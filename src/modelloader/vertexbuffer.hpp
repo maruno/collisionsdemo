@@ -1,6 +1,10 @@
 #ifndef VERTEXBUFFER_HPP
 #define VERTEXBUFFER_HPP
 
+#include <tuple>
+
+#include <glm/glm.hpp>
+
 #include "glload/gl_3_2.h"
 
 namespace modelloader {
@@ -12,6 +16,7 @@ namespace modelloader {
 		GLuint vBO, iBO, nBO;
 		GLuint vao;
 		unsigned int numIndices;
+		const std::tuple<glm::vec3, glm::vec3> extremes;
 
 	 public:
 		/**
@@ -21,7 +26,7 @@ namespace modelloader {
 		 * @param myIBO Indice Buffer Object of this vertex buffer collection.
 		 * @param myNumIndices Number of indices associated with this vertex buffer collection.
 		 */
-		VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices);
+		VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices, std::tuple<glm::vec3, glm::vec3> myExtremes);
 
 		/**
 		 * Request the 'Vertex'/position Buffer Object.
@@ -52,6 +57,13 @@ namespace modelloader {
 		inline const unsigned int getNumIndices() const;
 
 		/**
+		 * Request the extremes of the 3D-model
+		 *
+		 * @return Extremes of the 3D-model
+		 */
+		inline const std::tuple<glm::vec3, glm::vec3>& getExtremes() const;
+
+		/**
 		 * Bind the buffers from this vertex buffer collection for use.
 		 */
 		void bindBuffers() const;
@@ -71,6 +83,10 @@ namespace modelloader {
 
 	const unsigned int VertexBuffer::getNumIndices() const {
 		return numIndices;
+	}
+
+	const std::tuple<glm::vec3, glm::vec3>& VertexBuffer::getExtremes() const {
+		return extremes;
 	}
 }
 

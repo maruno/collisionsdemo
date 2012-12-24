@@ -2,8 +2,8 @@
 
 using namespace modelloader;
 
-VertexBuffer::VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices)
-: vBO(myVBO), iBO(myIBO), nBO(myNBO), numIndices(myNumIndices) {
+VertexBuffer::VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices, std::tuple<glm::vec3, glm::vec3> myExtremes)
+: vBO(myVBO), iBO(myIBO), nBO(myNBO), numIndices(myNumIndices), extremes(myExtremes) {
 	//Generate VAO
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
