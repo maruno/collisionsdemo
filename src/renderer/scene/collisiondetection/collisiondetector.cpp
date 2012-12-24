@@ -40,17 +40,7 @@ bool scene::collisiondetection::intersects(const BoundingSphere& a, const Boundi
 }
 
 bool scene::collisiondetection::intersects(const AxisAlignedBoundingCuboid& a, const AxisAlignedBoundingCuboid& b) {
-	bool collision = true;
-
-	if(a.getMinX() > b.getMaxX() || a.getMaxX() < b.getMinX()) {
-		collision = false;
-	} else if(a.getMinY() > b.getMaxY() || a.getMaxY() < b.getMinY()) {
-		collision = false;
-	} else if(a.getMinZ() > b.getMaxZ() || a.getMaxZ() < b.getMinZ()) {
-		collision = false;
-	}
-
-	return collision;
+	return a.intersects(b);
 }
 
 bool scene::collisiondetection::intersects(const AxisAlignedBoundingCuboid& cuboid, const BoundingSphere& sphere) {

@@ -19,6 +19,8 @@ namespace scene {
 			virtual ~BoundingSphere();
 			inline glm::vec3 getLocation() const { return location; };
 			inline float getRadius() const { return radius; };
+
+			virtual bool intersects(const BoundingVolume& other) const override;
 		 private:
 			float radius;
 			glm::vec3 location;

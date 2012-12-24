@@ -1,10 +1,8 @@
-/*
- * AxisAlignedBoundingCuboid.cpp
- *
- *      Author: Marcel Veltman
- */
-
 #include "axisalignedboundingcuboid.hpp"
+
+#include <typeinfo>
+
+#include "util/comparison.hpp"
 
 scene::collisiondetection::AxisAlignedBoundingCuboid::AxisAlignedBoundingCuboid(std::tuple<glm::vec3, glm::vec3> diagonal) {
 	glm::vec3 ex1 = std::get<0>(diagonal);
@@ -21,4 +19,20 @@ scene::collisiondetection::AxisAlignedBoundingCuboid::AxisAlignedBoundingCuboid(
 }
 
 scene::collisiondetection::AxisAlignedBoundingCuboid::~AxisAlignedBoundingCuboid() {
+}
+
+bool scene::collisiondetection::AxisAlignedBoundingCuboid::intersects(const scene::collisiondetection::BoundingVolume& other) const {
+	if(typeid(other) == typeid(AxisAlignedBoundingCuboid)) {
+		const AxisAlignedBoundingCuboid& otherbox = static_cast<const AxisAlignedBoundingCuboid&>(other);
+		
+		if(util::between(getMinX(), otherbox.getMinX(), otherbox.getMaxX()) || util::between(getMaxX(), otherbox.getMinX(), otherbox.getMaxX())) {
+			if(util::between(getMinY(), otherbox.getMinY(), otherbox.getMaxY()) || util::between(getMaxY(), otherbox.getMinY(), otherbox.getMaxY())) {
+				if(util::between(getMinZ(), otherbox.getMinZ(), otherbox.getMaxZ()) || util::between(getMaxZ(), getMinZ(), getMaxZ())) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }

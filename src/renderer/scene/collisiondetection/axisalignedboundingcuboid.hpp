@@ -26,6 +26,8 @@ namespace scene {
 			float getMaxX() const { return points[1].x; };
 			float getMaxY() const { return points[0].y; };
 			float getMaxZ() const { return points[0].z; };
+
+			virtual bool intersects(const BoundingVolume& other) const override;
 		 private:
 			glm::vec3 points[8];
 		};

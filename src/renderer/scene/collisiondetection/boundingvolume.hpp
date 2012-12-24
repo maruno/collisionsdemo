@@ -8,13 +8,12 @@
 #define BOUNDINGVOLUME_HPP_
 
 namespace scene{
-
 	namespace collisiondetection {
-
 		class BoundingVolume {
-			protected:
-				BoundingVolume() = default;
-				virtual ~BoundingVolume() = default;
+		 public:
+			virtual bool intersects(const BoundingVolume& other) const = 0;
+
+			virtual ~BoundingVolume() = default;
 		};
 	}
 }

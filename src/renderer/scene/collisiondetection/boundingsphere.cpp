@@ -14,3 +14,7 @@ scene::collisiondetection::BoundingSphere::BoundingSphere(float radius, glm::vec
 scene::collisiondetection::BoundingSphere::~BoundingSphere() {
 
 }
+
+bool scene::collisiondetection::BoundingSphere::intersects(const scene::collisiondetection::BoundingVolume& other) const {
+	return false;
+}
