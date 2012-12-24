@@ -16,79 +16,79 @@ namespace scene {
 	 * @author Michel Bouwmans
 	 */
 	class PerspectiveCamera final {
-		private:
-			static std::unique_ptr<PerspectiveCamera> instance;
-			
-			glm::mat4 view, projection;
-			
-			glm::vec3 up;
-			glm::vec3 position;
-			glm::vec3 direction;
+	 private:
+		static std::unique_ptr<PerspectiveCamera> instance;
 
-			GLuint uBO;
-			bool needsUpload;
-			
-			PerspectiveCamera();
-			
-			void upload();
-			
-			void updatePosition(float dX, float dY, float dZ);
-			void updateDirection(float angle, float x, float y, float z);
-		public:
-			PerspectiveCamera(const PerspectiveCamera&) = delete;
-			PerspectiveCamera& operator=(const PerspectiveCamera&) = delete;
-			
-			static inline PerspectiveCamera& getInstance();
-			
-			/**
-			 * Call this function when the viewport has been rescaled.
-			 *
-			 * @param width New width of the viewport.
-			 * @param height New height of the viewport.
-			 */
-			void rescale(int width, int height);
+		glm::mat4 view, projection;
 
-			/**
-			 * Change the position of the camera in the world.
-			 *
-			 * @param position New camera position.
-			 * @param direction New direction in which camera is observing.
-			 */
-			void changeCameraPosition(glm::vec3 position, glm::vec3 direction);
+		glm::vec3 up;
+		glm::vec3 position;
+		glm::vec3 direction;
 
-			/**
-			 * Render an image using this camera.
-			 */
-			void render(scene::SceneGroup* world);
+		GLuint uBO;
+		bool needsUpload;
 
-			inline GLuint getUBO();
-			
-			/**
-			 * Update the position and direction of the camera.
-			 */
-			void update();
+		PerspectiveCamera();
 
-			inline const glm::vec3& getPosition();
-			
-			inline const glm::mat4& getProjectionMatrix();
+		void upload();
+
+		void updatePosition(float dX, float dY, float dZ);
+		void updateDirection(float angle, float x, float y, float z);
+	 public:
+		PerspectiveCamera(const PerspectiveCamera&) = delete;
+		PerspectiveCamera& operator=(const PerspectiveCamera&) = delete;
+
+		static inline PerspectiveCamera& getInstance();
+
+		/**
+		 * Call this function when the viewport has been rescaled.
+		 *
+		 * @param width New width of the viewport.
+		 * @param height New height of the viewport.
+		 */
+		void rescale(int width, int height);
+
+		/**
+		 * Change the position of the camera in the world.
+		 *
+		 * @param position New camera position.
+		 * @param direction New direction in which camera is observing.
+		 */
+		void changeCameraPosition(glm::vec3 position, glm::vec3 direction);
+
+		/**
+		 * Render an image using this camera.
+		 */
+		void render(scene::SceneGroup* world);
+
+		inline GLuint getUBO();
+
+		/**
+		 * Update the position and direction of the camera.
+		 */
+		void update();
+
+		inline const glm::vec3& getPosition();
+
+		inline const glm::mat4& getProjectionMatrix();
 	};
-	
+
 	PerspectiveCamera& PerspectiveCamera::getInstance() {
 		if(instance == nullptr) {
 			instance.reset(new PerspectiveCamera);
 		}
-		
+
 		return *instance;
 	}
-	
+
 	const glm::vec3& PerspectiveCamera::getPosition() {
 		return position;
 	}
-	
+
 	const glm::mat4& PerspectiveCamera::getProjectionMatrix() {
 		return projection;
 	}
-	
+
 	GLuint PerspectiveCamera::getUBO() {
 		return uBO;
 	}

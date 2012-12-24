@@ -12,18 +12,16 @@
 #include "scene/collisiondetection/boundingvolume.hpp"
 
 namespace scene {
-
 	namespace collisiondetection {
-
 		class BoundingSphere : public BoundingVolume {
-			public:
-				BoundingSphere(float radius, glm::vec3 centreLocation);
-				virtual ~BoundingSphere();
-				inline glm::vec3 getLocation() const { return location; };
-				inline float getRadius() const { return radius; };
-			private:
-				float radius;
-				glm::vec3 location;
+		 public:
+			BoundingSphere(float radius, glm::vec3 centreLocation);
+			virtual ~BoundingSphere();
+			inline glm::vec3 getLocation() const { return location; };
+			inline float getRadius() const { return radius; };
+		 private:
+			float radius;
+			glm::vec3 location;
 		};
 	}
 }

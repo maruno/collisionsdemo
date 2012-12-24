@@ -11,15 +11,15 @@
 
 namespace render {
 	class ColouredPhongSceneItem : public scene::SceneItem {
-		private:
-			GLuint colourInfoUBO;
+	 private:
+		GLuint colourInfoUBO;
 
-		public:
-			ColouredPhongSceneItem(glm::vec3 initialLocation, std::string objectName,
+	 public:
+		ColouredPhongSceneItem(glm::vec3 initialLocation, std::string objectName,
 				       scene::collisiondetection::BoundingVolume& myBounds,
 		                       ColourInformationUniform colour);
 
-			virtual void render(glm::mat4& parentMatrix) const final override;
+		virtual void render(glm::mat4& parentMatrix) const final override;
 	};
 }
 

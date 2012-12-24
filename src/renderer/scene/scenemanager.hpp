@@ -20,28 +20,28 @@ namespace scene {
 	 * @author Michel Bouwmans
 	 */
 	class SceneManager {
-		private:
-			SceneGroup world;
+	 private:
+		SceneGroup world;
 
-			UniversalGravitation universalGravity;
+		UniversalGravitation universalGravity;
 
-		public:
-			/**
-			 * Constructor.
-			 */
-			SceneManager();
+	 public:
+		/**
+		 * Constructor.
+		 */
+		SceneManager();
 
-			/**
-			 * Start the multithreaded main scene loop. Framebuffer should be ready.
-			 */
-			void startSceneLoop();
+		/**
+		 * Start the multithreaded main scene loop. Framebuffer should be ready.
+		 */
+		void startSceneLoop();
 
-			/**
-			 * Add an item under scene graph control.
-			 *
-			 * @param item Unique pointer to the @ref SceneItem. The scene graph takes ownership.
-			 */
-			void addItem(std::unique_ptr<SceneItem> item);
+		/**
+		 * Add an item under scene graph control.
+		 *
+		 * @param item Unique pointer to the @ref SceneItem. The scene graph takes ownership.
+		 */
+		void addItem(std::unique_ptr<SceneItem> item);
 	};
 }
 

@@ -8,53 +8,53 @@ namespace modelloader {
 	 * Wrapper class that represents a vertex buffer collection.
 	 */
 	class VertexBuffer {
-		private:
-			GLuint vBO, iBO, nBO;
-			GLuint vao;
-			unsigned int numIndices;
+	 private:
+		GLuint vBO, iBO, nBO;
+		GLuint vao;
+		unsigned int numIndices;
 
-		public:
-			/**
-			 * Constructor.
-			 *
-			 * @param myVBO 'Vertex'/position Buffer Object of this vertex buffer collection.
-			 * @param myIBO Indice Buffer Object of this vertex buffer collection.
-			 * @param myNumIndices Number of indices associated with this vertex buffer collection.
-			 */
-			VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices);
+	 public:
+		/**
+		 * Constructor.
+		 *
+		 * @param myVBO 'Vertex'/position Buffer Object of this vertex buffer collection.
+		 * @param myIBO Indice Buffer Object of this vertex buffer collection.
+		 * @param myNumIndices Number of indices associated with this vertex buffer collection.
+		 */
+		VertexBuffer(GLuint myVBO, GLuint myIBO, GLuint myNBO, unsigned int myNumIndices);
 
-			/**
-			 * Request the 'Vertex'/position Buffer Object.
-			 *
-			 * @return 'Vertex'/position Buffer Object identifier.
-			 */
-			inline const GLuint getVBO() const;
+		/**
+		 * Request the 'Vertex'/position Buffer Object.
+		 *
+		 * @return 'Vertex'/position Buffer Object identifier.
+		 */
+		inline const GLuint getVBO() const;
 
-			/**
-			 * Request the Normal Buffer Object.
-			 *
-			 * @return Normal Buffer Object identifier.
-			 */
-			inline const GLuint getNBO() const;
+		/**
+		 * Request the Normal Buffer Object.
+		 *
+		 * @return Normal Buffer Object identifier.
+		 */
+		inline const GLuint getNBO() const;
 
-			/**
-			 * Request the Indice Buffer Object.
-			 *
-			 * @return Indice Buffer Object identifier.
-			 */
-			inline const GLuint getIBO() const;
+		/**
+		 * Request the Indice Buffer Object.
+		 *
+		 * @return Indice Buffer Object identifier.
+		 */
+		inline const GLuint getIBO() const;
 
-			/**
-			 * Request the number of indices.
-			 *
-			 * @return Number of indices.
-			 */
-			inline const unsigned int getNumIndices() const;
+		/**
+		 * Request the number of indices.
+		 *
+		 * @return Number of indices.
+		 */
+		inline const unsigned int getNumIndices() const;
 
-			/**
-			 * Bind the buffers from this vertex buffer collection for use.
-			 */
-			void bindBuffers() const;
+		/**
+		 * Bind the buffers from this vertex buffer collection for use.
+		 */
+		void bindBuffers() const;
 	};
 
 	const GLuint VertexBuffer::getVBO() const {

@@ -13,15 +13,15 @@ namespace scene {
 	 * @author Michel Bouwmans
 	 */
 	class UniversalGravitation {
-		private:
-			static constexpr double G = 0.0000000000667384;
+	 private:
+		static constexpr double G = 0.0000000000667384;
 
-			std::vector<GravitationalObject*> gravityObjects;
-		public:
-			inline void addObject(GravitationalObject* gravObject);
-			inline void delObject(GravitationalObject* gravObject);
+		std::vector<GravitationalObject*> gravityObjects;
+	 public:
+		inline void addObject(GravitationalObject* gravObject);
+		inline void delObject(GravitationalObject* gravObject);
 
-			void update();
+		void update();
 	};
 
 	void UniversalGravitation::addObject(GravitationalObject* gravObject) {

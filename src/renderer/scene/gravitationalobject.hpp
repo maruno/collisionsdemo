@@ -16,47 +16,47 @@ namespace scene {
 	 * @author Michel Bouwmans
 	 */
 	class GravitationalObject : public scene::SceneItem {
-		private:
-			unsigned int mass;
-			glm::vec3 gravitationalForce;
-			glm::vec3 currentMotion;
+	 private:
+		unsigned int mass;
+		glm::vec3 gravitationalForce;
+		glm::vec3 currentMotion;
 
-		public:
-			/**
-			 * Constructor.
-			 *
-			 * @param myMass Mass of this item.
-			 */
-			GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName, scene::collisiondetection::BoundingVolume& myBounds);
+	 public:
+		/**
+		 * Constructor.
+		 *
+		 * @param myMass Mass of this item.
+		 */
+		GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName, scene::collisiondetection::BoundingVolume& myBounds);
 
-			/**
-			 * Request the mass.
-			 *
-			 * @return Mass of this item.
-			 */
-			inline unsigned int getMass() const;
+		/**
+		 * Request the mass.
+		 *
+		 * @return Mass of this item.
+		 */
+		inline unsigned int getMass() const;
 
-			/**
-			 * Add a new force to this item.
-			 *
-			 * @param additionalForce The additional force that works on this item.
-			 */
-			inline void addForce(glm::vec3 additionalForce);
+		/**
+		 * Add a new force to this item.
+		 *
+		 * @param additionalForce The additional force that works on this item.
+		 */
+		inline void addForce(glm::vec3 additionalForce);
 
-			/**
-			 * Reset all forces acting upon this item.
-			 */
-			inline void resetForce();
+		/**
+		 * Reset all forces acting upon this item.
+		 */
+		inline void resetForce();
 
-			/**
-			 * Request the current motion.
-			 *
-			 * @return The current motion of this item.
-			 */
-			inline glm::vec3 getCurrentMotion() const;
+		/**
+		 * Request the current motion.
+		 *
+		 * @return The current motion of this item.
+		 */
+		inline glm::vec3 getCurrentMotion() const;
 
-			virtual void update() override;
-			virtual void render(glm::mat4& parentMatrix) const override = 0;
+		virtual void update() override;
+		virtual void render(glm::mat4& parentMatrix) const override = 0;
 	};
 
 	void GravitationalObject::addForce(glm::vec3 additionalForce) {
