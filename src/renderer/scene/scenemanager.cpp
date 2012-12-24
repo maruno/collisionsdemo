@@ -10,8 +10,6 @@
 #include "scenegroup.hpp"
 #include "perspectivecamera.hpp"
 
-#include "collisiondetection/collisiondetector.hpp"
-
 #include "render/lightmanager.hpp"
 
 #include "config/globals.hpp"
@@ -45,7 +43,7 @@ void SceneManager::startSceneLoop() {
 				if(group.constraints != nullptr) {
 					auto it = group.childItems.begin();
 					while(it != group.childItems.end()) {
-						if(!scene::collisiondetection::intersects(*(group.constraints), (*it)->getBounds())) {
+						if(!group.constraints->intersects((*it)->getBounds())) {
 							std::lock_guard<std::recursive_mutex> guard(group.rootNode->sceneMutex);
 
 							group.rootNode->bubbleItem(std::move(*it));

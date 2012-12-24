@@ -14,18 +14,8 @@
 
  */
 
-scene::collisiondetection::AxisAlignedBoundingBox::AxisAlignedBoundingBox(std::tuple<glm::vec3, glm::vec3> diagonal) {
-	glm::vec3& frontLowerLeft = std::get<0>(diagonal);
-	glm::vec3& backUpperRight = std::get<1>(diagonal);
-
-	minX = frontLowerLeft.x;
-	maxX = backUpperRight.x;
-
-	minY = frontLowerLeft.y;
-	maxY = backUpperRight.y;
-
-	minZ = backUpperRight.z;
-	maxZ = frontLowerLeft.z;
+scene::collisiondetection::AxisAlignedBoundingBox::AxisAlignedBoundingBox(std::tuple<glm::vec3, glm::vec3> diagonal)
+: minX(std::get<0>(diagonal).x), maxX(std::get<1>(diagonal).x), minY(std::get<0>(diagonal).y), maxY(std::get<1>(diagonal).y), minZ(std::get<1>(diagonal).z), maxZ(std::get<0>(diagonal).z) {
 }
 
 scene::collisiondetection::AxisAlignedBoundingBox::~AxisAlignedBoundingBox() {

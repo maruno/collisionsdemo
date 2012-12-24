@@ -32,12 +32,12 @@ void SceneGroup::addOctreeLayers(unsigned int levels) {
 		childGroups = new std::array<SceneGroup,8>;
 
 		//Calculate and set constraints for all childGroups
-		float width = (constraints->getMaxX() - constraints->getMinX()) / 2.0f;
-		float height = (constraints->getMaxY() - constraints->getMinY()) / 2.0f;
-		float depth = (constraints->getMaxZ() - constraints->getMinZ()) / 2.0f;
+		float width = (constraints->maxX - constraints->minX) / 2.0f;
+		float height = (constraints->maxY - constraints->minY) / 2.0f;
+		float depth = (constraints->maxZ - constraints->minZ) / 2.0f;
 
-		glm::vec3 childMinimum(constraints->getMinX(), constraints->getMinY(), constraints->getMaxZ());
-		glm::vec3 childMaximum(constraints->getMinX() + width, constraints->getMinY() + height, constraints->getMaxZ() - depth);
+		glm::vec3 childMinimum(constraints->minX, constraints->minY, constraints->maxZ);
+		glm::vec3 childMaximum(constraints->minX + width, constraints->minY + height, constraints->maxZ - depth);
 
 		(*childGroups)[0].constraints.reset(new AABB(Diagonal(childMinimum, childMaximum)));
 
@@ -106,7 +106,7 @@ void SceneGroup::bubbleItem(std::unique_ptr<SceneItem> item) {
 	
 	if(childGroups != nullptr) {
 		std::function<bool(SceneGroup&)> itemInGroup = [&item](SceneGroup& child) {
-			return collisiondetection::intersects(*(child.constraints), item->getBounds());
+			return child.constraints->intersects(item->getBounds());
 		};
 
 		auto viableGroup = std::find_if(childGroups->begin(), childGroups->end(), itemInGroup);
