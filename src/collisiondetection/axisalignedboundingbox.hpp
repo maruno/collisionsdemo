@@ -12,9 +12,8 @@ namespace collisiondetection {
 		const float minY, maxY;
 		const float minZ, maxZ;
 
-
 		AxisAlignedBoundingBox(std::tuple<glm::vec3, glm::vec3> diagonal);
-		virtual ~AxisAlignedBoundingBox();
+		virtual ~AxisAlignedBoundingBox() = default;
 
 		virtual bool intersects(const BoundingVolume& other) const override;
 	};
