@@ -10,7 +10,7 @@
 
 using namespace scene;
 
-typedef collisiondetection::AxisAlignedBoundingCuboid AABB;
+typedef collisiondetection::AxisAlignedBoundingBox AABB;
 typedef std::tuple<glm::vec3, glm::vec3> Diagonal;
 
 SceneGroup* SceneGroup::rootNode;
@@ -20,7 +20,7 @@ SceneGroup::SceneGroup() : childGroups{nullptr} {
 	rootNode = this;
 }
 
-SceneGroup::SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAlignedBoundingCuboid myConstraints)
+SceneGroup::SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAlignedBoundingBox myConstraints)
 	: constraints(new AABB(myConstraints)) {
 	addOctreeLayers(octreeLevels);
 

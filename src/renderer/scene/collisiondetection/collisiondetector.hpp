@@ -12,7 +12,7 @@
 
 #include "scene/collisiondetection/boundingsphere.hpp"
 #include "scene/collisiondetection/boundingvolume.hpp"
-#include "scene/collisiondetection/axisalignedboundingcuboid.hpp"
+#include "scene/collisiondetection/AxisAlignedBoundingBox.hpp"
 
 namespace scene {
 
@@ -24,11 +24,11 @@ namespace scene {
 
 		bool intersects(const scene::collisiondetection::BoundingVolume& a, const scene::collisiondetection::BoundingVolume& b);
 
-		bool intersects(const AxisAlignedBoundingCuboid& a, const AxisAlignedBoundingCuboid& b);
+		bool intersects(const AxisAlignedBoundingBox& a, const AxisAlignedBoundingBox& b);
 
 		bool intersects(const BoundingSphere& a, const BoundingSphere& b);
 
-		bool intersects(const AxisAlignedBoundingCuboid& cuboid, const BoundingSphere& sphere);
+		bool intersects(const AxisAlignedBoundingBox& cuboid, const BoundingSphere& sphere);
 	}
 }
 

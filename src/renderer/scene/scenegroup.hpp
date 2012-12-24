@@ -11,7 +11,7 @@
 
 #include "renderer/scene/sceneitem.hpp"
 
-#include "renderer/scene/collisiondetection/axisalignedboundingcuboid.hpp"
+#include "renderer/scene/collisiondetection/AxisAlignedBoundingBox.hpp"
 
 namespace scene {
 	class SceneManager;
@@ -29,7 +29,7 @@ namespace scene {
 		std::array<SceneGroup, 8>* childGroups;
 		std::list<std::unique_ptr<SceneItem>> childItems;
 
-		std::unique_ptr<collisiondetection::AxisAlignedBoundingCuboid> constraints;
+		std::unique_ptr<collisiondetection::AxisAlignedBoundingBox> constraints;
 
 		static SceneGroup* rootNode;
 		static std::recursive_mutex sceneMutex;
@@ -44,7 +44,7 @@ namespace scene {
 		 * @param octreeLevels Number of octree levels that should be used.
 		 * @param myConstraints Constraining box of this scene graph.
 		 */
-		SceneGroup(unsigned int octreeLevels, scene::collisiondetection::AxisAlignedBoundingCuboid myConstraints);
+		SceneGroup(unsigned int octreeLevels, scene::collisiondetection::AxisAlignedBoundingBox myConstraints);
 
 		/**
 		 * Call visitation-function on all @ref SceneItem childs in the scene graph.

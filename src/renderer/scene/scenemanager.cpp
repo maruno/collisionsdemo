@@ -18,7 +18,7 @@
 
 using namespace scene;
 
-typedef scene::collisiondetection::AxisAlignedBoundingCuboid AABB;
+typedef scene::collisiondetection::AxisAlignedBoundingBox AABB;
 
 SceneManager::SceneManager()
 	: world(3, AABB(std::make_tuple(glm::vec3(-500.0f, -500.0f, 500.0f), glm::vec3(500.0f, 500.0f, -500.0f)))) {

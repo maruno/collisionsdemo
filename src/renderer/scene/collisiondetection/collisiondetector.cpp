@@ -10,17 +10,17 @@ bool scene::collisiondetection::intersects(const BoundingVolume& a, const Boundi
 		const BoundingSphere& bsa = static_cast<const BoundingSphere&>(a);
 		const BoundingSphere& bsb = static_cast<const BoundingSphere&>(b);
 		collision = intersects(bsa, bsb);
-	} else if(typeA == typeid(const AxisAlignedBoundingCuboid) && typeB == typeid(const AxisAlignedBoundingCuboid)) {
-		const AxisAlignedBoundingCuboid& aabca = static_cast<const AxisAlignedBoundingCuboid&>(a);
-		const AxisAlignedBoundingCuboid& aabcb = static_cast<const AxisAlignedBoundingCuboid&>(b);
+	} else if(typeA == typeid(const AxisAlignedBoundingBox) && typeB == typeid(const AxisAlignedBoundingBox)) {
+		const AxisAlignedBoundingBox& aabca = static_cast<const AxisAlignedBoundingBox&>(a);
+		const AxisAlignedBoundingBox& aabcb = static_cast<const AxisAlignedBoundingBox&>(b);
 		collision = intersects(aabca, aabcb);
-	} else if(typeA == typeid(const AxisAlignedBoundingCuboid) && typeB == typeid(const BoundingSphere)) {
-		const AxisAlignedBoundingCuboid& cuboid = static_cast<const AxisAlignedBoundingCuboid&>(a);
+	} else if(typeA == typeid(const AxisAlignedBoundingBox) && typeB == typeid(const BoundingSphere)) {
+		const AxisAlignedBoundingBox& cuboid = static_cast<const AxisAlignedBoundingBox&>(a);
 		const BoundingSphere& sphere = static_cast<const BoundingSphere&>(b);
 		collision = intersects(cuboid, sphere);
-	} else if(typeA == typeid(const BoundingSphere) && typeB == typeid(const AxisAlignedBoundingCuboid)) {
+	} else if(typeA == typeid(const BoundingSphere) && typeB == typeid(const AxisAlignedBoundingBox)) {
 		const BoundingSphere& sphere = static_cast<const BoundingSphere&>(a);
-		const AxisAlignedBoundingCuboid& cuboid = static_cast<const AxisAlignedBoundingCuboid&>(b);
+		const AxisAlignedBoundingBox& cuboid = static_cast<const AxisAlignedBoundingBox&>(b);
 		collision = intersects(cuboid, sphere);
 	}
 	return collision;
@@ -39,11 +39,11 @@ bool scene::collisiondetection::intersects(const BoundingSphere& a, const Boundi
 	return collision;
 }
 
-bool scene::collisiondetection::intersects(const AxisAlignedBoundingCuboid& a, const AxisAlignedBoundingCuboid& b) {
+bool scene::collisiondetection::intersects(const AxisAlignedBoundingBox& a, const AxisAlignedBoundingBox& b) {
 	return a.intersects(b);
 }
 
-bool scene::collisiondetection::intersects(const AxisAlignedBoundingCuboid& cuboid, const BoundingSphere& sphere) {
+bool scene::collisiondetection::intersects(const AxisAlignedBoundingBox& cuboid, const BoundingSphere& sphere) {
 	bool collision = false;
 	glm::vec3 closestPoint;
 
