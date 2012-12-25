@@ -15,9 +15,7 @@ namespace render {
 		GLuint colourInfoUBO;
 
 	 public:
-		ColouredPhongSceneItem(glm::vec3 initialLocation, std::string objectName,
-				       collisiondetection::BoundingVolume& myBounds,
-		                       ColourInformationUniform colour);
+		ColouredPhongSceneItem(glm::vec3 initialLocation, std::string objectName, ColourInformationUniform colour);
 
 		virtual void render(glm::mat4& parentMatrix) const final override;
 	};

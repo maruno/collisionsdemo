@@ -8,9 +8,8 @@
 
 using namespace scene;
 
-SceneItem::SceneItem(glm::vec3 initialLocation, std::string objectName, collisiondetection::BoundingVolume& myBounds)
-	: location(initialLocation), modelMatrix{1.0f}, bounds(myBounds),
-	  vBuffers(modelloader::VertexBufferFactory::getInstance()["sphere"]) {
+SceneItem::SceneItem(glm::vec3 initialLocation, std::string objectName)
+	: location(initialLocation), modelMatrix{1.0f}, vBuffers(modelloader::VertexBufferFactory::getInstance()["sphere"]) {
 	//Generate UBO for storing a matrix
 	glGenBuffers(1, &matrixUBO);
 }

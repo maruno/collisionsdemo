@@ -27,7 +27,6 @@ namespace scene {
 		GLuint shaderProgram;
 
 		const modelloader::VertexBuffer& vBuffers;
-		const collisiondetection::BoundingVolume& bounds;
 
 		mutable std::mutex locationMutex;
 		mutable std::recursive_mutex matrixMutex;
@@ -39,7 +38,7 @@ namespace scene {
 		 * @param objectName Name of the obj-file without extension.
 		 * @param myBounds Bounding volume for this item.
 		 */
-		SceneItem(glm::vec3 initialLocation, std::string objectName, collisiondetection::BoundingVolume& myBounds);
+		SceneItem(glm::vec3 initialLocation, std::string objectName);
 
 		/**
 		 * Called every update-tick.
@@ -85,7 +84,7 @@ namespace scene {
 	}
 
 	const collisiondetection::BoundingVolume& SceneItem::getBounds() const {
-		return bounds;
+		return vBuffers.getBounds();
 	}
 
 	std::recursive_mutex& SceneItem::getMatrixMutex() {
