@@ -9,7 +9,7 @@
 using namespace scene;
 
 SceneItem::SceneItem(glm::vec3 initialLocation, std::string objectName)
-	: location(initialLocation), modelMatrix{1.0f}, vBuffers(modelloader::VertexBufferFactory::getInstance()["sphere"]) {
+	: location(initialLocation), modelMatrix{1.0f}, vBuffers(modelloader::VertexBufferFactory::getInstance()[objectName]) {
 	//Generate UBO for storing a matrix
 	glGenBuffers(1, &matrixUBO);
 }
