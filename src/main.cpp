@@ -15,8 +15,6 @@
 #include "renderer/scene/perspectivecamera.hpp"
 #include "renderer/scene/scenegroup.hpp"
 
-#include "renderer/scene/collisiondetection/axisalignedboundingcuboid.hpp"
-
 int main(int argc, char** argv) {
 	glfwInit();
 
