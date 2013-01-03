@@ -17,3 +17,6 @@ difficultyVector(difficulty) {
 		obstacles.push_back(std::make_pair(glm::vec3{0.0f, -1.0f, 0.0f}, obstacleMatrix));
 	}
 }
+
+TunnelSegment::TunnelSegment(const TunnelSegment& other) : render::ColouredPhongSceneItem(other.location, "tunnel-segment", render::ColourInformationUniform{glm::vec3{140.0f, 140.0f, 140.0f}, 0.3f}),	obstacles(other.obstacles), difficultyVector(other.difficultyVector){
+}

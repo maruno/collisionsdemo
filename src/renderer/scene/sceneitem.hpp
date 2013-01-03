@@ -75,6 +75,8 @@ namespace scene {
 		 * @return Matrix mutex for this item.
 		 */
 		inline std::recursive_mutex& getMatrixMutex();
+
+		virtual ~SceneItem() = default;
 	};
 
 	glm::vec3 SceneItem::getLocation() const {

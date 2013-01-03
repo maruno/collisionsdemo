@@ -18,6 +18,8 @@ namespace render {
 		ColouredPhongSceneItem(glm::vec3 initialLocation, std::string objectName, ColourInformationUniform colour);
 
 		virtual void render(glm::mat4& parentMatrix) const final override;
+
+		virtual ~ColouredPhongSceneItem() = default;
 	};
 }
 
