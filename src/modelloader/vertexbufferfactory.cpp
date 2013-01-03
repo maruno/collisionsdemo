@@ -24,8 +24,15 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	}
 
 	//VBO not in flyweight pool: Load and buffer obj-file to VBO
-	std::ifstream inputFile("./models/" + objName + ".obj");
-	modelloader::ObjLexer lexer(&inputFile);
+	std::ifstream objFile("./models/" + objName + ".obj");
+
+	if(!objFile.is_open()) {
+		//TODO To logging
+		std::cerr << "Could not find model " << objName << std::endl;
+		assert(objFile.is_open());
+	}
+
+	modelloader::ObjLexer lexer(&objFile);
 
 	std::vector<glm::vec3> verticesData;
 	std::vector<unsigned int> indicesData;
