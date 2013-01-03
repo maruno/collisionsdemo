@@ -12,6 +12,7 @@ namespace config {
 		constexpr unsigned short cameraMovementSpeed = 2;
 		constexpr float cameraRotationalSpeed = 0.5f;
 		constexpr float ambianceLight = 0.05f;
+		constexpr unsigned int tunnelLength = 100;
 	}
 }
 

@@ -12,6 +12,9 @@
 #include "renderer/scene/scenemanager.hpp"
 #include "renderer/scene/perspectivecamera.hpp"
 
+#include "tunnelsegment.hpp"
+#include "tunnelgenerator.hpp"
+
 //HACK for C access
 scene::SceneManager* sceneManagerPtr;
 
@@ -69,7 +72,11 @@ int main(int argc, char** argv) {
 		}
 	});
 
-	//TODO SceneItems
+	//Add SceneItems
+	TunnelGenerator gen;
+	for(int i = 0; i < config::globals::tunnelLength; ++gen, ++i) {
+		sceneManager.addItem(std::unique_ptr<scene::SceneItem>(new TunnelSegment(*gen)));
+	}
 
 	//Start main render loop
 	sceneManager.startSceneLoop();
