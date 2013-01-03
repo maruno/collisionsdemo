@@ -1,8 +1,6 @@
 #version 150 core
 
-layout(std140) uniform;
-
-uniform matrixUni {
+layout(std140) uniform matrixUni {
 	mat4 mVPMatrix;
 	mat4 mVMatrix;
 	mat3 normalMatrix;

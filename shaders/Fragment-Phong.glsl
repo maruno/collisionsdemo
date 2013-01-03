@@ -1,16 +1,14 @@
 #version 150 core
 
-layout(std140) uniform;
-
-uniform lightsUni {
+layout(std140) uniform lightsUni {
 	vec4 lightSource[10];
 };
 
-uniform cameraUni {
+layout(std140) uniform cameraUni {
 	vec3 viewSource;
 };
 
-uniform colourInformationUni {
+layout(std140) uniform colourInformationUni {
 	vec3 ambiance;
 	vec3 kColour;
 	vec3 mShininess;
