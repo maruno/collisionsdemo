@@ -13,7 +13,6 @@
 
 #include "renderer/scene/scenemanager.hpp"
 #include "renderer/scene/perspectivecamera.hpp"
-#include "renderer/scene/scenegroup.hpp"
 
 int main(int argc, char** argv) {
 	glfwInit();
