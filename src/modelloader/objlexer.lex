@@ -15,7 +15,7 @@
 
 LineTerminator \r|\n|\r\n
 WhiteSpace [ \t\f]
-Identifier [A-Za-z0-9 .\(\):\']*
+Identifier [A-Za-z0-9 \-\.\(\):\']*
 TextLine ({Identifier}|{WhiteSpace})*{LineTerminator}
 Comment #{TextLine}
 Float "-"?[0-9]+"."[0-9]+
@@ -41,5 +41,6 @@ Crap ("mtllib"|"usemtl"|"s"|"o"|"g")({Identifier}|{WhiteSpace})*{LineTerminator}
 {Slash} {return modelloader::ObjParser::token::INDEXDELIMITER;}
 {WhiteSpace} {}
 {Crap} {}
+. printf("Lexical analyzer: bad input character '%s' at line %d\n", yytext, yylineno);
 
 %%
