@@ -16,6 +16,8 @@ class TunnelSegment : public render::ColouredPhongSceneItem {
 	TunnelSegment(glm::vec3& location, glm::vec3& difficulty);
 
 	inline const glm::vec3& getDifficultyVector();
+
+	virtual void update(){};
 };
 
 const glm::vec3& TunnelSegment::getDifficultyVector() {
