@@ -4,6 +4,7 @@
 #include <list>
 #include <algorithm>
 #include <memory>
+#include <atomic>
 
 #include "renderer/scene/universalgravitation.hpp"
 #include "renderer/scene/sceneitem.hpp"
@@ -24,6 +25,7 @@ namespace scene {
 		SceneGroup world;
 
 		UniversalGravitation universalGravity;
+		std::atomic<bool> running;
 
 	 public:
 		/**
@@ -35,6 +37,11 @@ namespace scene {
 		 * Start the multithreaded main scene loop. Framebuffer should be ready.
 		 */
 		void startSceneLoop();
+
+		/**
+		 * Stop the multithreaded main scene loop and return startSceneLoop.
+		 */
+		void stopSceneLoop();
 
 		/**
 		 * Add an item under scene graph control.

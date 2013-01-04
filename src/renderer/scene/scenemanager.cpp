@@ -17,14 +17,17 @@
 using namespace scene;
 
 SceneManager::SceneManager()
-	: world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-500.0f, -500.0f, 500.0f), glm::vec3(500.0f, 500.0f, -500.0f)))) {
+: world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-500.0f, -500.0f, 500.0f), glm::vec3(500.0f, 500.0f, -500.0f)))),
+running(false){
 }
 
 void SceneManager::startSceneLoop() {
 	scene::PerspectiveCamera& camera = scene::PerspectiveCamera::getInstance();
 
+	running = true;
+
 	std::thread updateThread([this, &camera]() {
-		while(true) {
+		while(running) {
 			universalGravity.update();
 
 			world.visitScene([](std::unique_ptr<SceneItem>& child) {
@@ -59,7 +62,7 @@ void SceneManager::startSceneLoop() {
 		}
 	});
 
-	while(true) {
+	while(running) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		render::LightManager::getInstance().upload();
@@ -69,6 +72,12 @@ void SceneManager::startSceneLoop() {
 
 		std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::frameRate)*1000));
 	}
+
+	updateThread.join();
+}
+
+void SceneManager::stopSceneLoop() {
+	running = false;
 }
 
 void SceneManager::addItem(std::unique_ptr<SceneItem> item) {

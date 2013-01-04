@@ -12,6 +12,9 @@
 #include "renderer/scene/scenemanager.hpp"
 #include "renderer/scene/perspectivecamera.hpp"
 
+//HACK for C access
+scene::SceneManager* sceneManagerPtr;
+
 int main(int argc, char** argv) {
 	glfwInit();
 
@@ -44,8 +47,17 @@ int main(int argc, char** argv) {
 	scene::PerspectiveCamera& camera = scene::PerspectiveCamera::getInstance();
 	scene::SceneManager sceneManager;
 
-	camera.changeCameraPosition(glm::vec3(20.0f, 0.0f, 150.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	//HACK for C access
+	sceneManagerPtr =  &sceneManager;
+
+	camera.changeCameraPosition(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 	camera.rescale(config::globals::initialWidth, config::globals::initialHeight);
+
+	glfwSetWindowCloseCallback([](){
+		sceneManagerPtr->stopSceneLoop();
+
+		return GL_FALSE;
+	});
 
 	glfwSetWindowSizeCallback([](int width, int height) {
 		scene::PerspectiveCamera::getInstance().rescale(width, height);
@@ -61,4 +73,8 @@ int main(int argc, char** argv) {
 
 	//Start main render loop
 	sceneManager.startSceneLoop();
+
+	glfwCloseWindow();
+
+	return EXIT_SUCCESS;
 }
