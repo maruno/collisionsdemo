@@ -54,7 +54,7 @@ namespace scene {
 		 * @param position New camera position.
 		 * @param direction New direction in which camera is observing.
 		 */
-		void changeCameraPosition(glm::vec3 position, glm::vec3 direction);
+		void changeCameraPosition(glm::vec3 myPosition, glm::vec3 myDirection);
 
 		/**
 		 * Render an image using this camera.
@@ -62,11 +62,6 @@ namespace scene {
 		void render(scene::SceneGroup* world);
 
 		inline GLuint getUBO();
-
-		/**
-		 * Update the position and direction of the camera.
-		 */
-		void update();
 
 		inline const glm::vec3& getPosition();
 

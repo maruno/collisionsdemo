@@ -56,8 +56,6 @@ void SceneManager::startSceneLoop() {
 				}
 			});
 
-			camera.update();
-
 			std::this_thread::sleep_for(std::chrono::milliseconds((unsigned int)(1.0f/config::globals::updateRate)*1000));
 		}
 	});

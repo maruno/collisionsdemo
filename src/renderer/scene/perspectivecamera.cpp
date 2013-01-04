@@ -25,7 +25,10 @@ void PerspectiveCamera::rescale(int width, int height) {
 	projection = glm::perspective<float>(60.0f, static_cast<float>(width)/height, 0.3f, 1000.0f);
 }
 
-void PerspectiveCamera::changeCameraPosition(glm::vec3 position, glm::vec3 direction) {
+void PerspectiveCamera::changeCameraPosition(glm::vec3 myPosition, glm::vec3 myDirection) {
+	position = myPosition;
+	direction = myDirection;
+
 	glm::vec3 lookAtCenter = position + direction;
 
 	view = glm::lookAt<float>(position, lookAtCenter, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -37,13 +40,6 @@ void PerspectiveCamera::render(SceneGroup* world) {
 	world->visitScene([this](std::unique_ptr<SceneItem>& child) {
 		child->render(view);
 	});
-}
-
-void PerspectiveCamera::update() {
-	constexpr float directionUpdate = 1.0f/config::globals::updateRate * config::globals::cameraRotationalSpeed;
-	constexpr float positionUpdate = 1.0f/config::globals::updateRate * config::globals::cameraMovementSpeed;
-
-	changeCameraPosition(position, direction);
 }
 
 void PerspectiveCamera::upload() {
