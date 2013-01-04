@@ -1,8 +1,6 @@
 #include <memory>
 #include <tuple>
 
-#include <unistd.h>
-
 #include "glload/gl_3_2.h"
 #include "glload/gll.hpp"
 #include <GL/glfw.h>
