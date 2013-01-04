@@ -21,6 +21,14 @@ bool AxisAlignedBoundingBox::intersects(const BoundingVolume& other) const {
 				}
 			}
 		}
+
+		if(util::between(otherbox.minX, minX, maxX) || util::between(otherbox.maxX, minX, maxX)) {
+			if(util::between(otherbox.minY, minY, maxY) || util::between(otherbox.maxY, minY, maxY)) {
+				if(util::between(otherbox.minZ, minZ, maxZ) || util::between(otherbox.maxZ, minZ, maxZ)) {
+					return true;
+				}
+			}
+		}
 	}
 
 	return false;
