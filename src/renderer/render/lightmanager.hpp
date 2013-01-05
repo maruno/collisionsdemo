@@ -31,8 +31,6 @@ namespace render {
 
 		static inline LightManager& getInstance();
 
-		//void cameraMoved();
-
 		unsigned int addLightSource(const glm::vec3& lightLocation, float lightIntensity);
 		void moveLightSource(unsigned int lightSourceId, const glm::vec3& lightLocation);
 

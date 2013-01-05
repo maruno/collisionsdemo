@@ -10,12 +10,6 @@ LightManager::LightManager(): needsUpload(true), numLightSources(0) {
 	glGenBuffers(1, &uBO);
 }
 
-/*void LightManager::cameraMoved() {
-	sourcesUni.viewSource = scene::PerspectiveCamera::getInstance().getPosition();
-	
-	needsUpload = true;
-}*/
-
 unsigned int LightManager::addLightSource(const glm::vec3& lightLocation, float lightIntensity) {
 	if(numLightSources == 10) {
 		throw MaxLightsReached();
