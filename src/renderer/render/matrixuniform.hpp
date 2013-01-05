@@ -13,8 +13,8 @@ namespace render {
 		glm::mat4 normalMatrix;
 
 		MatrixUniform(const glm::mat4& myMVMatrix) 
-		: mVMatrix(myMVMatrix), mVPMatrix(scene::PerspectiveCamera::getInstance().getProjectionMatrix() * mVMatrix) {
-			normalMatrix = glm::mat4(glm::inverseTranspose(glm::mat3(myMVMatrix)));
+		: mVMatrix(myMVMatrix), mVPMatrix(scene::PerspectiveCamera::getInstance().getProjectionMatrix() * myMVMatrix) {
+			normalMatrix = glm::inverseTranspose(myMVMatrix);
 		};
 	};
 }
