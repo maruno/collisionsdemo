@@ -25,7 +25,7 @@ unsigned int LightManager::addLightSource(const glm::vec3& lightLocation, float 
 }
 
 void LightManager::moveLightSource(unsigned int lightSourceId, const glm::vec3& lightLocation) {
-	glm::vec4& lightSource = lightSources[lightSourceId];
+	glm::vec4& lightSource = lightSources[lightSourceId-1];
 	
 	lightSource.x = lightLocation.x;
 	lightSource.y = lightLocation.y;
