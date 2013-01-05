@@ -13,7 +13,7 @@ using namespace scene;
 
 std::unique_ptr<PerspectiveCamera> PerspectiveCamera::instance;
 
-PerspectiveCamera::PerspectiveCamera() : direction{0.0f, 0.0f, -1.0f}, up{0.0f, 1.0f, 0.0f}, needsUpload{true} {
+PerspectiveCamera::PerspectiveCamera() : direction{0.0f, 0.0f, -1.0f}, up{0.0f, 1.0f, 0.0f}, needsUpload{true}, lightID{0} {
 	glGenBuffers(1, &uBO);
 }
 
@@ -29,9 +29,21 @@ void PerspectiveCamera::changeCameraPosition(glm::vec3 myPosition, glm::vec3 myD
 	position = myPosition;
 	direction = myDirection;
 
+	//Update view matrix
 	glm::vec3 lookAtCenter = position + direction;
 
 	view = glm::lookAt<float>(position, lookAtCenter, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	//Camera light
+	render::LightManager& lightManager = render::LightManager::getInstance();
+
+	if(lightID) {
+		//Update light
+		lightManager.moveLightSource(lightID, position);
+	} else {
+		//Create light
+		lightID = lightManager.addLightSource(position, 0.5f);
+	}
 }
 
 void PerspectiveCamera::render(SceneGroup* world) {

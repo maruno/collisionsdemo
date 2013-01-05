@@ -25,6 +25,8 @@ namespace scene {
 		glm::vec3 position;
 		glm::vec3 direction;
 
+		unsigned int lightID;
+
 		GLuint uBO;
 		bool needsUpload;
 
