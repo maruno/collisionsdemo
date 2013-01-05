@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 	//HACK for C access
 	sceneManagerPtr =  &sceneManager;
 
-	camera.changeCameraPosition(glm::vec3(-2.5f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	camera.changeCameraPosition(glm::vec3(0.0, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 	camera.rescale(config::globals::initialWidth, config::globals::initialHeight);
 
 	glfwSetWindowCloseCallback([](){
