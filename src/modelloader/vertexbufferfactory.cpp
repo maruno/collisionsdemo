@@ -82,8 +82,7 @@ std::vector<glm::vec3> VertexBufferFactory::calculateVertexNormals(const std::ve
 	
 	std::vector<glm::vec3> vertexNormals;
 	
-	std::for_each(indicesData.begin(), indicesData.end(), [&](const unsigned int& idx){
-		const glm::vec3& vertex = verticesData.at(idx);
+	std::for_each(verticesData.begin(), verticesData.end(), [&](const glm::vec3& vertex){
 		const glm::vec3& vertexNormal = vertexNormalsMap.at(vertex);
 		
 		vertexNormals.push_back(vertexNormal);
