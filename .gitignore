@@ -4,3 +4,4 @@ build
 *.kdev4
 *.kate-swp
 *.trace
+.DS_Store
