@@ -5,6 +5,8 @@
 #include <functional>
 #include <cassert>
 
+#include "config/globals.hpp"
+
 #include "sceneitem.hpp"
 
 using namespace scene;
@@ -116,7 +118,7 @@ void SceneGroup::bubbleItem(std::unique_ptr<SceneItem> item) {
 			auto otherGroup = std::find_if(viableGroup+1, childGroups->end(), itemInGroup);
 
 			if(otherGroup != childGroups->end()) {
-				childItems.push_back(std::move(item));
+				addItem(std::move(item));
 				return;
 			}
 		}
@@ -124,7 +126,26 @@ void SceneGroup::bubbleItem(std::unique_ptr<SceneItem> item) {
 		viableGroup->bubbleItem(std::move(item));
 	}
 
-	childItems.push_back(std::move(item));
+	addItem(std::move(item));
+}
+
+void SceneGroup::addItem(std::unique_ptr<SceneItem> item) {
+	if (childGroups == nullptr && childItems.size() == config::globals::maxSceneGroupSize) {
+		addOctreeLayers(1);
+
+		auto it = childItems.begin();
+		while(it != childItems.end()) {
+			std::lock_guard<std::recursive_mutex> guard(rootNode->sceneMutex);
+			bubbleItem(std::move(*it));
+			it = childItems.erase(it);
+		}
+
+		//Finally push in item
+		std::lock_guard<std::recursive_mutex> lock(rootNode->sceneMutex);
+		bubbleItem(std::move(item));
+	} else {
+		childItems.push_back(std::move(item));
+	}
 }
 
 SceneGroup::~SceneGroup() {

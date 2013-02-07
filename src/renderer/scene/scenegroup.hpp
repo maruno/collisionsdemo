@@ -35,6 +35,13 @@ namespace scene {
 		static std::recursive_mutex sceneMutex;
 
 		void addOctreeLayers(unsigned int levels);
+
+		/**
+		 * Add an @ref SceneItem to the SceneGroup and adds octreelevels if there are lots of items
+		 *
+		 * \param item Unique pointer to the @ref SceneItem child. The scene graph takes ownership.
+		 */
+		void addItem(std::unique_ptr<SceneItem> item);
 	 public:
 		SceneGroup();
 
@@ -66,6 +73,7 @@ namespace scene {
 		 * @param child Unique pointer to the @ref SceneItem child. The scene graph takes ownership.
 		 */
 		void bubbleItem(std::unique_ptr<SceneItem> item);
+
 
 		~SceneGroup();
 	};

@@ -17,7 +17,7 @@
 using namespace scene;
 
 SceneManager::SceneManager()
-: world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-500.0f, -500.0f, 500.0f), glm::vec3(500.0f, 500.0f, -500.0f)))),
+: world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-10.0f, -10.0f, 0.0f), glm::vec3(10.0f, 10.0f, -50.0f)))),
 running(false){
 }
 

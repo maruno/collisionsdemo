@@ -13,6 +13,7 @@ namespace config {
 		constexpr float cameraRotationalSpeed = 0.5f;
 		constexpr float ambianceLight = 0.2f;
 		constexpr unsigned int tunnelLength = 100;
+		constexpr unsigned int maxSceneGroupSize = 20;
 	}
 }
 
