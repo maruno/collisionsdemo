@@ -118,6 +118,7 @@ void SceneGroup::bubbleItem(std::unique_ptr<SceneItem> item) {
 			auto otherGroup = std::find_if(viableGroup+1, childGroups->end(), itemInGroup);
 
 			if(otherGroup != childGroups->end()) {
+				//The item is on the edge of two groups, add to current group
 				addItem(std::move(item));
 				return;
 			}
