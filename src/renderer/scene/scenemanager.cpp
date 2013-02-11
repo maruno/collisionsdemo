@@ -33,11 +33,7 @@ void SceneManager::startSceneLoop() {
 			world.visitScene([](std::unique_ptr<SceneItem>& child) {
 				child->update();
 
-				child->getMatrixMutex().lock();
-
 				child->move();
-
-				child->getMatrixMutex().unlock();
 			});
 
 			world.visitGroups([](SceneGroup& group) {
