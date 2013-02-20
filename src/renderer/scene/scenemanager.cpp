@@ -33,7 +33,7 @@ void SceneManager::startSceneLoop() {
 			world.visitScene([](std::unique_ptr<SceneItem>& child) {
 				child->update();
 
-				child->move();
+				child->buildModelMatrix();
 			});
 
 			world.visitGroups([](SceneGroup& group) {

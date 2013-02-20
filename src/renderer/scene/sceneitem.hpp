@@ -6,6 +6,7 @@
 
 #include "glload/gl_3_2.h"
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "collisiondetection/boundingvolume.hpp"
 
@@ -21,6 +22,9 @@ namespace scene {
 	class SceneItem {
 	 protected:
 		glm::vec3 location;
+		glm::vec3 scale;
+		glm::quat rotation;
+
 		glm::mat4 modelMatrix;
 
 		GLuint matrixUBO;
@@ -46,9 +50,9 @@ namespace scene {
 		virtual void update() = 0;
 
 		/**
-		 * Move the object.
+		 * Rebuild the model matrix.
 		 */
-		virtual void move();
+		virtual void buildModelMatrix();
 
 		/**
 		 * Called every render-tick.
