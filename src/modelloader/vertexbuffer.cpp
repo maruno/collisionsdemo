@@ -4,7 +4,7 @@
 
 using namespace modelloader;
 
-VertexBuffer::VertexBuffer(VertexBuffer&& other) : vBO{other.vBO}, iBO{other.iBO}, nBO{other.nBO}, numIndices{other.numIndices}, extremes{other.extremes},
+VertexBuffer::VertexBuffer(VertexBuffer&& other) : vBO{other.vBO}, iBO{other.iBO}, nBO{other.nBO}, vao(other.vao), numIndices{other.numIndices}, extremes{other.extremes},
 bounds(std::move(other.bounds)){
 }
 
