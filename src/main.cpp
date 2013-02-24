@@ -15,6 +15,8 @@
 #include "tunnelsegment.hpp"
 #include "tunnelgenerator.hpp"
 
+#include "player.hpp"
+
 //HACK for C access
 scene::SceneManager* sceneManagerPtr;
 
@@ -47,14 +49,11 @@ int main(int argc, char** argv) {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//Define world
-	scene::PerspectiveCamera& camera = scene::PerspectiveCamera::getInstance();
+	scene::PerspectiveCamera::getInstance().rescale(config::globals::initialWidth, config::globals::initialHeight);
 	scene::SceneManager sceneManager;
 
 	//HACK for C access
 	sceneManagerPtr =  &sceneManager;
-
-	camera.changeCameraPosition(glm::vec3(0.0, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-	camera.rescale(config::globals::initialWidth, config::globals::initialHeight);
 
 	glfwSetWindowCloseCallback([](){
 		sceneManagerPtr->stopSceneLoop();
@@ -77,6 +76,8 @@ int main(int argc, char** argv) {
 	for(int i = 0; i < config::globals::tunnelLength; ++gen, ++i) {
 		sceneManager.addItem(std::unique_ptr<scene::SceneItem>(new TunnelSegment(*gen)));
 	}
+
+	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(new Player));
 
 	//Start main render loop
 	sceneManager.startSceneLoop();
