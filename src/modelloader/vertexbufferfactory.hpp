@@ -12,6 +12,13 @@
 
 namespace modelloader {
 	/**
+	 * Data preservation rule
+	 */
+	enum DataPreservation {
+		none, vertex, vertexAndNormal
+	};
+
+	/**
 	 * Factory class for vertex buffers.
 	 *
 	 * This class returns vertex buffer collections, associated with a name, from a flyweight pool if available.

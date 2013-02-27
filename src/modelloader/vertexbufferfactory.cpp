@@ -12,6 +12,7 @@
 #include "objlexer.hpp"
 
 #include "util/hash.hpp"
+#include "config/globals.hpp"
 
 using namespace modelloader;
 
@@ -61,6 +62,20 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	glBufferData(GL_ARRAY_BUFFER, vertexNormalsData.size()*sizeof(glm::vec3), &(vertexNormalsData.front()), GL_STATIC_DRAW);
 
 	vbopool.emplace(std::make_pair(std::string(objName), std::move(VertexBuffer{bos[0], bos[1], bos[2], indicesData.size(), extremes})));
+
+	auto it = config::preservationRules.find(objName);
+	if(it != config::preservationRules.cend()) {
+		switch (it->second) {
+			case vertex:
+				vbopool.at(objName).vertexData.reset(new std::vector<glm::vec3>(std::move(verticesData)));
+				break;
+			case vertexAndNormal:
+				vbopool.at(objName).vertexData.reset(new std::vector<glm::vec3>(std::move(verticesData)));
+				vbopool.at(objName).normalsData.reset(new std::vector<glm::vec3>(std::move(vertexNormalsData)));
+			default:
+				break;
+		}
+	}
 
 	return vbopool.at(objName);
 }

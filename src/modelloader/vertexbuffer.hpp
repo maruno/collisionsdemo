@@ -3,6 +3,8 @@
 
 #include <tuple>
 #include <memory>
+#include <vector>
+#include <exception>
 
 #include <glm/glm.hpp>
 
@@ -11,16 +13,24 @@
 #include "collisiondetection/boundingvolume.hpp"
 
 namespace modelloader {
+	class DataNotAvailable : public std::runtime_error {
+	 public:
+		DataNotAvailable() : std::runtime_error("Requested data not available for this 3D-model") {}
+	};
+
 	/**
 	 * Wrapper class that represents a vertex buffer collection.
 	 */
 	class VertexBuffer {
+	 friend class VertexBufferFactory;
 	 private:
 		GLuint vBO, iBO, nBO;
 		GLuint vao;
 		unsigned int numIndices;
 		const std::tuple<glm::vec3, glm::vec3> extremes;
 		std::unique_ptr<collisiondetection::BoundingVolume> bounds;
+		std::unique_ptr<std::vector<glm::vec3>> vertexData;
+		std::unique_ptr<std::vector<glm::vec3>> normalsData;
 
 	 public:
 		/**
@@ -80,6 +90,22 @@ namespace modelloader {
 		inline const collisiondetection::BoundingVolume& getBounds() const;
 
 		/**
+		 * Request the vertex data of the 3D-model
+		 *
+		 * \return Vertex data of this 3D-model
+		 * \throw DataNotAvailable Requested vertex data was not loaded.
+		 */
+		inline const std::vector<glm::vec3>& getVertexData() const;
+
+		/**
+		 * Request the normal data of the 3D-model
+		 *
+		 * \return Normal data of this 3D-model
+		 * \throw DataNotAvailable Requested normal data was not loaded.
+		 */
+		inline const std::vector<glm::vec3>& getNormalData() const;
+
+		/**
 		 * Bind the buffers from this vertex buffer collection for use.
 		 */
 		void bindBuffers() const;
@@ -107,6 +133,22 @@ namespace modelloader {
 
 	const collisiondetection::BoundingVolume& VertexBuffer::getBounds() const {
 		return *bounds;
+	}
+
+	const std::vector<glm::vec3>& VertexBuffer::getVertexData() const {
+		if (vertexData.get() == nullptr) {
+			throw DataNotAvailable();
+		}
+
+		return *vertexData;
+	}
+
+	const std::vector<glm::vec3>& VertexBuffer::getNormalData() const {
+		if (normalsData.get() == nullptr) {
+			throw DataNotAvailable();
+		}
+
+		return *normalsData;
 	}
 }
 

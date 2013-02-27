@@ -1,8 +1,11 @@
 #ifndef GLOBALS_HPP
 #define GLOBALS_HPP
 
+#include <map>
+#include <string>
+#include "modelloader/vertexbufferfactory.hpp"
+
 namespace config {
-	
 	namespace globals {
 		constexpr unsigned short updateRate = 40;
 		constexpr unsigned short frameRate = 35;
@@ -15,6 +18,8 @@ namespace config {
 		constexpr unsigned int tunnelLength = 100;
 		constexpr unsigned int maxSceneGroupSize = 20;
 	}
+
+	const std::map<std::string, modelloader::DataPreservation> preservationRules{{std::string{"tunnel-segment"}, modelloader::DataPreservation::vertexAndNormal}};
 }
 
 #endif // GLOBALS_HPP
