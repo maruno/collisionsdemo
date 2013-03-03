@@ -78,7 +78,7 @@ void SceneGroup::addOctreeLayers(unsigned int levels) {
 	}
 }
 
-void SceneGroup::visitScene(std::function<void(std::unique_ptr<SceneItem>&)> visitation) {
+void SceneGroup::visitScene(std::function<void(std::shared_ptr<SceneItem>)> visitation) {
 	std::lock_guard<std::recursive_mutex> guard(sceneMutex);
 
 	std::for_each(childItems.begin(), childItems.end(), visitation);
@@ -102,7 +102,7 @@ void SceneGroup::visitGroups(std::function<void(SceneGroup&)> visitation) {
 	}
 }
 
-void SceneGroup::bubbleItem(std::unique_ptr<SceneItem> item) {
+void SceneGroup::bubbleItem(std::shared_ptr<SceneItem> item) {
 	std::lock_guard<std::recursive_mutex> guard(sceneMutex);
 	
 	if(childGroups != nullptr) {
@@ -130,7 +130,7 @@ void SceneGroup::bubbleItem(std::unique_ptr<SceneItem> item) {
 	addItem(std::move(item));
 }
 
-void SceneGroup::addItem(std::unique_ptr<SceneItem> item) {
+void SceneGroup::addItem(std::shared_ptr<SceneItem> item) {
 	if (childGroups == nullptr && childItems.size() == config::globals::maxSceneGroupSize) {
 		addOctreeLayers(1);
 

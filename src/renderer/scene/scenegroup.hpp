@@ -27,7 +27,7 @@ namespace scene {
 
 	 private:
 		std::array<SceneGroup, 8>* childGroups;
-		std::list<std::unique_ptr<SceneItem>> childItems;
+		std::list<std::shared_ptr<SceneItem>> childItems;
 
 		std::unique_ptr<collisiondetection::AxisAlignedBoundingBox> constraints;
 
@@ -41,7 +41,7 @@ namespace scene {
 		 *
 		 * \param item Unique pointer to the @ref SceneItem child. The scene graph takes ownership.
 		 */
-		void addItem(std::unique_ptr<SceneItem> item);
+		void addItem(std::shared_ptr<SceneItem> item);
 	 public:
 		SceneGroup();
 
@@ -58,7 +58,7 @@ namespace scene {
 		 *
 		 * @param visitation Function to call.
 		 */
-		void visitScene(std::function<void(std::unique_ptr<SceneItem>&)> visitation);
+		void visitScene(std::function<void(std::shared_ptr<SceneItem>)> visitation);
 
 		/**
 		 * Call visitation-function on all @ref SceneGroup childs in the scene graph.
@@ -72,7 +72,7 @@ namespace scene {
 		 *
 		 * @param child Unique pointer to the @ref SceneItem child. The scene graph takes ownership.
 		 */
-		void bubbleItem(std::unique_ptr<SceneItem> item);
+		void bubbleItem(std::shared_ptr<SceneItem> item);
 
 
 		~SceneGroup();

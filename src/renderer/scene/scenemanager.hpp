@@ -48,7 +48,7 @@ namespace scene {
 		 *
 		 * @param item Unique pointer to the @ref SceneItem. The scene graph takes ownership.
 		 */
-		void addItem(std::unique_ptr<SceneItem> item);
+		void addItem(std::shared_ptr<SceneItem> item);
 	};
 }
 

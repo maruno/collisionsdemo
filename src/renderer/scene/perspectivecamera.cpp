@@ -49,7 +49,7 @@ void PerspectiveCamera::changeCameraPosition(glm::vec3 myPosition, glm::vec3 myD
 void PerspectiveCamera::render(SceneGroup* world) {
 	upload();
 	
-	world->visitScene([this](std::unique_ptr<SceneItem>& child) {
+	world->visitScene([this](std::shared_ptr<SceneItem> child) {
 		child->render(view);
 	});
 }

@@ -74,10 +74,10 @@ int main(int argc, char** argv) {
 	//Add SceneItems
 	TunnelGenerator gen;
 	for(int i = 0; i < config::globals::tunnelLength; ++gen, ++i) {
-		sceneManager.addItem(std::unique_ptr<scene::SceneItem>(new TunnelSegment(*gen)));
+		sceneManager.addItem(std::shared_ptr<scene::SceneItem>(new TunnelSegment(*gen)));
 	}
 
-	sceneManager.addItem(std::unique_ptr<scene::SceneItem>(new Player));
+	sceneManager.addItem(Player::getInstance());
 
 	//Start main render loop
 	sceneManager.startSceneLoop();

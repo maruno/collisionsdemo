@@ -30,7 +30,7 @@ void SceneManager::startSceneLoop() {
 		while(running) {
 			universalGravity.update();
 
-			world.visitScene([](std::unique_ptr<SceneItem>& child) {
+			world.visitScene([](std::shared_ptr<SceneItem> child) {
 				child->update();
 
 				child->buildModelMatrix();
@@ -74,7 +74,7 @@ void SceneManager::stopSceneLoop() {
 	running = false;
 }
 
-void SceneManager::addItem(std::unique_ptr<SceneItem> item) {
+void SceneManager::addItem(std::shared_ptr<SceneItem> item) {
 	GravitationalObject* gravObject = dynamic_cast<GravitationalObject*>(item.get());
 	if(gravObject != nullptr) {
 		universalGravity.addObject(gravObject);
