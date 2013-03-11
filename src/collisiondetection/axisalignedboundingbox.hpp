@@ -16,6 +16,8 @@ namespace collisiondetection {
 		virtual ~AxisAlignedBoundingBox() = default;
 
 		virtual bool intersects(const BoundingVolume& other) const override;
+
+		virtual void attachToItem(scene::SceneItem* item) const override {};
 	};
 
 	typedef AxisAlignedBoundingBox AABB;

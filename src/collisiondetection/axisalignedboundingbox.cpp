@@ -29,6 +29,8 @@ bool AxisAlignedBoundingBox::intersects(const BoundingVolume& other) const {
 				}
 			}
 		}
+	} else {
+		assert(0);
 	}
 
 	return false;

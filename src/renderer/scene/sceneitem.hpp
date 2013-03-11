@@ -80,6 +80,27 @@ namespace scene {
 		 */
 		inline std::recursive_mutex& getMatrixMutex();
 
+		/**
+		 * Get the model matrix for this item.
+		 *
+		 * \return Model matrix for this item.
+		 */
+		inline const glm::mat4& getModelMatrix() const;
+
+		/**
+		 * Get the rotation for this item.
+		 *
+		 * \return Rotation quaternion for this item.
+		 */
+		inline const glm::quat& getRotation() const;
+
+		/**
+		 * Get the scale for this item.
+		 *
+		 * \return Scale vec3 for this item.
+		 */
+		inline const glm::vec3& getScale() const;
+
 		virtual ~SceneItem() = default;
 	};
 
@@ -95,6 +116,18 @@ namespace scene {
 
 	std::recursive_mutex& SceneItem::getMatrixMutex() {
 		return matrixMutex;
+	}
+
+	const glm::mat4& SceneItem::getModelMatrix() const {
+		return modelMatrix;
+	}
+
+	const glm::quat& SceneItem::getRotation() const {
+		return rotation;
+	}
+
+	const glm::vec3& SceneItem::getScale() const {
+		return scale;
 	}
 }
 
