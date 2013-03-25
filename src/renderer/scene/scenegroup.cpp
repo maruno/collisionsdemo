@@ -22,13 +22,15 @@ SceneGroup::SceneGroup() : childGroups{nullptr} {
 }
 
 SceneGroup::SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAlignedBoundingBox myConstraints)
-	: constraints(new AABB(myConstraints)) {
+: childGroups{nullptr}, constraints(new AABB(myConstraints)) {
 	addOctreeLayers(octreeLevels);
 
 	rootNode = this;
 }
 
 void SceneGroup::addOctreeLayers(unsigned int levels) {
+	assert(childGroups == nullptr);
+
 	if(levels != 0) {
 		childGroups = new std::array<SceneGroup,8>;
 
@@ -72,9 +74,9 @@ void SceneGroup::addOctreeLayers(unsigned int levels) {
 
 		//Recursive call
 		std::for_each(childGroups->begin(), childGroups->end(),
-		[=](SceneGroup& child) {
-			child.addOctreeLayers(levels-1);
-		});
+			      [=](SceneGroup& child) {
+				      child.addOctreeLayers(levels-1);
+			      });
 	}
 }
 
@@ -85,9 +87,9 @@ void SceneGroup::visitScene(std::function<void(std::shared_ptr<SceneItem>)> visi
 
 	if(childGroups != nullptr) {
 		std::for_each(childGroups->begin(), childGroups->end(),
-		[&](SceneGroup& child) {
-			child.visitScene(visitation);
-		});
+			      [&](SceneGroup& child) {
+				      child.visitScene(visitation);
+			      });
 	}
 }
 
@@ -96,38 +98,64 @@ void SceneGroup::visitGroups(std::function<void(SceneGroup&)> visitation) {
 
 	if(childGroups != nullptr) {
 		std::for_each(childGroups->begin(), childGroups->end(),
-		[&](SceneGroup& child) {
-			child.visitGroups(visitation);
-		});
+			      [&](SceneGroup& child) {
+				      child.visitGroups(visitation);
+			      });
 	}
 }
 
 void SceneGroup::bubbleItem(std::shared_ptr<SceneItem> item) {
 	std::lock_guard<std::recursive_mutex> guard(sceneMutex);
-	
+
 	if(childGroups != nullptr) {
 		std::function<bool(SceneGroup&)> itemInGroup = [&item](SceneGroup& child) {
-			return child.constraints->intersects(item->getBounds());
+			const collisiondetection::BoundingVolume& otherBounds = item->getBounds();
+			otherBounds.attachToItem(item.get());
+
+			return otherBounds.intersects(*(child.constraints.get()));
 		};
 
-		auto viableGroup = std::find_if(childGroups->begin(), childGroups->end(), itemInGroup);
+		unsigned short viableGroupIdx = 0;
 
-		assert(viableGroup != childGroups->end());
+		//std::array<SceneGroup, 8>::iterator viableGroup = std::find_if(childGroups->begin(), childGroups->end(), itemInGroup);
+		//BUG workaround TROLOLOL Iterator is een pointer: typedef value_type* iterator;
+		for(; viableGroupIdx < 8; ++viableGroupIdx) {
+			if(itemInGroup(childGroups->at(viableGroupIdx))) {
+				break;
+			}
+		}
 
-		if(viableGroup+1 != childGroups->end()) {
-			auto otherGroup = std::find_if(viableGroup+1, childGroups->end(), itemInGroup);
+		if(viableGroupIdx == 8) {
+			if(this == rootNode) {
+				addItem(item);
+				return;
+			} else {
+				assert(viableGroupIdx != 8);
+			}
+		}
 
-			if(otherGroup != childGroups->end()) {
+
+		if(viableGroupIdx < 7) {
+		 	//auto otherGroup = std::find_if(viableGroup+1, childGroups->end(), itemInGroup);
+			//BUG workaround TROLOLOL Iterator is een pointer: typedef value_type* iterator;
+			unsigned short otherGroupIdx = viableGroupIdx+1;
+			for(; otherGroupIdx < 8; ++otherGroupIdx) {
+				if(itemInGroup((*childGroups)[otherGroupIdx])) {
+					break;
+				}
+			}
+
+			if(otherGroupIdx == 8) {
 				//The item is on the edge of two groups, add to current group
-				addItem(std::move(item));
+				addItem(item);
 				return;
 			}
 		}
 
-		viableGroup->bubbleItem(std::move(item));
+		(*childGroups)[viableGroupIdx].bubbleItem(item);
 	}
 
-	addItem(std::move(item));
+	addItem(item);
 }
 
 void SceneGroup::addItem(std::shared_ptr<SceneItem> item) {
@@ -137,15 +165,15 @@ void SceneGroup::addItem(std::shared_ptr<SceneItem> item) {
 		auto it = childItems.begin();
 		while(it != childItems.end()) {
 			std::lock_guard<std::recursive_mutex> guard(rootNode->sceneMutex);
-			bubbleItem(std::move(*it));
+			bubbleItem(*it);
 			it = childItems.erase(it);
 		}
 
 		//Finally push in item
 		std::lock_guard<std::recursive_mutex> lock(rootNode->sceneMutex);
-		bubbleItem(std::move(item));
+		bubbleItem(item);
 	} else {
-		childItems.push_back(std::move(item));
+		childItems.push_back(item);
 	}
 }
 

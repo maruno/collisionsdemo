@@ -29,7 +29,7 @@ namespace scene {
 		std::array<SceneGroup, 8>* childGroups;
 		std::list<std::shared_ptr<SceneItem>> childItems;
 
-		std::unique_ptr<collisiondetection::AxisAlignedBoundingBox> constraints;
+		std::shared_ptr<collisiondetection::AxisAlignedBoundingBox> constraints;
 
 		static SceneGroup* rootNode;
 		static std::recursive_mutex sceneMutex;
