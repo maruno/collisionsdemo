@@ -34,7 +34,9 @@ namespace scene {
 		static SceneGroup* rootNode;
 		static std::recursive_mutex sceneMutex;
 
-		void addOctreeLayers(unsigned int levels);
+		unsigned int sceneDepth;
+
+		void addOctreeLayers(unsigned int levels, unsigned int myDepth);
 
 		/**
 		 * Add an @ref SceneItem to the SceneGroup and adds octreelevels if there are lots of items

@@ -17,6 +17,7 @@ namespace config {
 		constexpr float ambianceLight = 0.2f;
 		constexpr unsigned int tunnelLength = 100;
 		constexpr unsigned int maxSceneGroupSize = 20;
+		constexpr unsigned int maxSceneGraphDepth = 20;
 	}
 
 	const std::map<std::string, modelloader::DataPreservation> preservationRules{{std::string{"tunnel-segment"}, modelloader::DataPreservation::vertexAndNormal}};

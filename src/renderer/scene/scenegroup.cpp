@@ -22,14 +22,16 @@ SceneGroup::SceneGroup() : childGroups{nullptr} {
 }
 
 SceneGroup::SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAlignedBoundingBox myConstraints)
-: childGroups{nullptr}, constraints(new AABB(myConstraints)) {
-	addOctreeLayers(octreeLevels);
+: childGroups{nullptr}, constraints(new AABB(myConstraints)), sceneDepth{0} {
+	addOctreeLayers(octreeLevels, sceneDepth);
 
 	rootNode = this;
 }
 
-void SceneGroup::addOctreeLayers(unsigned int levels) {
+void SceneGroup::addOctreeLayers(unsigned int levels, unsigned int myDepth) {
 	assert(childGroups == nullptr);
+
+	sceneDepth = ++myDepth;
 
 	if(levels != 0) {
 		childGroups = new std::array<SceneGroup,8>;
@@ -75,7 +77,7 @@ void SceneGroup::addOctreeLayers(unsigned int levels) {
 		//Recursive call
 		std::for_each(childGroups->begin(), childGroups->end(),
 			      [=](SceneGroup& child) {
-				      child.addOctreeLayers(levels-1);
+				      child.addOctreeLayers(levels-1, sceneDepth);
 			      });
 	}
 }
@@ -159,8 +161,8 @@ void SceneGroup::bubbleItem(std::shared_ptr<SceneItem> item) {
 }
 
 void SceneGroup::addItem(std::shared_ptr<SceneItem> item) {
-	if (childGroups == nullptr && childItems.size() == config::globals::maxSceneGroupSize) {
-		addOctreeLayers(1);
+	if (childGroups == nullptr && childItems.size() == config::globals::maxSceneGroupSize && sceneDepth != config::globals::maxSceneGraphDepth) {
+		addOctreeLayers(1, sceneDepth);
 
 		auto it = childItems.begin();
 		while(it != childItems.end()) {
