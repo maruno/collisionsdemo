@@ -17,12 +17,12 @@ typedef std::tuple<glm::vec3, glm::vec3> Diagonal;
 SceneGroup* SceneGroup::rootNode;
 std::recursive_mutex SceneGroup::sceneMutex;
 
-SceneGroup::SceneGroup() : childGroups{nullptr} {
+SceneGroup::SceneGroup() : childGroups{nullptr}, parent{nullptr} {
 	rootNode = this;
 }
 
 SceneGroup::SceneGroup(unsigned int octreeLevels, collisiondetection::AxisAlignedBoundingBox myConstraints)
-: childGroups{nullptr}, constraints(new AABB(myConstraints)), sceneDepth{0} {
+: childGroups{nullptr}, constraints(new AABB(myConstraints)), sceneDepth{0}, parent{nullptr} {
 	addOctreeLayers(octreeLevels, sceneDepth);
 
 	rootNode = this;
@@ -78,6 +78,8 @@ void SceneGroup::addOctreeLayers(unsigned int levels, unsigned int myDepth) {
 		std::for_each(childGroups->begin(), childGroups->end(),
 			      [=](SceneGroup& child) {
 				      child.addOctreeLayers(levels-1, sceneDepth);
+
+				      child.parent = this;
 			      });
 	}
 }
@@ -103,6 +105,20 @@ void SceneGroup::visitGroups(std::function<void(SceneGroup&)> visitation) {
 			      [&](SceneGroup& child) {
 				      child.visitGroups(visitation);
 			      });
+	}
+}
+
+void SceneGroup::visitParentGroups(std::function<void(SceneGroup &)> visitation) {
+	std::vector<SceneGroup*> parents;
+	SceneGroup* currentParent = parent;
+
+	while(currentParent != nullptr) {
+		parents.push_back(currentParent);
+		currentParent = currentParent->parent;
+	}
+
+	for(SceneGroup* p : parents) {
+		visitation(*p);
 	}
 }
 

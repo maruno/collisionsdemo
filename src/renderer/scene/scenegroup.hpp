@@ -34,6 +34,8 @@ namespace scene {
 		static SceneGroup* rootNode;
 		static std::recursive_mutex sceneMutex;
 
+		SceneGroup* parent;
+
 		unsigned int sceneDepth;
 
 		void addOctreeLayers(unsigned int levels, unsigned int myDepth);
@@ -68,6 +70,13 @@ namespace scene {
 		 * @param visitation Function to call.
 		 */
 		void visitGroups(std::function<void(SceneGroup&)> visitation);
+
+		/**
+		 * Call visitation-function on all @ref SceneGroup parents in the scene graph.
+		 *
+		 * \param visitation Function to call.
+		 */
+		void visitParentGroups(std::function<void(SceneGroup&)> visitation);
 
 		/**
 		 * Bubble a @ref SceneItem to the correct group in the scene graph.
