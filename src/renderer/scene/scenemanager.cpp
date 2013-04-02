@@ -45,8 +45,8 @@ void SceneManager::startSceneLoop() {
 					auto collidable = std::dynamic_pointer_cast<collisiondetection::Collidable>(child);
 
 					if(collidable.get() != nullptr) {
-						for (std::shared_ptr<SceneItem>& other : group.childItems) {
-							if(other != child) {
+						std::function<void(const SceneGroup&)> collisionCheck = [collidable, child](const SceneGroup& group) {
+							for(const std::shared_ptr<SceneItem>& other : group.childItems) {
 								//TODO Collidables should always have a copy of their bounds
 
 								const collisiondetection::BoundingVolume& collidableBounds = child->getBounds();
@@ -59,28 +59,19 @@ void SceneManager::startSceneLoop() {
 									collidable->handleCollision(*other);
 								}
 							}
-						}
+						};
+
+						collisionCheck(group);
 
 						if(group.childGroups != nullptr) {
-							//Check underlying groups for edge cases
+							//Check underlying groups for lower edge cases
 							for(SceneGroup& childGroup : *group.childGroups) {
-								for (std::shared_ptr<SceneItem>& other : childGroup.childItems) {
-									if(other != child) {
-										//TODO Collidables should always have a copy of their bounds
-
-										const collisiondetection::BoundingVolume& collidableBounds = child->getBounds();
-										collidableBounds.attachToItem(child.get());
-
-										const collisiondetection::BoundingVolume& otherBounds = other->getBounds();
-										otherBounds.attachToItem(other.get());
-
-										if(collidableBounds.intersects(otherBounds)) {
-											collidable->handleCollision(*other);
-										}
-									}
-								}
+								collisionCheck(childGroup);
 							}
 						}
+
+						//Check with parents for upper edge cases
+						group.visitParentGroups(collisionCheck);
 					}
 				}
 			});
