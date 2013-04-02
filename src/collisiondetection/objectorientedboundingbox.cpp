@@ -84,31 +84,31 @@ bool ObjectOrientedBoundingBox::intersects(const BoundingVolume& other) const {
 	seperationAxis[5] = glm::normalize(seperationAxis[5]);
 	
 	//Ax x Bx
-	seperationAxis[6] = glm::normalize(glm::cross(seperationAxis[0], seperationAxis[3]));
+	seperationAxis[6] = glm::cross(seperationAxis[0], seperationAxis[3]);
 
 	//Ax x By
-	seperationAxis[7] = glm::normalize(glm::cross(seperationAxis[0], seperationAxis[4]));
+	seperationAxis[7] = glm::cross(seperationAxis[0], seperationAxis[4]);
 
 	//Ax x Bz
-	seperationAxis[8] = glm::normalize(glm::cross(seperationAxis[0], seperationAxis[5]));
+	seperationAxis[8] = glm::cross(seperationAxis[0], seperationAxis[5]);
 
 	//Ay x Bx
-	seperationAxis[9] = glm::normalize(glm::cross(seperationAxis[1], seperationAxis[3]));
+	seperationAxis[9] = glm::cross(seperationAxis[1], seperationAxis[3]);
 
 	//Ay x By
-	seperationAxis[10] = glm::normalize(glm::cross(seperationAxis[1], seperationAxis[4]));
+	seperationAxis[10] = glm::cross(seperationAxis[1], seperationAxis[4]);
 
 	//Ay x Bz
-	seperationAxis[11] = glm::normalize(glm::cross(seperationAxis[1], seperationAxis[5]));
+	seperationAxis[11] = glm::cross(seperationAxis[1], seperationAxis[5]);
 
 	//Az x Bx
-	seperationAxis[12] = glm::normalize(glm::cross(seperationAxis[2], seperationAxis[3]));
+	seperationAxis[12] = glm::cross(seperationAxis[2], seperationAxis[3]);
 
 	//Az x By
-	seperationAxis[13] = glm::normalize(glm::cross(seperationAxis[2], seperationAxis[4]));
+	seperationAxis[13] = glm::cross(seperationAxis[2], seperationAxis[4]);
 
 	//Az x Bz
-	seperationAxis[14] = glm::normalize(glm::cross(seperationAxis[2], seperationAxis[5]));
+	seperationAxis[14] = glm::cross(seperationAxis[2], seperationAxis[5]);
 	
 	for(glm::vec3& l : seperationAxis) {
 		bool overlap = glm::abs(glm::dot((otherOBB.origin - origin), l)) > glm::abs(halfBoxSize.x * glm::dot(seperationAxis[0], l)) + glm::abs(halfBoxSize.y * glm::dot(seperationAxis[1], l)) + glm::abs(halfBoxSize.z * glm::dot(seperationAxis[2], l)) + glm::abs(otherOBB.halfBoxSize.x * glm::dot(seperationAxis[3], l)) + glm::abs(otherOBB.halfBoxSize.y * glm::dot(seperationAxis[4], l)) + glm::abs(otherOBB.halfBoxSize.z * glm::dot(seperationAxis[5], l));
