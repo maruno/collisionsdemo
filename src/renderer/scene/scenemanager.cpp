@@ -78,6 +78,8 @@ void SceneManager::startSceneLoop() {
 
 			world.visitGroups([](SceneGroup& group) {
 				if(group.constraints != nullptr) {
+					std::vector<std::shared_ptr<SceneItem>> bubbleCandidates;
+
 					auto it = group.childItems.begin();
 					while(it != group.childItems.end()) {
 						const collisiondetection::BoundingVolume& otherBounds = (*it)->getBounds();
@@ -86,11 +88,15 @@ void SceneManager::startSceneLoop() {
 						if(!otherBounds.intersects(*(group.constraints))) {
 							std::lock_guard<std::recursive_mutex> guard(group.rootNode->sceneMutex);
 
-							group.rootNode->bubbleItem(*it);
+							bubbleCandidates.push_back(*it);
 							it = group.childItems.erase(it);
 						} else {
 							++it;
 						}
+					}
+
+					for(std::shared_ptr<SceneItem>& candidate : bubbleCandidates) {
+						group.rootNode->bubbleItem(candidate);
 					}
 				}
 			});
