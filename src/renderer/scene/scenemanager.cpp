@@ -47,16 +47,18 @@ void SceneManager::startSceneLoop() {
 					if(collidable.get() != nullptr) {
 						std::function<void(const SceneGroup&)> collisionCheck = [collidable, child](const SceneGroup& group) {
 							for(const std::shared_ptr<SceneItem>& other : group.childItems) {
-								//TODO Collidables should always have a copy of their bounds
+								if(child.get() != other.get()) {
+									//TODO Collidables should always have a copy of their bounds
 
-								const collisiondetection::BoundingVolume& collidableBounds = child->getBounds();
-								collidableBounds.attachToItem(child.get());
+									const collisiondetection::BoundingVolume& collidableBounds = child->getBounds();
+									collidableBounds.attachToItem(child.get());
 
-								const collisiondetection::BoundingVolume& otherBounds = other->getBounds();
-								otherBounds.attachToItem(other.get());
+									const collisiondetection::BoundingVolume& otherBounds = other->getBounds();
+									otherBounds.attachToItem(other.get());
 
-								if(collidableBounds.intersects(otherBounds)) {
-									collidable->handleCollision(*other);
+									if(collidableBounds.intersects(otherBounds)) {
+										collidable->handleCollision(*other);
+									}
 								}
 							}
 						};
