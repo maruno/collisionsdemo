@@ -3,6 +3,7 @@
 #include <mutex>
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "modelloader/vertexbufferfactory.hpp"
 
@@ -27,5 +28,5 @@ void SceneItem::buildModelMatrix() {
 	modelMatrix = glm::scale(modelMatrix, scale);
 
 	//Apply rotation from quaternion
-	glm::mat4_cast(rotation) *= modelMatrix;
+	modelMatrix = glm::mat4_cast(rotation) *= modelMatrix;
 }
