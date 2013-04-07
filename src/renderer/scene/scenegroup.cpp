@@ -178,18 +178,18 @@ void SceneGroup::bubbleItem(std::shared_ptr<SceneItem> item) {
 
 void SceneGroup::addItem(std::shared_ptr<SceneItem> item) {
 	if (childGroups == nullptr && childItems.size() == config::globals::maxSceneGroupSize && sceneDepth != config::globals::maxSceneGraphDepth) {
+		std::lock_guard<std::recursive_mutex> lock(rootNode->sceneMutex);
+
 		addOctreeLayers(1, sceneDepth);
 
-		auto it = childItems.begin();
-		while(it != childItems.end()) {
-			std::lock_guard<std::recursive_mutex> guard(rootNode->sceneMutex);
-			bubbleItem(*it);
-			it = childItems.erase(it);
-		}
+		std::vector<std::shared_ptr<SceneItem>> bubbleCandidates {item};
+		std::move(childItems.begin(), childItems.end(), std::back_inserter(bubbleCandidates));
+		childItems.clear();
 
 		//Finally push in item
-		std::lock_guard<std::recursive_mutex> lock(rootNode->sceneMutex);
-		bubbleItem(item);
+		for(std::shared_ptr<SceneItem>& candidate : bubbleCandidates) {
+			bubbleItem(candidate);
+		}
 	} else {
 		childItems.push_back(item);
 	}
