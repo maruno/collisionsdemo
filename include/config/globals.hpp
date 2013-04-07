@@ -16,8 +16,8 @@ namespace config {
 		constexpr float cameraRotationalSpeed = 0.5f;
 		constexpr float ambianceLight = 0.2f;
 		constexpr unsigned int tunnelLength = 100;
-		constexpr unsigned int maxSceneGroupSize = 20;
-		constexpr unsigned int maxSceneGraphDepth = 20;
+		constexpr unsigned int maxSceneGroupSize = 25;
+		constexpr unsigned int maxSceneGraphDepth = 10;
 	}
 
 	const std::map<std::string, modelloader::DataPreservation> preservationRules{{std::string{"tunnel-segment"}, modelloader::DataPreservation::vertexAndNormal}};
