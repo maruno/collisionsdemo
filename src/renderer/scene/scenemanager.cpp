@@ -65,9 +65,7 @@ void SceneManager::startSceneLoop() {
 
 						if(group.childGroups != nullptr) {
 							//Check underlying groups for lower edge cases
-							for(SceneGroup& childGroup : *group.childGroups) {
-								collisionCheck(childGroup);
-							}
+							group.visitGroups(collisionCheck);
 						}
 
 						//Check with parents for upper edge cases
