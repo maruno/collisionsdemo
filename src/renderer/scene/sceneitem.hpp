@@ -71,7 +71,7 @@ namespace scene {
 		 *
 		 * @return Bounding volume for this item.
 		 */
-		inline const collisiondetection::BoundingVolume& getBounds() const;
+		inline const collisiondetection::ObjectOrientedBoundingBox getBounds() const;
 
 		/**
 		 * Get the matrix mutex for this item.
@@ -110,7 +110,7 @@ namespace scene {
 		return location;
 	}
 
-	const collisiondetection::BoundingVolume& SceneItem::getBounds() const {
+	const collisiondetection::ObjectOrientedBoundingBox SceneItem::getBounds() const {
 		return vBuffers.getBounds();
 	}
 

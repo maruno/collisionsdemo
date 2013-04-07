@@ -10,7 +10,7 @@
 
 #include "glload/gl_3_2.h"
 
-#include "collisiondetection/boundingvolume.hpp"
+#include "collisiondetection/ObjectOrientedBoundingBox.hpp"
 
 namespace modelloader {
 	class DataNotAvailable : public std::runtime_error {
@@ -28,7 +28,7 @@ namespace modelloader {
 		GLuint vao;
 		unsigned int numIndices;
 		const std::tuple<glm::vec3, glm::vec3> extremes;
-		std::unique_ptr<collisiondetection::BoundingVolume> bounds;
+		std::unique_ptr<collisiondetection::ObjectOrientedBoundingBox> bounds;
 		std::unique_ptr<std::vector<glm::vec3>> vertexData;
 		std::unique_ptr<std::vector<glm::vec3>> normalsData;
 
@@ -85,9 +85,9 @@ namespace modelloader {
 		/**
 		 * Request the bounds of the 3D-model
 		 *
-		 * @return BoundingVolume attached to the 3D-model
+		 * @return ObjectOrientedBoundingBox attached to the 3D-model
 		 */
-		inline const collisiondetection::BoundingVolume& getBounds() const;
+		inline const collisiondetection::ObjectOrientedBoundingBox& getBounds() const;
 
 		/**
 		 * Request the vertex data of the 3D-model
@@ -131,7 +131,7 @@ namespace modelloader {
 		return extremes;
 	}
 
-	const collisiondetection::BoundingVolume& VertexBuffer::getBounds() const {
+	const collisiondetection::ObjectOrientedBoundingBox& VertexBuffer::getBounds() const {
 		return *bounds;
 	}
 

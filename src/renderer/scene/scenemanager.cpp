@@ -45,15 +45,13 @@ void SceneManager::startSceneLoop() {
 					auto collidable = std::dynamic_pointer_cast<collisiondetection::Collidable>(child);
 
 					if(collidable.get() != nullptr) {
-						std::function<void(const SceneGroup&)> collisionCheck = [collidable, child](const SceneGroup& group) {
-							for(const std::shared_ptr<SceneItem>& other : group.childItems) {
+						std::function<void(const SceneGroup&)> collisionCheck = [collidable, child](const SceneGroup& otherGroup) {
+							for(const std::shared_ptr<SceneItem>& other : otherGroup.childItems) {
 								if(child.get() != other.get()) {
-									//TODO Collidables should always have a copy of their bounds
-
-									const collisiondetection::BoundingVolume& collidableBounds = child->getBounds();
+									const collisiondetection::ObjectOrientedBoundingBox collidableBounds = child->getBounds();
 									collidableBounds.attachToItem(child.get());
 
-									const collisiondetection::BoundingVolume& otherBounds = other->getBounds();
+									const collisiondetection::ObjectOrientedBoundingBox otherBounds = other->getBounds();
 									otherBounds.attachToItem(other.get());
 
 									if(collidableBounds.intersects(otherBounds)) {
