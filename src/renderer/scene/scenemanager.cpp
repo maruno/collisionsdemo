@@ -23,7 +23,7 @@
 
 using namespace scene;
 
-dispatch_queue_t gcd_queue;
+extern dispatch_queue_t gcd_queue;
 
 SceneManager::SceneManager()
 : world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-10.0f, -10.0f, 10.0f), glm::vec3(10.0f, 10.0f, -50.0f)))),
@@ -34,8 +34,6 @@ void SceneManager::startSceneLoop() {
 	scene::PerspectiveCamera& camera = scene::PerspectiveCamera::getInstance();
 
 	running = true;
-
-	gcd_queue = dispatch_queue_create("Update Queue", DISPATCH_QUEUE_SERIAL);
 
 	auto gcd_update_timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, gcd_queue);
 	dispatch_source_set_timer(gcd_update_timer, DISPATCH_TIME_NOW, (uint64_t) (1.0f/config::globals::frameRate)*1000000000, 0);

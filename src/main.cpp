@@ -7,6 +7,8 @@
 
 #include <glm/glm.hpp>
 
+#include <dispatch/dispatch.h>
+
 #include "config/globals.hpp"
 
 #include "renderer/scene/scenemanager.hpp"
@@ -19,6 +21,9 @@
 
 //HACK for C access
 scene::SceneManager* sceneManagerPtr;
+
+//Update queue
+dispatch_queue_t gcd_queue;
 
 int main(int argc, char** argv) {
 	glfwInit();
@@ -47,6 +52,9 @@ int main(int argc, char** argv) {
 
 	//Set clear colour to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	//Initialize GCD
+	gcd_queue = dispatch_queue_create("Update Queue", DISPATCH_QUEUE_SERIAL);
 
 	//Define world
 	scene::PerspectiveCamera::getInstance().rescale(config::globals::initialWidth, config::globals::initialHeight);

@@ -46,6 +46,13 @@ namespace scene {
 		 * \param item Unique pointer to the @ref SceneItem child. The scene graph takes ownership.
 		 */
 		void addItem(std::shared_ptr<SceneItem> item);
+
+		/**
+		 * Try to relocate the suspiciously placed @ref SceneItem child at a later time.
+		 *
+		 * \param item Child to try and relocate later
+		 */
+		void tryRelocationLater(std::shared_ptr<SceneItem> item);
 	 public:
 		SceneGroup();
 

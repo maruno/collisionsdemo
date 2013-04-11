@@ -4,10 +4,15 @@
 #include <tuple>
 #include <functional>
 #include <cassert>
+#include <typeinfo>
+
+#include <dispatch/dispatch.h>
 
 #include "config/globals.hpp"
 
 #include "sceneitem.hpp"
+
+#include "collisiondetection/collidable.hpp"
 
 using namespace scene;
 
@@ -16,6 +21,8 @@ typedef std::tuple<glm::vec3, glm::vec3> Diagonal;
 
 SceneGroup* SceneGroup::rootNode;
 std::recursive_mutex SceneGroup::sceneMutex;
+
+extern dispatch_queue_t gcd_queue;
 
 SceneGroup::SceneGroup() : childGroups{nullptr}, parent{nullptr} {
 	rootNode = this;
@@ -145,7 +152,11 @@ void SceneGroup::bubbleItem(std::shared_ptr<SceneItem> item) {
 
 		if(viableGroupIdx == 8) {
 			if(this == rootNode) {
+				//Item probably out of scene graph root boundaries or on the edge of two groups
 				addItem(item);
+
+				tryRelocationLater(item);
+
 				return;
 			} else {
 				assert(viableGroupIdx != 8);
@@ -166,6 +177,9 @@ void SceneGroup::bubbleItem(std::shared_ptr<SceneItem> item) {
 			if(otherGroupIdx == 8) {
 				//The item is on the edge of two groups, add to current group
 				addItem(item);
+
+				tryRelocationLater(item);
+
 				return;
 			}
 		}
@@ -192,6 +206,22 @@ void SceneGroup::addItem(std::shared_ptr<SceneItem> item) {
 		}
 	} else {
 		childItems.push_back(item);
+	}
+}
+
+void SceneGroup::tryRelocationLater(std::shared_ptr<SceneItem> item) {
+	//For now only detect collidables, because only those move right now.
+	if(typeid(*item) == typeid(collisiondetection::Collidable)) {
+		auto when = dispatch_time(DISPATCH_TIME_NOW, 500000000);
+		dispatch_after(when, gcd_queue, ^{
+			auto it = std::find(childItems.begin(), childItems.end(), item);
+
+			if(it != childItems.end()) {
+				std::lock_guard<std::recursive_mutex> guard(rootNode->sceneMutex);
+				childItems.erase(it);
+				rootNode->bubbleItem(const_cast<std::shared_ptr<SceneItem>&>(item));
+			}
+		});
 	}
 }
 
