@@ -45,7 +45,7 @@ namespace scene {
 		 *
 		 * \param item Unique pointer to the @ref SceneItem child. The scene graph takes ownership.
 		 */
-		void addItem(std::shared_ptr<SceneItem> item);
+		void addItem(std::shared_ptr<SceneItem>& item);
 
 		/**
 		 * Try to relocate the suspiciously placed @ref SceneItem child at a later time.
@@ -69,7 +69,7 @@ namespace scene {
 		 *
 		 * @param visitation Function to call.
 		 */
-		void visitScene(std::function<void(std::shared_ptr<SceneItem>)> visitation);
+		void visitScene(std::function<void(std::shared_ptr<SceneItem>&)> visitation);
 
 		/**
 		 * Call visitation-function on all @ref SceneGroup childs in the scene graph.
@@ -90,7 +90,7 @@ namespace scene {
 		 *
 		 * @param child Unique pointer to the @ref SceneItem child. The scene graph takes ownership.
 		 */
-		void bubbleItem(std::shared_ptr<SceneItem> item);
+		void bubbleItem(std::shared_ptr<SceneItem>& item);
 
 
 		~SceneGroup();

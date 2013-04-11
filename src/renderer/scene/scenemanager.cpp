@@ -26,7 +26,7 @@ using namespace scene;
 extern dispatch_queue_t gcd_queue;
 
 SceneManager::SceneManager()
-: world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-10.0f, -10.0f, 10.0f), glm::vec3(10.0f, 10.0f, -50.0f)))),
+: world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-25.0f, -25.0f, 10.0f), glm::vec3(10.0f, 10.0f, -50.0f)))),
 running(false){
 }
 
@@ -45,6 +45,32 @@ void SceneManager::startSceneLoop() {
 			child->update();
 
 			child->buildModelMatrix();
+		});
+
+		world.visitGroups([](SceneGroup& group) {
+			if(group.constraints != nullptr) {
+				std::unique_lock<std::recursive_mutex> guard(group.rootNode->sceneMutex, std::defer_lock);
+				std::vector<std::shared_ptr<SceneItem>> bubbleCandidates;
+
+				auto it = group.childItems.begin();
+				while(it != group.childItems.end()) {
+					const collisiondetection::BoundingVolume& otherBounds = (*it)->getBounds();
+					otherBounds.attachToItem((*it).get());
+
+					if(!otherBounds.intersects(*(group.constraints))) {
+						guard.lock();
+
+						bubbleCandidates.push_back(*it);
+						it = group.childItems.erase(it);
+					} else {
+						++it;
+					}
+				}
+
+				for(std::shared_ptr<SceneItem>& candidate : bubbleCandidates) {
+					group.rootNode->bubbleItem(candidate);
+				}
+			}
 		});
 
 		world.visitGroups([](SceneGroup& group) {
@@ -77,32 +103,6 @@ void SceneManager::startSceneLoop() {
 
 					//Check with parents for upper edge cases
 					group.visitParentGroups(collisionCheck);
-				}
-			}
-		});
-
-		world.visitGroups([](SceneGroup& group) {
-			if(group.constraints != nullptr) {
-				std::unique_lock<std::recursive_mutex> guard(group.rootNode->sceneMutex, std::defer_lock);
-				std::vector<std::shared_ptr<SceneItem>> bubbleCandidates;
-
-				auto it = group.childItems.begin();
-				while(it != group.childItems.end()) {
-					const collisiondetection::BoundingVolume& otherBounds = (*it)->getBounds();
-					otherBounds.attachToItem((*it).get());
-
-					if(!otherBounds.intersects(*(group.constraints))) {
-						guard.lock();
-
-						bubbleCandidates.push_back(*it);
-						it = group.childItems.erase(it);
-					} else {
-						++it;
-					}
-				}
-
-				for(std::shared_ptr<SceneItem>& candidate : bubbleCandidates) {
-					group.rootNode->bubbleItem(candidate);
 				}
 			}
 		});

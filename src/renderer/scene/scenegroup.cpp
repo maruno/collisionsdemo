@@ -91,7 +91,7 @@ void SceneGroup::addOctreeLayers(unsigned int levels, unsigned int myDepth) {
 	}
 }
 
-void SceneGroup::visitScene(std::function<void(std::shared_ptr<SceneItem>)> visitation) {
+void SceneGroup::visitScene(std::function<void(std::shared_ptr<SceneItem>&)> visitation) {
 	std::lock_guard<std::recursive_mutex> guard(sceneMutex);
 
 	std::for_each(childItems.begin(), childItems.end(), visitation);
@@ -129,7 +129,7 @@ void SceneGroup::visitParentGroups(std::function<void(SceneGroup &)> visitation)
 	}
 }
 
-void SceneGroup::bubbleItem(std::shared_ptr<SceneItem> item) {
+void SceneGroup::bubbleItem(std::shared_ptr<SceneItem>& item) {
 	std::lock_guard<std::recursive_mutex> guard(sceneMutex);
 
 	if(childGroups != nullptr) {
@@ -190,7 +190,7 @@ void SceneGroup::bubbleItem(std::shared_ptr<SceneItem> item) {
 	addItem(item);
 }
 
-void SceneGroup::addItem(std::shared_ptr<SceneItem> item) {
+void SceneGroup::addItem(std::shared_ptr<SceneItem>& item) {
 	if (childGroups == nullptr && childItems.size() == config::globals::maxSceneGroupSize && sceneDepth != config::globals::maxSceneGraphDepth) {
 		std::lock_guard<std::recursive_mutex> lock(rootNode->sceneMutex);
 
