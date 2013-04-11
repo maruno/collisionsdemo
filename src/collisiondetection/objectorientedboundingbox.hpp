@@ -7,6 +7,8 @@
 
 #include <glm/glm.hpp>
 
+#include "axisalignedboundingbox.hpp"
+
 namespace collisiondetection {
 	class ObjectOrientedBoundingBox : public BoundingVolume {
 	 private:
@@ -17,6 +19,8 @@ namespace collisiondetection {
 		mutable glm::vec3 halfBoxSize;
 
 		mutable scene::SceneItem* attachedItem;
+
+		AABB toAABB() const;
 	 public:
 		ObjectOrientedBoundingBox(std::tuple<glm::vec3, glm::vec3> myDiagonal);
 
