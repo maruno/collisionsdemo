@@ -58,7 +58,9 @@ void SceneManager::startSceneLoop() {
 					otherBounds.attachToItem((*it).get());
 
 					if(!otherBounds.intersects(*(group.constraints))) {
-						guard.lock();
+						if(!guard.owns_lock()) {
+							guard.lock();
+						}
 
 						bubbleCandidates.push_back(*it);
 						it = group.childItems.erase(it);
