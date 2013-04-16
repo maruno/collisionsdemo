@@ -31,6 +31,7 @@ namespace modelloader {
 		std::unique_ptr<collisiondetection::ObjectOrientedBoundingBox> bounds;
 		std::unique_ptr<std::vector<glm::vec3>> vertexData;
 		std::unique_ptr<std::vector<glm::vec3>> normalsData;
+		std::unique_ptr<std::vector<glm::uvec3>> indicesData;
 
 	 public:
 		/**
@@ -106,6 +107,14 @@ namespace modelloader {
 		inline const std::vector<glm::vec3>& getNormalData() const;
 
 		/**
+		 * Request the indices data of the 3D-model
+		 *
+		 * \return Indices data of this 3D-model
+		 * \throw DataNotAvailable Requested indices data was not loaded.
+		 */
+		inline const std::vector<glm::uvec3>& getIndicesData() const;
+
+		/**
 		 * Bind the buffers from this vertex buffer collection for use.
 		 */
 		void bindBuffers() const;
@@ -149,6 +158,14 @@ namespace modelloader {
 		}
 
 		return *normalsData;
+	}
+
+	const std::vector<glm::uvec3>& VertexBuffer::getIndicesData() const {
+		if (indicesData.get() == nullptr) {
+			throw DataNotAvailable();
+		}
+
+		return *indicesData;
 	}
 }
 

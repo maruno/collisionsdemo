@@ -36,7 +36,7 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	modelloader::ObjLexer lexer(&objFile);
 
 	std::vector<glm::vec3> verticesData;
-	std::vector<unsigned int> indicesData;
+	std::vector<glm::uvec3> indicesData;
 	std::tuple<glm::vec3, glm::vec3> extremes;
 
 	modelloader::ObjParser parser(verticesData, indicesData, extremes, lexer);
@@ -55,13 +55,13 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	glBufferData(GL_ARRAY_BUFFER, verticesData.size() * sizeof(glm::vec3), &(verticesData.front()), GL_STATIC_DRAW);
 
 	//Buffer indices to IBO
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesData.size() * sizeof(unsigned int), &(indicesData.front()), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesData.size() * sizeof(glm::uvec3), &(indicesData.front()), GL_STATIC_DRAW);
 
 	//Buffer normals to NBO
 	glBindBuffer(GL_ARRAY_BUFFER, bos[2]);
-	glBufferData(GL_ARRAY_BUFFER, vertexNormalsData.size()*sizeof(glm::vec3), &(vertexNormalsData.front()), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertexNormalsData.size() * sizeof(glm::vec3), &(vertexNormalsData.front()), GL_STATIC_DRAW);
 
-	vbopool.emplace(std::make_pair(std::string(objName), std::move(VertexBuffer{bos[0], bos[1], bos[2], indicesData.size(), extremes})));
+	vbopool.emplace(std::make_pair(std::string(objName), std::move(VertexBuffer{bos[0], bos[1], bos[2], indicesData.size() * 3, extremes})));
 
 	auto it = config::preservationRules.find(objName);
 	if(it != config::preservationRules.cend()) {
@@ -72,6 +72,10 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 			case vertexAndNormal:
 				vbopool.at(objName).vertexData.reset(new std::vector<glm::vec3>(std::move(verticesData)));
 				vbopool.at(objName).normalsData.reset(new std::vector<glm::vec3>(std::move(vertexNormalsData)));
+			case all:
+				vbopool.at(objName).vertexData.reset(new std::vector<glm::vec3>(std::move(verticesData)));
+				vbopool.at(objName).normalsData.reset(new std::vector<glm::vec3>(std::move(vertexNormalsData)));
+				vbopool.at(objName).indicesData.reset(new std::vector<glm::uvec3>(std::move(indicesData)));
 			default:
 				break;
 		}
@@ -80,13 +84,13 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 	return vbopool.at(objName);
 }
 
-std::vector<glm::vec3> VertexBufferFactory::calculateVertexNormals(const std::vector<unsigned int>& indicesData, const std::vector<glm::vec3>& verticesData) {
+std::vector<glm::vec3> VertexBufferFactory::calculateVertexNormals(const std::vector<glm::uvec3>& indicesData, const std::vector<glm::vec3>& verticesData) {
 	std::unordered_map<glm::vec3, glm::vec3> vertexNormalsMap;
 	
 	for(auto it = indicesData.cbegin(); it != indicesData.cend(); ++it) {
-		const glm::vec3& p1 = verticesData.at(*it);
-		const glm::vec3& p2 = verticesData.at(*++it);
-		const glm::vec3& p3 = verticesData.at(*++it);
+		const glm::vec3& p1 = verticesData.at(it->x);
+		const glm::vec3& p2 = verticesData.at(it->y);
+		const glm::vec3& p3 = verticesData.at(it->z);
 		
 		glm::vec3 faceNormal = glm::triangleNormal(p1, p2, p3);
 		

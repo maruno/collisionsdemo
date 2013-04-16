@@ -15,7 +15,7 @@ namespace modelloader {
 	 * Data preservation rule
 	 */
 	enum DataPreservation {
-		none, vertex, vertexAndNormal
+		none, vertex, vertexAndNormal, all
 	};
 
 	/**
@@ -33,7 +33,7 @@ namespace modelloader {
 		static VertexBufferFactory instance;
 		VertexBufferFactory() = default;
 
-		std::vector<glm::vec3> calculateVertexNormals(const std::vector<unsigned int>& indicesData, const std::vector<glm::vec3>& verticesData);
+		std::vector<glm::vec3> calculateVertexNormals(const std::vector<glm::uvec3>& indicesData, const std::vector<glm::vec3>& verticesData);
 	 public:
 		/**
 		 * Access a vertex buffer by name.

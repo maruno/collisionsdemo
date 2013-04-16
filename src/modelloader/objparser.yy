@@ -8,7 +8,7 @@
 %define parser_class_name "ObjParser"
 
 %parse-param {std::vector<glm::vec3>& verticesData}
-%parse-param {std::vector<unsigned int>& indicesData}
+%parse-param {std::vector<glm::uvec3>& indicesData}
 %parse-param {std::tuple<glm::vec3, glm::vec3>& extremes}
 %parse-param {modelloader::ObjLexer& lexer}
 
@@ -81,9 +81,7 @@ vertex : VERTEX FLOAT FLOAT FLOAT {
 };
 
 face : FACE INTEGER INTEGER INTEGER {
-	indicesData.push_back(boost::lexical_cast<unsigned int>($2)-1);
-	indicesData.push_back(boost::lexical_cast<unsigned int>($3)-1);
-	indicesData.push_back(boost::lexical_cast<unsigned int>($4)-1);
+	indicesData.emplace_back(boost::lexical_cast<unsigned int>($2)-1, boost::lexical_cast<unsigned int>($3)-1, boost::lexical_cast<unsigned int>($4)-1);
 };
 
 %%
