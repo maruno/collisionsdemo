@@ -63,7 +63,7 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 
 	vbopool.emplace(std::make_pair(std::string(objName), std::move(VertexBuffer{bos[0], bos[1], bos[2], indicesData.size() * 3, extremes})));
 
-	auto it = config::preservationRules.find(objName);
+	/*auto it = config::preservationRules.find(objName);
 	if(it != config::preservationRules.cend()) {
 		switch (it->second) {
 			case vertex:
@@ -79,7 +79,12 @@ const VertexBuffer& VertexBufferFactory::operator[](std::string objName) {
 			default:
 				break;
 		}
-	}
+	}*/
+
+	vbopool.at(objName).vertexData.reset(new std::vector<glm::vec3>(std::move(verticesData)));
+	vbopool.at(objName).normalsData.reset(new std::vector<glm::vec3>(std::move(vertexNormalsData)));
+	vbopool.at(objName).indicesData.reset(new std::vector<glm::uvec3>(std::move(indicesData)));
+
 
 	return vbopool.at(objName);
 }

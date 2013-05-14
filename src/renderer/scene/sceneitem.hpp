@@ -101,6 +101,13 @@ namespace scene {
 		 */
 		inline const glm::vec3& getScale() const;
 
+		/**
+		 * Get the vertex buffer for this item.
+		 *
+		 * \return Vertex buffer for this item.
+		 */
+		inline const modelloader::VertexBuffer& getVBuffer() const;
+
 		virtual ~SceneItem() = default;
 	};
 
@@ -128,6 +135,10 @@ namespace scene {
 
 	const glm::vec3& SceneItem::getScale() const {
 		return scale;
+	}
+
+	const modelloader::VertexBuffer& SceneItem::getVBuffer() const {
+		return vBuffers;
 	}
 }
 
