@@ -6,8 +6,8 @@
 
 using namespace scene;
 
-GravitationalObject::GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName)
-	: SceneItem(initialLocation, objectName), mass(myMass) {
+GravitationalObject::GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName, render::ColourInformationUniform colour)
+: ColouredPhongSceneItem(initialLocation, objectName, colour), mass{myMass} {
 }
 
 void GravitationalObject::update() {

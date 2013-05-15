@@ -5,7 +5,7 @@
 
 #include <glm/glm.hpp>
 
-#include "renderer/scene/sceneitem.hpp"
+#include "renderer/render/colouredphongsceneitem.hpp"
 
 namespace scene {
 	/**
@@ -13,7 +13,7 @@ namespace scene {
 	 *
 	 * @author Michel Bouwmans
 	 */
-	class GravitationalObject : public scene::SceneItem {
+	class GravitationalObject : public render::ColouredPhongSceneItem {
 	 private:
 		unsigned int mass;
 		glm::vec3 gravitationalForce;
@@ -25,7 +25,7 @@ namespace scene {
 		 *
 		 * @param myMass Mass of this item.
 		 */
-		GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName);
+		GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName, render::ColourInformationUniform colour);
 
 		/**
 		 * Request the mass.
@@ -54,7 +54,6 @@ namespace scene {
 		inline glm::vec3 getCurrentMotion() const;
 
 		virtual void update() override;
-		virtual void render(glm::mat4& parentMatrix) const override = 0;
 	};
 
 	void GravitationalObject::addForce(glm::vec3 additionalForce) {
