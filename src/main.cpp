@@ -14,8 +14,6 @@
 #include "renderer/scene/scenemanager.hpp"
 #include "renderer/scene/perspectivecamera.hpp"
 
-#include "tunnelsegment.hpp"
-#include "tunnelgenerator.hpp"
 
 #include "player.hpp"
 
@@ -80,10 +78,7 @@ int main(int argc, char** argv) {
 	});
 
 	//Add SceneItems
-	TunnelGenerator gen;
-	for(int i = 0; i < config::globals::tunnelLength; ++gen, ++i) {
-		sceneManager.addItem(std::shared_ptr<scene::SceneItem>(new TunnelSegment(*gen)));
-	}
+	
 
 	sceneManager.addItem(Player::getInstance());
 
