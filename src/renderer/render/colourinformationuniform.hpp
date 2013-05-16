@@ -14,10 +14,10 @@ namespace render {
 		glm::vec3 mShininess;
 
 		ColourInformationUniform(const glm::vec3& colour, float shininess)
-			: kColour(1.0f, 1.0f, 1.0f), mShininess(shininess), ambiance(config::globals::ambianceLight) {
-			kColour.r -= colour.r/255.0f;
-			kColour.g -= colour.g/255.0f;
-			kColour.b -= colour.b/255.0f;
+			: kColour(0.0f, 0.0f, 0.0f), mShininess(shininess), ambiance(config::globals::ambianceLight) {
+			kColour.r = colour.r/255.0f;
+			kColour.g = colour.g/255.0f;
+			kColour.b = colour.b/255.0f;
 		};
 	};
 }
