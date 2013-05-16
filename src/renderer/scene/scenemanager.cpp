@@ -26,7 +26,7 @@ using namespace scene;
 extern dispatch_queue_t gcd_queue;
 
 SceneManager::SceneManager()
-: world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-25.0f, -25.0f, 10.0f), glm::vec3(10.0f, 10.0f, -50.0f)))),
+: world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-50.0f, -50.0f, 50.0f), glm::vec3(50.0f, 50.0f, -50.0f)))),
 running(false){
 }
 

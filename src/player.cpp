@@ -1,10 +1,16 @@
 #include "player.hpp"
 
 #include <mutex>
+#include <typeinfo>
 
 #include "config/globals.hpp"
 
 #include "renderer/scene/perspectivecamera.hpp"
+
+
+#include "collisiondetection/vclip.hpp"
+
+#include <iostream>
 
 std::shared_ptr<Player> Player::instance;
 
@@ -12,6 +18,9 @@ Player::Player() : render::ColouredPhongSceneItem(glm::vec3{0.0f, 0.0f, 0.0f}, "
 	scene::PerspectiveCamera::getInstance().changeCameraPosition(glm::vec3{0.0, 0.5f, 2.5f}, location);
 
 	scale = glm::vec3{0.25f, 0.25f, 0.25f};
+	//rotation = glm::rotate(rotation, 20, glm::vec3{1.0f, 0.0f, 0.0f});
+	//rotation = glm::rotate(rotation, 50, glm::vec3{0.0f, 1.0f, 0.0f});
+	//rotation = glm::rotate(rotation, 85, glm::vec3{0.0f, 0.0f, 1.0f});
 }
 
 void Player::update() {
@@ -26,4 +35,9 @@ void Player::update() {
 	glm::vec3 newCameraPosition(camera.getPosition());
 	newCameraPosition.z -= stepSize;
 	camera.changeCameraPosition(newCameraPosition, location);
+}
+
+void Player::handleCollision(scene::SceneItem& collidee) {
+//TODO VClip
+//TODO collision response
 }

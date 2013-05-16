@@ -2,9 +2,11 @@
 
 #include "renderer/render/colouredphongsceneitem.hpp"
 
+#include "collisiondetection/collidable.hpp"
+
 #include <memory>
 
-class Player : public render::ColouredPhongSceneItem {
+class Player : public render::ColouredPhongSceneItem, public collisiondetection::Collidable {
  private:
 	static std::shared_ptr<Player> instance;
 
@@ -13,6 +15,8 @@ class Player : public render::ColouredPhongSceneItem {
 	inline static std::shared_ptr<Player> getInstance();
 
 	virtual void update() override;
+
+	virtual void handleCollision(scene::SceneItem& collidee) override;
 };
 
 std::shared_ptr<Player> Player::getInstance() {

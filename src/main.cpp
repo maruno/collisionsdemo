@@ -1,5 +1,6 @@
 #include <memory>
 #include <tuple>
+#include <random>
 
 #include "glload/gl_3_2.h"
 #include "glload/gll.hpp"
@@ -14,7 +15,7 @@
 #include "renderer/scene/scenemanager.hpp"
 #include "renderer/scene/perspectivecamera.hpp"
 
-
+#include "asteroid.hpp"
 #include "player.hpp"
 
 //HACK for C access
@@ -78,7 +79,14 @@ int main(int argc, char** argv) {
 	});
 
 	//Add SceneItems
-	
+	std::mt19937 gen;
+	std::uniform_real_distribution<float> locDis(-40, 40);
+	std::uniform_int_distribution<unsigned int> massDis(10, 50);
+
+	for(unsigned int i = 0; i < 20; ++i) {
+		scene::SceneItem* asteroid = new Asteroid(glm::vec3{locDis(gen), locDis(gen), locDis(gen)}, massDis(gen));
+		sceneManager.addItem(std::shared_ptr<scene::SceneItem>(asteroid));
+	}
 
 	sceneManager.addItem(Player::getInstance());
 
