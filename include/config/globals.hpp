@@ -14,7 +14,7 @@ namespace config {
 		constexpr unsigned short multiSamples = 8;
 		constexpr unsigned short cameraMovementSpeed = 2;
 		constexpr float cameraRotationalSpeed = 0.5f;
-		constexpr float ambianceLight = 0.2f;
+		constexpr float ambianceLight = 0.5f;
 		constexpr unsigned int tunnelLength = 100;
 		constexpr unsigned int maxSceneGroupSize = 25;
 		constexpr unsigned int maxSceneGraphDepth = 10;
