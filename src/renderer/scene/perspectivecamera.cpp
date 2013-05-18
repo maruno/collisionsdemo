@@ -30,7 +30,7 @@ void PerspectiveCamera::changeCameraPosition(glm::vec3 myPosition, glm::vec3 myD
 	direction = myDirection;
 
 	//Update view matrix
-	glm::vec3 lookAtCenter = position + direction;
+	glm::vec3 lookAtCenter = direction;
 
 	view = glm::lookAt<float>(position, lookAtCenter, glm::vec3(0.0f, 1.0f, 0.0f));
 

@@ -28,5 +28,5 @@ void SceneItem::buildModelMatrix() {
 	modelMatrix = glm::scale(modelMatrix, scale);
 
 	//Apply rotation from quaternion
-	modelMatrix = glm::mat4_cast(rotation) *= modelMatrix;
+	modelMatrix = modelMatrix * glm::mat4_cast(rotation);
 }
