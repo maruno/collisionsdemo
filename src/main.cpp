@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
 	std::uniform_real_distribution<float> locDis(-40, 40);
 	std::uniform_int_distribution<unsigned int> massDis(10, 50);
 
-	for(unsigned int i = 0; i < 20; ++i) {
+	for(unsigned int i = 0; i < 50; ++i) {
 		scene::SceneItem* asteroid = new Asteroid(glm::vec3{locDis(gen), locDis(gen), locDis(gen)}, massDis(gen));
 		sceneManager.addItem(std::shared_ptr<scene::SceneItem>(asteroid));
 	}
