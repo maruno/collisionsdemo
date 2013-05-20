@@ -26,6 +26,8 @@ namespace collisiondetection {
 
 		StateVariables stateVarsA, stateVarsB;
 
+		std::pair<unsigned int, unsigned int> previousEdgeEdgeA, previousEdgeEdgeB;
+
 		scene::SceneItem* itemA;
 		scene::SceneItem* itemB;
 
@@ -43,14 +45,17 @@ namespace collisiondetection {
 		State EE();
 		State EF();
 
-		float ds(const glm::vec3& v, const glm::vec3& planeNormal);
+		State EELocalMinEscape();
 
 		template<typename T>
-		ClipResult<T> clipEdge(const glm::vec3& t, const glm::vec3& h, T firstNeighbour, T pastLastNeightbour, const std::vector<glm::vec3>& planeNormals);
-		bool postClipDerivativeCheckVertex(ClipResult<std::vector<std::pair<unsigned int, unsigned int>>::iterator>& clipResult, std::vector<std::pair<unsigned int, unsigned int>>::iterator end, const glm::vec3& v,
+		float ds(const glm::vec3& v, const glm::vec3& planeNormal, T reference);
+
+		template<typename T>
+		ClipResult<T> clipEdge(const glm::vec3& t, const glm::vec3& h, T firstNeighbour, T pastLastNeightbour, const std::vector<glm::vec3>& planeNormals, float lebesgueContinueBegin = 0.0f, float lebesgueContinueEnd = 1.0f, unsigned int* reference = nullptr);
+		State postClipDerivativeCheckVertex(ClipResult<std::vector<std::pair<unsigned int, unsigned int>>::iterator>& clipResult, std::vector<std::pair<unsigned int, unsigned int>>::iterator end, const glm::vec3& v,
 						   const glm::vec3& t, const glm::vec3& h);
-		bool postClipDerivativeCheckVertexEdge(ClipResult<std::vector<unsigned int>::iterator>& clipResult, std::vector<unsigned int>::iterator end, const glm::vec3& t, const glm::vec3& h);
-		bool postClipDerivativeCheckFaceEdge(ClipResult<std::vector<unsigned int>::iterator>& clipResult, std::vector<unsigned int>::iterator end, const glm::vec3& t, const glm::vec3& h);
+		State postClipDerivativeCheckVertexEdge(ClipResult<std::vector<unsigned int>::iterator>& clipResult, std::vector<unsigned int>::iterator end, const glm::vec3& t, const glm::vec3& h);
+		State postClipDerivativeCheckFaceEdge(ClipResult<std::vector<unsigned long>::iterator>& clipResult, std::vector<unsigned long>::iterator end, const glm::vec3& t, const glm::vec3& h);
 
 		bool swapped;
 		inline void swap();
@@ -58,16 +63,17 @@ namespace collisiondetection {
 		glm::vec3 transformVerticeA(unsigned int idx);
 		glm::vec3 transformVerticeB(unsigned int idx);
 
-		inline std::vector<glm::vec3> voronoiPlanesForEdges(std::vector<std::pair<unsigned int, unsigned int>> edges);
+		inline std::vector<glm::vec3> voronoiPlanesForEdges(std::vector<std::pair<unsigned int, unsigned int>> edges, unsigned int reference);
 		inline std::vector<glm::vec3> voronoiPlanesForEdgeFace(std::vector<std::pair<unsigned int, unsigned int>> edges, unsigned int faceIdx);
-		inline std::vector<glm::vec3> voronoiPlanesForEdgeFace(std::pair<unsigned int, unsigned int> edge, std::vector<unsigned int> faces);
+		inline std::vector<glm::vec3> voronoiPlanesForEdgeFace(std::pair<unsigned int, unsigned int> edge, std::vector<unsigned long> faces);
 		inline std::vector<glm::vec3> voronoiPlanesForFaces(std::vector<unsigned int>& faces);
 		inline bool violatesVP(const glm::vec3& planeNormal, const glm::vec3& vectorToPoint);
 		
 		inline std::vector<unsigned int> facesContainingVertex(unsigned int vertexIdx);
-		inline std::vector<unsigned int> facesContainingEdge(unsigned int vertexIdx, unsigned int edgeToVertexIdx);
+		inline std::vector<unsigned long> facesContainingEdge(unsigned int vertexIdx, unsigned int edgeToVertexIdx);
 
 		inline std::vector<std::pair<unsigned int, unsigned int>> neighboursForVertex(unsigned int vertexIdx);
+		inline std::vector<std::pair<unsigned int, unsigned int>> neighboursForVertex(unsigned int vertexIdx, const glm::uvec3& face);
 		inline std::vector<std::pair<unsigned int, unsigned int>> neighboursForFace(unsigned int faceIdx);
 	public:
 		VClip(scene::SceneItem* myA, scene::SceneItem* myB);

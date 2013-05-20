@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <set>
+#include <limits>
 
 #include <glm/gtx/simd_vec4.hpp>
 #include <glm/gtx/simd_mat4.hpp>
@@ -27,8 +28,29 @@ void VClip::swap() {
 	std::swap(facesA, facesB);
 }
 
-float VClip::ds(const glm::vec3& v, const glm::vec3& planeNormal) {
-	glm::vec3 referencePoint = transformVerticeB(stateVarsB.vertexIdx);
+template<>
+float VClip::ds(const glm::vec3& v, const glm::vec3& planeNormal, glm::vec3 referencePoint) {
+	return glm::dot(planeNormal, (v - referencePoint));
+}
+
+template<>
+float VClip::ds(const glm::vec3& v, const glm::vec3& planeNormal, std::pair<unsigned int, unsigned int> reference) {
+	glm::vec3 referencePoint = transformVerticeA(reference.first);
+
+	return glm::dot(planeNormal, (v - referencePoint));
+}
+
+//Use long for faces to differentiate
+template<>
+float VClip::ds(const glm::vec3 &v, const glm::vec3 &planeNormal, unsigned long reference) {
+	glm::vec3 referencePoint = transformVerticeA(facesA[reference].x);
+
+	return glm::dot(planeNormal, (v - referencePoint));
+}
+
+template<>
+float VClip::ds(const glm::vec3 &v, const glm::vec3 &planeNormal, unsigned int reference) {
+	glm::vec3 referencePoint = transformVerticeA(reference);
 
 	return glm::dot(planeNormal, (v - referencePoint));
 }
@@ -50,6 +72,24 @@ glm::vec3 VClip::transformVerticeB(unsigned int idx) {
 }
 
 #pragma mark Neighours
+
+std::vector<std::pair<unsigned int, unsigned int>> VClip::neighboursForVertex(unsigned int vertexIdx, const glm::uvec3& face) {
+	std::vector<std::pair<unsigned int, unsigned int>> neighbours;
+
+	//CCW, search for right indices-> The other ones
+	if(face.x == vertexIdx) {
+		neighbours.emplace_back(face.x, face.y);
+		neighbours.emplace_back(face.z, face.x);
+	} else if(face.y == vertexIdx) {
+		neighbours.emplace_back(face.y, face.z);
+		neighbours.emplace_back(face.x, face.y);
+	} else {
+		neighbours.emplace_back(face.z, face.x);
+		neighbours.emplace_back(face.y, face.z);
+	}
+
+	return std::move(neighbours);
+}
 
 std::vector<std::pair<unsigned int, unsigned int>> VClip::neighboursForVertex(unsigned int vertexIdx) {
 	std::vector<std::pair<unsigned int, unsigned int>> neighbours;
@@ -86,8 +126,8 @@ std::vector<unsigned int> VClip::facesContainingVertex(unsigned int vertexIdx) {
 	return std::move(containingFaces);
 }
 
-std::vector<unsigned int> VClip::facesContainingEdge(unsigned int vertexIdx, unsigned int edgeToVertexIdx) {
-	std::vector<unsigned int> containingFaces;
+std::vector<unsigned long> VClip::facesContainingEdge(unsigned int vertexIdx, unsigned int edgeToVertexIdx) {
+	std::vector<unsigned long> containingFaces;
 
 	for(auto it = facesA.cbegin(); it != facesA.cend(); ++it) {
 		const glm::uvec3& face = *it;
@@ -99,6 +139,8 @@ std::vector<unsigned int> VClip::facesContainingEdge(unsigned int vertexIdx, uns
 			containingFaces.push_back(std::distance(facesA.cbegin(), it));
 		}
 	}
+
+	assert(containingFaces.size() == 2);
 
 	return std::move(containingFaces);
 }
@@ -115,15 +157,24 @@ std::vector<std::pair<unsigned int, unsigned int>> VClip::neighboursForFace(unsi
 
 bool VClip::violatesVP(const glm::vec3& planeNormal, const glm::vec3& vectorToPoint) {
 	//VP-normal·pointVector < 0 -> point lies at the opposite side of the planeNormal
-	return (glm::dot(vectorToPoint, planeNormal) < 0.0f);
+	//Because coplanar-cases are problematic we use a tolerance of 0.1
+	return (glm::dot(vectorToPoint, planeNormal) < -0.1f);
 }
 
-std::vector<glm::vec3> VClip::voronoiPlanesForEdges(std::vector<std::pair<unsigned int, unsigned int>> edges) {
+std::vector<glm::vec3> VClip::voronoiPlanesForEdges(std::vector<std::pair<unsigned int, unsigned int>> edges, unsigned int reference) {
 	std::vector<glm::vec3> planeNormals;
 
 	for(std::pair<unsigned int, unsigned int>& edge : edges) {
-		glm::vec3 t = transformVerticeA(edge.first);
-		glm::vec3 h = transformVerticeA(edge.second);
+		glm::vec3 t, h;
+
+		//Correct for CCW
+		if(reference == edge.first) {
+			t = transformVerticeA(edge.first);
+			h = transformVerticeA(edge.second);
+		} else {
+			t = transformVerticeA(edge.second);
+			h = transformVerticeA(edge.first);
+		}
 
 		planeNormals.push_back(glm::normalize(t - h));
 	}
@@ -137,30 +188,38 @@ std::vector<glm::vec3> VClip::voronoiPlanesForEdgeFace(std::vector<std::pair<uns
 	glm::mat3 normalMatrix(glm::inverseTranspose(itemA->getModelMatrix()));
 	const glm::uvec3& face = facesA[faceIdx];
 	glm::vec3 faceNormal = glm::normalize((normalsA[face.x] + normalsA[face.y] + normalsA[face.z]) / 3.0f);
-	faceNormal = glm::normalize(faceNormal * normalMatrix);
+	faceNormal = glm::normalize(normalMatrix * faceNormal);
 
 	for(std::pair<unsigned int, unsigned int>& edge : edges) {
 		glm::vec3 t = transformVerticeA(edge.first);
 		glm::vec3 h = transformVerticeA(edge.second);
 
-		planeNormals.push_back(glm::normalize(glm::cross(t - h, faceNormal)));
+		planeNormals.push_back(glm::normalize(glm::cross(faceNormal, h - t)));
 	}
 
 	return std::move(planeNormals);
 }
 
-std::vector<glm::vec3> VClip::voronoiPlanesForEdgeFace(std::pair<unsigned int, unsigned int> edge, std::vector<unsigned int> faces) {
+std::vector<glm::vec3> VClip::voronoiPlanesForEdgeFace(std::pair<unsigned int, unsigned int> edge, std::vector<unsigned long> faces) {
 	std::vector<glm::vec3> planeNormals;
-
-	glm::vec3 t = transformVerticeA(edge.first);
-	glm::vec3 h = transformVerticeA(edge.second);
 
 	glm::mat3 normalMatrix(glm::inverseTranspose(itemA->getModelMatrix()));
 
 	for(unsigned int faceIdx : faces) {
 		const glm::uvec3& face = facesA[faceIdx];
 		glm::vec3 faceNormal = glm::normalize((normalsA[face.x] + normalsA[face.y] + normalsA[face.z]) / 3.0f);
-		faceNormal = glm::normalize(faceNormal * normalMatrix);
+		faceNormal = glm::normalize(normalMatrix * faceNormal);
+
+		glm::vec3 t, h;
+
+		//Correct for CCW
+		if((face.x == edge.first && face.y == edge.second) || (face.y == edge.first && face.z == edge.second) || (face.z == edge.first && face.x == edge.second)) {
+			t = transformVerticeA(edge.first);
+			h = transformVerticeA(edge.second);
+		} else {
+			t = transformVerticeA(edge.second);
+			h = transformVerticeA(edge.first);
+		}
 
 		planeNormals.push_back(glm::normalize(glm::cross(faceNormal, t - h)));
 	}
@@ -179,7 +238,7 @@ std::vector<glm::vec3> VClip::voronoiPlanesForFaces(std::vector<unsigned int>& f
 
 		//Because we are dealing with triangles, each face delivers one voronoi plane
 		glm::vec3 planeNormal = glm::normalize((normalsA[face.x] + normalsA[face.y] + normalsA[face.z]) / 3.0f);
-		planeNormal = planeNormal * normalMatrix;
+		planeNormal = normalMatrix * planeNormal;
 
 		planeNormals.push_back(glm::normalize(planeNormal));
 	}
@@ -190,10 +249,10 @@ std::vector<glm::vec3> VClip::voronoiPlanesForFaces(std::vector<unsigned int>& f
 #pragma mark Edge clipping
 
 template<typename T>
-VClip::ClipResult<T> VClip::clipEdge(const glm::vec3& t, const glm::vec3& h, T firstNeighbour, T pastLastNeightbour, const std::vector<glm::vec3>& planeNormals) {
+VClip::ClipResult<T> VClip::clipEdge(const glm::vec3& t, const glm::vec3& h, T firstNeighbour, T pastLastNeightbour, const std::vector<glm::vec3>& planeNormals, float lebesgueContinueBegin, float lebesgueContinueEnd, unsigned int* reference) {
 	ClipResult<T> result;
-	result.lebesgueBegin = 0.0f;
-	result.lebesgueEnd = 1.0f;
+	result.lebesgueBegin = lebesgueContinueBegin;
+	result.lebesgueEnd = lebesgueContinueEnd;
 	result.intersection = false;
 	result.N1 = pastLastNeightbour;
 	result.N2 = pastLastNeightbour;
@@ -201,15 +260,21 @@ VClip::ClipResult<T> VClip::clipEdge(const glm::vec3& t, const glm::vec3& h, T f
 	for(auto it = planeNormals.cbegin(); it != planeNormals.cend(); ++it) {
 		T N = firstNeighbour + std::distance(planeNormals.cbegin(), it); //<- Neighbour feature of X corresponding to plane
 
-		float dt = ds(t, *it);
-		float dh = ds(h, *it);
+		float dt, dh;
+		if(reference) {
+			dt = ds(t, *it, *reference);
+			dh = ds(h, *it, *reference);
+		} else {
+			dt = ds(t, *it, *N);
+			dh = ds(h, *it, *N);
+		}
 
 		if(dt < 0.0f && dh < 0.0f) {
 			result.N1 = result.N2 = N;
 			return result;
 		} else if(dt < 0.0f) {
 			float lebesgue = dt/(dt-dh);
-			if (lebesgue > result.lebesgueEnd) {
+			if (lebesgue > result.lebesgueBegin) {
 				result.lebesgueBegin = lebesgue;
 				result.N1 = N;
 
@@ -234,68 +299,92 @@ VClip::ClipResult<T> VClip::clipEdge(const glm::vec3& t, const glm::vec3& h, T f
 	return result;
 }
 
-bool VClip::postClipDerivativeCheckVertex(ClipResult<std::vector<std::pair<unsigned int, unsigned int>>::iterator>& clipResult, std::vector<std::pair<unsigned int, unsigned int>>::iterator end, const glm::vec3& v,
+VClip::State VClip::postClipDerivativeCheckVertex(ClipResult<std::vector<std::pair<unsigned int, unsigned int>>::iterator>& clipResult, std::vector<std::pair<unsigned int, unsigned int>>::iterator end, const glm::vec3& v,
 					  const glm::vec3& t, const glm::vec3& h) {
 	glm::vec3 u = (h - t);
 
 	if(clipResult.N1 != end) {
 		glm::vec3 e = (1.0f - clipResult.lebesgueBegin) * t + clipResult.lebesgueBegin * h;
 
+		glm::vec3 eMinV = e - v;
+		if(eMinV.x > -0.01f && eMinV.x < 0.01f && eMinV.y > -0.01f && eMinV.y < 0.01f && eMinV.z > -0.01f && eMinV.z < -0.01f) {
+			return State::penetrating;
+		}
+
 		if(std::signbit(glm::dot(u, (e - v)))) {
 			//Update V <- N1
 			stateVarsA.vertexIdx = clipResult.N1->first;
 			stateVarsA.edgeToVertexIdx = clipResult.N1->second;
 
-			return true;
+			return State::EE;
 		}
+
+		return State::done;
 	}
 
 	if(clipResult.N2 != end) {
 		glm::vec3 e = (1.0f - clipResult.lebesgueEnd) * t + clipResult.lebesgueEnd * h;
 
-		if(std::signbit(glm::dot(u, (e - v)))) {
+		glm::vec3 eMinV = e - v;
+		if(eMinV.x > -0.01f && eMinV.x < 0.01f && eMinV.y > -0.01f && eMinV.y < 0.01f && eMinV.z > -0.01f && eMinV.z < -0.01f) {
+			return State::penetrating;
+		}
+
+		if(!std::signbit(glm::dot(u, (e - v)))) {
 			//Update V <- N2
 			stateVarsA.vertexIdx = clipResult.N2->first;
 			stateVarsA.edgeToVertexIdx = clipResult.N2->second;
 
-			return true;
+			return State::EE;
 		}
 	}
 	
-	return false;
+	return State::done;
 }
 
-bool VClip::postClipDerivativeCheckVertexEdge(ClipResult<std::vector<unsigned int>::iterator> &clipResult, std::vector<unsigned int>::iterator end, const glm::vec3 &t, const glm::vec3 &h) {
+VClip::State VClip::postClipDerivativeCheckVertexEdge(ClipResult<std::vector<unsigned int>::iterator> &clipResult, std::vector<unsigned int>::iterator end, const glm::vec3 &t, const glm::vec3 &h) {
 	glm::vec3 u = (h - t);
 
 	if(clipResult.N1 != end) {
 		glm::vec3 e = (1.0f - clipResult.lebesgueBegin) * t + clipResult.lebesgueBegin * h;
 		glm::vec3 v = transformVerticeA(*clipResult.N1);
 
+		glm::vec3 eMinV = e - v;
+		if(eMinV.x > -0.01f && eMinV.x < 0.01f && eMinV.y > -0.01f && eMinV.y < 0.01f && eMinV.z > -0.01f && eMinV.z < -0.01f) {
+			return State::penetrating;
+		}
+
 		if(std::signbit(glm::dot(u, (e - v)))) {
 			//Update E <- N1
 			stateVarsA.vertexIdx = *clipResult.N1;
 
-			return true;
+			return State::VE;
 		}
+
+		return State::done;
 	}
 
 	if(clipResult.N2 != end) {
 		glm::vec3 e = (1.0f - clipResult.lebesgueEnd) * t + clipResult.lebesgueEnd * h;
 		glm::vec3 v = transformVerticeA(*clipResult.N2);
 
-		if(std::signbit(glm::dot(u, (e - v)))) {
+		glm::vec3 eMinV = e - v;
+		if(eMinV.x > -0.01f && eMinV.x < 0.01f && eMinV.y > -0.01f && eMinV.y < 0.01f && eMinV.z > -0.01f && eMinV.z < -0.01f) {
+			return State::penetrating;
+		}
+
+		if(!std::signbit(glm::dot(u, (e - v)))) {
 			//Update E <- N2
 			stateVarsA.vertexIdx = *clipResult.N2;
 
-			return true;
+			return State::VE;
 		}
 	}
 
-	return false;
+	return State::done;
 }
 
-bool VClip::postClipDerivativeCheckFaceEdge(ClipResult<std::vector<unsigned int>::iterator> &clipResult, std::vector<unsigned int>::iterator end, const glm::vec3 &t, const glm::vec3 &h) {
+VClip::State VClip::postClipDerivativeCheckFaceEdge(ClipResult<std::vector<unsigned long>::iterator> &clipResult, std::vector<unsigned long>::iterator end, const glm::vec3 &t, const glm::vec3 &h) {
 	glm::vec3 u = (h - t);
 	glm::mat3 normalMatrix(glm::inverseTranspose(itemA->getModelMatrix()));
 
@@ -304,21 +393,30 @@ bool VClip::postClipDerivativeCheckFaceEdge(ClipResult<std::vector<unsigned int>
 		const glm::uvec3& face = facesA[*clipResult.N1];
 
 		glm::vec3 planeNormal = glm::normalize((normalsA[face.x] + normalsA[face.y] + normalsA[face.z]) / 3.0f);
-		planeNormal = glm::normalize(planeNormal * normalMatrix);
+		planeNormal = glm::normalize(normalMatrix * planeNormal);
 
-		bool update;
-		if(std::signbit(ds(e, planeNormal))) {
-			update = std::signbit(glm::dot(u, planeNormal));
-		} else {
-			update = !std::signbit(glm::dot(u, planeNormal));
+		float de = ds(e, planeNormal, transformVerticeA(face.x));
+
+		if(de > -0.01 && de < 0.01) {
+			return State::penetrating;
 		}
 
-		if(update) {
+		bool foo;
+		if(std::signbit(de)) {
+			foo = std::signbit(glm::dot(u, planeNormal));
+		} else {
+			foo = !std::signbit(glm::dot(u, planeNormal));
+		}
+
+		if(foo) {
 			//Update E <- N1
 			stateVarsA.faceIdx = *clipResult.N1;
 
-			return true;
+			swap();
+			return State::EF;
 		}
+
+		return State::done;
 	}
 
 	if(clipResult.N2 != end) {
@@ -326,24 +424,31 @@ bool VClip::postClipDerivativeCheckFaceEdge(ClipResult<std::vector<unsigned int>
 		const glm::uvec3& face = facesA[*clipResult.N2];
 
 		glm::vec3 planeNormal = glm::normalize((normalsA[face.x] + normalsA[face.y] + normalsA[face.z]) / 3.0f);
-		planeNormal = glm::normalize(planeNormal * normalMatrix);
+		planeNormal = glm::normalize(normalMatrix * planeNormal);
 
-		bool update;
-		if(std::signbit(ds(e, planeNormal))) {
-			update = std::signbit(glm::dot(u, planeNormal));
-		} else {
-			update = !std::signbit(glm::dot(u, planeNormal));
+		float de = ds(e, planeNormal, transformVerticeA(face.x));
+
+		if(de > -0.01 && de < 0.01) {
+			return State::penetrating;
 		}
 
-		if(update) {
+		bool foo;
+		if(std::signbit(de)) {
+			foo = std::signbit(glm::dot(u, planeNormal));
+		} else {
+			foo = !std::signbit(glm::dot(u, planeNormal));
+		}
+
+		if(!foo) {
 			//Update E <- N2
 			stateVarsA.faceIdx = *clipResult.N2;
 
-			return true;
+			swap();
+			return State::EF;
 		}
 	}
 
-	return false;
+	return State::done;
 }
 
 #pragma mark State handlers
@@ -355,12 +460,13 @@ VClip::State VClip::VV() {
 	auto voronoiCheck = [this](const unsigned int activeIndex, const glm::vec3 vectorToV2){
 		//Find voronoi planes
 		std::vector<std::pair<unsigned int, unsigned int>> neighbourEdges = neighboursForVertex(activeIndex);
-		std::vector<glm::vec3> planeNormals = voronoiPlanesForEdges(neighbourEdges);
+		std::vector<glm::vec3> planeNormals = voronoiPlanesForEdges(neighbourEdges, activeIndex);
 
 		for(auto it = planeNormals.cbegin(); it != planeNormals.cend(); ++it) {
 			if (violatesVP(*it, vectorToV2)) {
-				//Update V <- E
 				const std::pair<unsigned int, unsigned int>& violatedEdge = neighbourEdges[std::distance(planeNormals.cbegin(), it)];
+
+				//Update V <- E
 				stateVarsA.vertexIdx = violatedEdge.first;
 				stateVarsA.edgeToVertexIdx = violatedEdge.second;
 
@@ -374,13 +480,14 @@ VClip::State VClip::VV() {
 
 	State newState = voronoiCheck(stateVarsA.vertexIdx, glm::normalize(vB - vA));
 
-	swap(); //Beware: Variables vA & vB are not swapped
 	if(newState == State::done) {
+		swap(); //Beware: Variables vA & vB are not swapped
 		newState = voronoiCheck(stateVarsA.vertexIdx, glm::normalize(vA - vB));
 	}
 
 	return newState;
 }
+
 
 VClip::State VClip::VE() {
 	glm::vec3 t = transformVerticeB(stateVarsB.vertexIdx);
@@ -388,23 +495,9 @@ VClip::State VClip::VE() {
 
 	glm::vec3 v = transformVerticeA(stateVarsA.vertexIdx);
 
-	//glm::mat3 normalMatrix(glm::inverseTranspose(itemA->getModelMatrix()));
-
 	glm::vec3 vectorToV = glm::normalize(v - t);
 
-	//Check voronoi planes for E,F
 	swap();
-	std::vector<unsigned int> containingFaces = facesContainingEdge(stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx);
-	std::vector<glm::vec3> planeNormals = voronoiPlanesForEdgeFace({stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx}, containingFaces);
-	for(auto it = planeNormals.cbegin(); it != planeNormals.cend(); ++it) {
-		if (violatesVP(*it, vectorToV)) {
-			//Update E <- F
-			stateVarsA.faceIdx = containingFaces[std::distance(planeNormals.cbegin(), it)];
-
-			swap();
-			return State::VF;
-		}
-	}
 
 	//Check voronoi planes for V,E
 	if(violatesVP(glm::normalize(h - t), vectorToV)) {
@@ -420,30 +513,37 @@ VClip::State VClip::VE() {
 		return State::VV;
 	}
 
+	//Check voronoi planes for E,F
+	std::vector<unsigned long> containingFaces = facesContainingEdge(stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx);
+	std::vector<glm::vec3> planeNormals = voronoiPlanesForEdgeFace({stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx}, containingFaces);
+	for(auto it = planeNormals.cbegin(); it != planeNormals.cend(); ++it) {
+		if (violatesVP(*it, vectorToV)) {
+			//Update E <- F
+			stateVarsA.faceIdx = containingFaces[std::distance(planeNormals.cbegin(), it)];
+
+			swap();
+			return State::VF;
+		}
+	}
+	
 	swap();
 
 	std::vector<std::pair<unsigned int, unsigned int>> neighbourEdges = neighboursForVertex(stateVarsA.vertexIdx);
-	planeNormals = voronoiPlanesForEdges(neighbourEdges);
+	planeNormals = voronoiPlanesForEdges(neighbourEdges, stateVarsA.vertexIdx);
 	
-	ClipResult<std::vector<std::pair<unsigned int, unsigned int>>::iterator> clipResult = clipEdge(t, h, neighbourEdges.begin(), neighbourEdges.end(), planeNormals);
+	ClipResult<std::vector<std::pair<unsigned int, unsigned int>>::iterator> clipResult = clipEdge(t, h, neighbourEdges.begin(), neighbourEdges.end(), planeNormals, 0.0f, 1.0f, &stateVarsA.vertexIdx);
 
-	bool updatedV = false;
-
-	if(clipResult.N1 != neighbourEdges.cend() && clipResult.N2 != neighbourEdges.cend()) {
+	if(clipResult.N1 != neighbourEdges.end() && clipResult.N2 != neighbourEdges.end()) {
 		if(clipResult.N1 == clipResult.N2) {
 			//Update V <- N
 			stateVarsA.vertexIdx = clipResult.N1->first;
 			stateVarsA.edgeToVertexIdx = clipResult.N1->second;
 
-			updatedV = true;
+			return State::EE;
 		}
 	} else {
 		//Check derivates and possible update V
-		updatedV = postClipDerivativeCheckVertex(clipResult, neighbourEdges.end(), v, t, h);
-	}
-
-	if(updatedV) {
-		return State::EE;
+		return postClipDerivativeCheckVertex(clipResult, neighbourEdges.end(), v, t, h);
 	}
 
 	return State::done;
@@ -462,16 +562,21 @@ VClip::State VClip::VF() {
 	//Check for maximally violating edge
 	std::vector<std::pair<unsigned int, unsigned int>> faceEdges = neighboursForFace(stateVarsA.faceIdx);
 	std::vector<glm::vec3> planeNormals = voronoiPlanesForEdgeFace(faceEdges, stateVarsA.faceIdx);
-	if(violatesVP(planeNormals.at(0), (v - transformVerticeA(face.x)))) {
+
+	glm::vec3 referencePoint = transformVerticeA(face.x);
+	glm::vec3 vectorToV = glm::normalize(v - referencePoint);
+	if(violatesVP(planeNormals.at(0), vectorToV)) {
 		vEA = face.x;
 		vEB = face.y;
 
-		maxViolationDistance = glm::abs(glm::dot(planeNormals.front(), v));
+		maxViolationDistance = ds(v, planeNormals.at(0), referencePoint);
 		foundViolation = true;
 	}
 
-	if(violatesVP(planeNormals.at(1), (v - transformVerticeA(face.y)))) {
-		float violationDistance = glm::abs(glm::dot(planeNormals.front(), v));
+	referencePoint = transformVerticeA(face.y);
+	vectorToV = glm::normalize(v - referencePoint);
+	if(violatesVP(planeNormals.at(1), vectorToV)) {
+		float violationDistance = ds(v, planeNormals.at(1), referencePoint);
 
 		if(violationDistance > maxViolationDistance) {
 			vEA = face.y;
@@ -482,14 +587,15 @@ VClip::State VClip::VF() {
 		}
 	}
 
-	if(violatesVP(planeNormals.at(2), (v - transformVerticeA(face.z)))) {
-		float violationDistance = glm::abs(glm::dot(planeNormals.front(), v));
+	referencePoint = transformVerticeA(face.z);
+	vectorToV = glm::normalize(v - referencePoint);
+	if(violatesVP(planeNormals.at(2), vectorToV)) {
+		float violationDistance = ds(v, planeNormals.at(2), referencePoint);
 
 		if(violationDistance > maxViolationDistance) {
 			vEA = face.z;
 			vEB = face.x;
 
-			maxViolationDistance = violationDistance;
 			foundViolation = true;
 		}
 	}
@@ -505,61 +611,92 @@ VClip::State VClip::VF() {
 
 	swap();
 
+	referencePoint = transformVerticeB(face.x);
+
 	glm::mat3 normalMatrix(glm::inverseTranspose(itemB->getModelMatrix()));
 	glm::vec3 planeNormal = glm::normalize((normalsB[face.x] + normalsB[face.y] + normalsB[face.z]) / 3.0f);
-	planeNormal = glm::normalize(planeNormal * normalMatrix);
+	planeNormal = glm::normalize(normalMatrix * planeNormal);
+
+	float absoluteDistanceFromV = glm::abs(ds(v, planeNormal, referencePoint));
 
 	//Check for incident edges
 	std::vector<unsigned int> containingFaces = facesContainingVertex(stateVarsA.vertexIdx);
 	for(auto it = containingFaces.cbegin(); it != containingFaces.cend(); ++it) {
-		const glm::uvec3& face = facesA[*it];
-
+		const glm::uvec3& possibleFace = facesA[*it];
 		if(face.x == stateVarsA.vertexIdx) {
-			const glm::vec3 vY = transformVerticeA(face.y);
-			if(ds(v, planeNormal) > ds(vY, planeNormal)) {
+			const glm::vec3 vY = transformVerticeA(possibleFace.y);
+			if(absoluteDistanceFromV > glm::abs(ds(vY, planeNormal, referencePoint))) {
 				//Update V <- E
-				stateVarsA.edgeToVertexIdx = face.y;
+				stateVarsA.edgeToVertexIdx = possibleFace.y;
 
 				return State::EF;
 			}
 		} else if(face.y == stateVarsA.vertexIdx) {
-			const glm::vec3 vZ = transformVerticeA(face.z);
-			if(ds(v, planeNormal) > ds(vZ, planeNormal)) {
+			const glm::vec3 vZ = transformVerticeA(possibleFace.z);
+			if(absoluteDistanceFromV > glm::abs(ds(vZ, planeNormal, referencePoint))) {
 				//Update V <- E
-				stateVarsA.edgeToVertexIdx = face.z;
+				stateVarsA.edgeToVertexIdx = possibleFace.z;
 
 				return State::EF;
 			}
 		} else {
-			const glm::vec3 vX = transformVerticeA(face.x);
-			if(ds(v, planeNormal) > ds(vX, planeNormal)) {
+			const glm::vec3 vX = transformVerticeA(possibleFace.x);
+			if(absoluteDistanceFromV > glm::abs(ds(vX, planeNormal, referencePoint))) {
 				//Update V <- E
-				stateVarsA.edgeToVertexIdx = face.x;
+				stateVarsA.edgeToVertexIdx = possibleFace.x;
 
 				return State::EF;
 			}
 		}
 	}
 
-	if(ds(v, planeNormal) > 0.0f) {
+	if(ds(v, planeNormal, referencePoint) > 0.0f) {
 		return State::done;
 	}
 
 	//Lodged in a local minimal. Implement MERL TR97-05 algorithm 3? Possibly just penetration
-	assert(0);
+	return State::penetrating;
 }
 
 VClip::State VClip::EE() {
+	std::pair<unsigned int, unsigned int> edgeA = {stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx};
+	std::pair<unsigned int, unsigned int> edgeB = {stateVarsB.vertexIdx, stateVarsB.edgeToVertexIdx};
+
+	//Check for edge-edge loop
+	if(previousEdgeEdgeA == edgeA) {
+		swap();
+		return EELocalMinEscape();
+	} else if(previousEdgeEdgeB == edgeB) {
+		return EELocalMinEscape();
+	}
+
+	swap();
+	std::swap(edgeA, edgeB);
+
+	if(previousEdgeEdgeA == edgeA) {
+		swap();
+		return EELocalMinEscape();
+	} else if(previousEdgeEdgeB == edgeB) {
+		return EELocalMinEscape();
+	}
+
+	swap();
+	std::swap(edgeA, edgeB);
+
+	previousEdgeEdgeA = edgeA;
+	previousEdgeEdgeB = edgeB;
+
 	auto EERun = [this]() {
 		const glm::vec3 t = transformVerticeB(stateVarsB.vertexIdx);
 		const glm::vec3 h = transformVerticeB(stateVarsB.edgeToVertexIdx);
 		
-		//Clip EB to VP(E1,V)
+		//Clip E2 to VP(E1,V)
 		const glm::vec3 tA = transformVerticeA(stateVarsA.vertexIdx);
 		const glm::vec3 hA = transformVerticeA(stateVarsA.edgeToVertexIdx);
 
 		std::vector<unsigned int> neighbourVertices = {stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx};
-		std::vector<glm::vec3> planeNormals = {glm::normalize(tA - hA), glm::normalize(hA - tA)};
+		std::vector<glm::vec3> planeNormals = {glm::normalize(hA - tA), glm::normalize(tA - hA)};
+		
 		ClipResult<std::vector<unsigned int>::iterator> clipResult = clipEdge(t, h, neighbourVertices.begin(), neighbourVertices.end(), planeNormals);
 
 		if(!clipResult.intersection) {
@@ -571,31 +708,27 @@ VClip::State VClip::EE() {
 			}
 		}
 
-		if(postClipDerivativeCheckVertexEdge(clipResult, neighbourVertices.end(), t, h)) {
+		if(postClipDerivativeCheckVertexEdge(clipResult, neighbourVertices.end(), t, h) == State::VE) {
 			return State::VE;
 		}
 
 		//Clip E2 to VP(E,F)
-		std::vector<unsigned int> neighbourFaces = facesContainingEdge(stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx);
+		std::vector<unsigned long> neighbourFaces = facesContainingEdge(stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx);
 		planeNormals = voronoiPlanesForEdgeFace({stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx}, neighbourFaces);
-		clipResult = clipEdge(t, h, neighbourFaces.begin(), neighbourFaces.end(), planeNormals);
 
-		if(!clipResult.intersection) {
-			if(clipResult.N1 == clipResult.N2) {
+		ClipResult<std::vector<unsigned long>::iterator> clipResultF = clipEdge(t, h, neighbourFaces.begin(), neighbourFaces.end(), planeNormals, clipResult.lebesgueBegin, clipResult.lebesgueEnd);
+
+		if(!clipResultF.intersection) {
+			if(clipResultF.N1 == clipResultF.N2) {
 				//Simply excluded by N, update E <- F
-				stateVarsA.faceIdx = *clipResult.N1;
+				stateVarsA.faceIdx = *clipResultF.N1;
 
 				swap();
 				return State::EF;
 			}
 		}
 
-		if(postClipDerivativeCheckFaceEdge(clipResult, neighbourFaces.end(), t, h)) {
-			swap();
-			return State::EF;
-		}
-
-		return State::done;
+		return postClipDerivativeCheckFaceEdge(clipResultF, neighbourFaces.end(), t, h);
 	};
 
 	State newState = EERun();
@@ -613,27 +746,138 @@ VClip::State VClip::EF() {
 	std::vector<std::pair<unsigned int, unsigned int>> neighbours = neighboursForFace(stateVarsA.faceIdx);
 	std::vector<glm::vec3> planeNormals = voronoiPlanesForEdgeFace(neighbours, stateVarsA.faceIdx);
 
+	const glm::uvec3& face = facesA[stateVarsA.faceIdx];
+
 	const glm::vec3 t = transformVerticeB(stateVarsB.vertexIdx);
 	const glm::vec3 h = transformVerticeB(stateVarsB.edgeToVertexIdx);
 
 	ClipResult<std::vector<std::pair<unsigned int, unsigned int>>::iterator> clipResult = clipEdge(t, h, neighbours.begin(), neighbours.end(), planeNormals);
 
 	if(!clipResult.intersection) {
-		//TODO Update F <- Closest egde or vertex on F to E
-		assert(0);
+		//Update F <- Closest egde or vertex on F to E
+		bool final = false;
+		bool lastScanWasV = false;
+		
+		auto scanCheckE = [&, this](std::pair<unsigned int, unsigned int> edge) {
+			lastScanWasV = false;
+
+			const glm::vec3 tA = transformVerticeA(edge.first);
+			const glm::vec3 hA = transformVerticeA(edge.second);
+
+			std::vector<unsigned int> neighbourVertices = {edge.first, edge.second};
+			std::vector<glm::vec3> planeNormals = {glm::normalize(hA - tA), glm::normalize(tA - hA)};
+
+			ClipResult<std::vector<unsigned int>::iterator> clipResultV = clipEdge(t, h, neighbourVertices.begin(), neighbourVertices.end(), planeNormals);
+			if(clipResultV.intersection) {
+				if(postClipDerivativeCheckVertexEdge(clipResultV, neighbourVertices.end(), t, h) == State::VE) {
+					//One of the endpoints is closer
+					return State::VE;
+				} else {
+					//This edge is closest
+					final = true;
+
+					stateVarsA.vertexIdx = edge.first;
+					stateVarsA.edgeToVertexIdx = edge.second;
+
+					return State::EE;
+				}
+			}
+			return State::done;
+		};
+
+		auto scanCheckV = [&, this](unsigned int vertexIdx) {
+			lastScanWasV = true;
+
+			std::vector<std::pair<unsigned int, unsigned int>> neighbours = neighboursForVertex(vertexIdx, face);
+			std::vector<glm::vec3> planeNormals = voronoiPlanesForEdges(neighbours, vertexIdx);
+
+			ClipResult<std::vector<std::pair<unsigned int, unsigned int>>::iterator> clipResultE = clipEdge(t, h, neighbours.begin(), neighbours.end(), planeNormals, 0.0f, 1.0f, &vertexIdx);
+			if(clipResultE.intersection) {
+				const glm::vec3 v = transformVerticeA(vertexIdx);
+				if(postClipDerivativeCheckVertex(clipResultE, neighbours.end(), v, t, h) == State::EE) {
+					//One of the neighbours is closer
+					return State::EE;
+				} else {
+					//This vertice is closest
+					final = true;
+
+					stateVarsA.vertexIdx = vertexIdx;
+
+					return State::VE;
+				}
+			}
+
+			return State::done;
+		};
+
+		std::vector<std::pair<unsigned int, unsigned int>>::iterator it;
+
+		if(clipResult.N1 != neighbours.end()) {
+			it = clipResult.N1;
+		} else if(clipResult.N2 != neighbours.end()) {
+			it = clipResult.N2;
+		} else {
+			it = neighbours.begin();
+		}
+
+		State scanState = State::done;
+
+		while(!final) {
+			switch (scanState) {
+				case State::VE:
+				{
+					unsigned int vertexIdx = stateVarsA.vertexIdx;
+
+					State nextState = scanCheckE(*it);
+
+					if(nextState == State::VE && vertexIdx == stateVarsA.vertexIdx) {
+						final = true;
+					} else {
+						scanState = nextState;
+					}
+				}
+
+					break;
+
+				case State::EE:
+				{
+					if(stateVarsA.vertexIdx == it->second && stateVarsA.edgeToVertexIdx != it->first) {
+						std::swap(stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx);
+					}
+				}
+				default:
+				{
+					if(lastScanWasV) {
+						scanState = scanCheckE(*it);
+					} else {
+						scanState = scanCheckV(it->first);
+					}
+				}
+					break;
+			}
+
+			if (!lastScanWasV) {
+				++it;
+				if(it == neighbours.end()) {
+					it = neighbours.begin();
+				}
+			}
+		}
+
+		return scanState;
 	}
 
-	const glm::uvec3& face = facesA[stateVarsA.faceIdx];
 	glm::mat3 normalMatrix(glm::inverseTranspose(itemA->getModelMatrix()));
 
-	glm::vec3 planeNormal = glm::normalize((normalsA[face.x] + normalsA[face.y] + normalsA[face.z]) / 3.0f);
-	planeNormal = glm::normalize(planeNormal * normalMatrix);
+	glm::vec3 referencePoint = transformVerticeA(face.x);
+	glm::vec3 faceNormal = glm::normalize((normalsA[face.x] + normalsA[face.y] + normalsA[face.z]) / 3.0f);
+	faceNormal = glm::normalize(normalMatrix * faceNormal);
 
 	glm::vec3 eBegin = (1.0f - clipResult.lebesgueBegin) * t + clipResult.lebesgueBegin * h;
-	float dBegin = ds(eBegin, planeNormal);
+	float dBegin = ds(eBegin, faceNormal, referencePoint);
 
 	glm::vec3 eEnd = (1.0f - clipResult.lebesgueEnd) * t + clipResult.lebesgueEnd * h;
-	float dEnd = ds(eEnd, planeNormal);
+	float dEnd = ds(eEnd, faceNormal, referencePoint);
 
 	if(dBegin * dEnd <= 0.0f) {
 		return State::penetrating;
@@ -642,10 +886,10 @@ VClip::State VClip::EF() {
 	glm::vec3 u = (h - t);
 
 	bool foo;
-	if(std::signbit(ds(eBegin, planeNormal))) {
-		foo = std::signbit(glm::dot(u, planeNormal));
+	if(std::signbit(ds(eBegin, faceNormal, referencePoint))) {
+		foo = std::signbit(glm::dot(u, faceNormal));
 	} else {
-		foo = !std::signbit(glm::dot(u, planeNormal));
+		foo = !std::signbit(glm::dot(u, faceNormal));
 	}
 
 	if(foo) {
@@ -657,7 +901,7 @@ VClip::State VClip::EF() {
 			return State::EE;
 		} else {
 			//Update E <- tail(E)
-			stateVarsB.vertexIdx = stateVarsB.edgeToVertexIdx;
+			stateVarsB.vertexIdx = stateVarsB.vertexIdx;
 
 			swap();
 			return State::VF;
@@ -671,9 +915,77 @@ VClip::State VClip::EF() {
 			return State::EE;
 		} else {
 			//Update E <- head(E)
+			stateVarsB.vertexIdx = stateVarsB.edgeToVertexIdx;
+
 			swap();
 			return State::VF;
 		}
+	}
+}
+
+#pragma mark Loop escapers
+VClip::State VClip::EELocalMinEscape() {
+	float min = 0.0f;
+	float max = 1.0f;
+	float maxd = -std::numeric_limits<float>::infinity();
+
+	swap();
+
+	const glm::vec3 t = transformVerticeB(stateVarsB.vertexIdx);
+	const glm::vec3 h = transformVerticeB(stateVarsB.edgeToVertexIdx);
+
+	unsigned long maxFace = 0;
+
+	for(auto it = facesA.begin(); it != facesA.end(); ++it) {
+		const glm::uvec3& face = *it;
+
+		glm::mat3 normalMatrix(glm::inverseTranspose(itemA->getModelMatrix()));
+		glm::vec3 faceNormal = glm::normalize((normalsA[face.x] + normalsA[face.y] + normalsA[face.z]) / 3.0f);
+		faceNormal = glm::normalize(normalMatrix * faceNormal);
+
+		unsigned long faceIdx = std::distance(facesA.begin(), it);
+
+		float dt = ds(t, faceNormal, faceIdx);
+		float dh = ds(h, faceNormal, faceIdx);
+
+		if (dt > maxd) {
+			maxd = dt;
+			maxFace = faceIdx;
+		}
+
+		if (dh > maxd) {
+			maxd = dh;
+			maxFace = faceIdx;
+		}
+
+		if (dh > 0.0f && dt > 0.0f) {
+			max = 0.0f;
+			min = 1.0f;
+		}
+
+		float lebesgue = dt/(dt-dh);
+		if(dh > 0.0f) {
+			if (lebesgue < max) {
+				max = lebesgue;
+			}
+		} else {
+			if(lebesgue > min) {
+				min = lebesgue;
+			}
+		}
+	}
+
+	if(max < min) {
+		//Disjoint
+		return State::done;
+
+		//Disjoint
+		stateVarsA.faceIdx = maxFace;
+
+		swap();
+		return State::EF;
+	} else {
+		return State::penetrating;
 	}
 }
 
