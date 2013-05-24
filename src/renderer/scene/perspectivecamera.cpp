@@ -18,11 +18,14 @@ PerspectiveCamera::PerspectiveCamera() : direction{0.0f, 0.0f, -1.0f}, up{0.0f, 
 }
 
 void PerspectiveCamera::rescale(int width, int height) {
-	glViewport(0, 0, width, height);
+	viewportWidth = width;
+	viewportHeight = height;
+
+	glViewport(0, 0, viewportWidth, viewportHeight);
 
 	//HOR+
 	//The approximate field of view of a human eye is 95° out, 75° down, 60° in, 60° up
-	projection = glm::perspective<float>(60.0f, static_cast<float>(width)/height, 0.3f, 1000.0f);
+	projection = glm::perspective<float>(60.0f, static_cast<float>(viewportWidth)/viewportHeight, 0.3f, 1000.0f);
 }
 
 void PerspectiveCamera::changeCameraPosition(glm::vec3 myPosition, glm::vec3 myDirection) {
@@ -32,7 +35,7 @@ void PerspectiveCamera::changeCameraPosition(glm::vec3 myPosition, glm::vec3 myD
 	//Update view matrix
 	glm::vec3 lookAtCenter = direction;
 
-	view = glm::lookAt<float>(position, lookAtCenter, glm::vec3(0.0f, 1.0f, 0.0f));
+	view = glm::lookAt<float>(position, lookAtCenter, up);
 
 	//Camera light
 	render::LightManager& lightManager = render::LightManager::getInstance();
@@ -44,6 +47,14 @@ void PerspectiveCamera::changeCameraPosition(glm::vec3 myPosition, glm::vec3 myD
 		//Create light
 		lightID = lightManager.addLightSource(position, 0.5f);
 	}
+}
+
+void PerspectiveCamera::changeUpVector(glm::vec3 myUp) {
+	up = myUp;
+
+	//HOR+
+	//The approximate field of view of a human eye is 95° out, 75° down, 60° in, 60° up
+	projection = glm::perspective<float>(60.0f, static_cast<float>(viewportWidth)/viewportHeight, 0.3f, 1000.0f);
 }
 
 void PerspectiveCamera::render(SceneGroup* world) {
@@ -61,19 +72,4 @@ void PerspectiveCamera::upload() {
 		
 		needsUpload = false;
 	}
-}
-
-void PerspectiveCamera::updatePosition(float dX, float dY, float dZ) {
-	position.x += dX;
-	position.y += dY;
-	position.z += dZ;
-}
-
-void PerspectiveCamera::updateDirection(float angle, float x, float y, float z) {
-	glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(x, y, z));
-	glm::vec4 dir(direction, 1);
-	dir = rotation * dir;
-	direction.x = dir.x;
-	direction.y = dir.y;
-	direction.z = dir.z;
 }

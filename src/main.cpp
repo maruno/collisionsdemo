@@ -6,6 +6,7 @@
 #include "glload/gll.hpp"
 #include <GL/glfw.h>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include <dispatch/dispatch.h>
@@ -74,7 +75,18 @@ int main(int argc, char** argv) {
 
 	glfwSetKeyCallback([](int key, int action) {
 		switch(key) {
-			//TODO Switch keys for control
+			case 'A':
+				Player::getInstance()->yaw(action? 1 : 0);
+				break;
+			case 'D':
+				Player::getInstance()->yaw(action? -1 : 0);
+				break;
+			case 'W':
+				Player::getInstance()->pitch(action? 1 : 0);
+				break;
+			case 'S':
+				Player::getInstance()->pitch(action? -1 : 0);
+				break;
 		}
 	});
 

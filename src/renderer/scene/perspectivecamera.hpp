@@ -19,6 +19,8 @@ namespace scene {
 	 private:
 		static std::unique_ptr<PerspectiveCamera> instance;
 
+		unsigned int viewportHeight, viewportWidth;
+
 		glm::mat4 view, projection;
 
 		glm::vec3 up;
@@ -33,9 +35,6 @@ namespace scene {
 		PerspectiveCamera();
 
 		void upload();
-
-		void updatePosition(float dX, float dY, float dZ);
-		void updateDirection(float angle, float x, float y, float z);
 	 public:
 		PerspectiveCamera(const PerspectiveCamera&) = delete;
 		PerspectiveCamera& operator=(const PerspectiveCamera&) = delete;
@@ -53,10 +52,17 @@ namespace scene {
 		/**
 		 * Change the position of the camera in the world.
 		 *
-		 * @param position New camera position.
-		 * @param direction New direction in which camera is observing.
+		 * @param myPosition New camera position.
+		 * @param myDirection New direction in which camera is observing.
 		 */
 		void changeCameraPosition(glm::vec3 myPosition, glm::vec3 myDirection);
+
+		/**
+		 * Change the up vector of the camera
+		 *
+		 * \param myUp New up vector
+		 */
+		void changeUpVector(glm::vec3 myUp);
 
 		/**
 		 * Render an image using this camera.
