@@ -7,4 +7,4 @@ set(awesomegame_SRCS asteroid.cpp player.cpp)
 
 #Build main executable
 add_executable(awesomegame main.cpp ${awesomegame_INCS} ${awesomegame_SRCS})
-target_link_libraries(awesomegame awesomerenderer ${GLFW_LIBRARIES} glload)
+target_link_libraries(awesomegame awesomerenderer ${GLFW_LIBRARIES} ${GCD_LINK_LIBRARIES} glload)

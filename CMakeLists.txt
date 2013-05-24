@@ -7,6 +7,7 @@ cmake_policy(VERSION 2.8)
 #Module includes
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 include(FindGLFW)
+include(FindGCD)
 
 #Include-directory
 include_directories("${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/src" ${CMAKE_CURRENT_BINARY_DIR})
@@ -34,7 +35,8 @@ ENDIF()
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	#HACK add c++abi and pthread to linker flags
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lc++abi -lpthread")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lc++abi -lpthread -lBlocksRuntime")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fblocks")
 ENDIF()
 
 #Find required packages
@@ -43,6 +45,7 @@ find_package(GLFW REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 find_package(Boost REQUIRED)
+find_package(GCD REQUIRED)
 
 #Add GL Load source folder
 add_subdirectory(glload)

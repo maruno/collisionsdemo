@@ -7,8 +7,6 @@
 #include <set>
 #include <limits>
 
-#include <glm/gtx/simd_vec4.hpp>
-#include <glm/gtx/simd_mat4.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
 using namespace collisiondetection;

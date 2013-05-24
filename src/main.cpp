@@ -7,6 +7,8 @@
 #include <GL/glfw.h>
 
 #define GLM_FORCE_RADIANS
+#define GLM_FORCE_AVX
+#define GLM_MESSAGES
 #include <glm/glm.hpp>
 
 #include <dispatch/dispatch.h>
