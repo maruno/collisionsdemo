@@ -818,47 +818,28 @@ VClip::State VClip::EF() {
 			it = neighbours.begin();
 		}
 
-		State scanState = State::done;
+		State scanState = scanCheckV(it->first);
 
-		while(!final) {
-			switch (scanState) {
-				case State::VE:
-				{
-					unsigned int vertexIdx = stateVarsA.vertexIdx;
-
-					State nextState = scanCheckE(*it);
-
-					if(nextState == State::VE && vertexIdx == stateVarsA.vertexIdx) {
-						final = true;
-					} else {
-						scanState = nextState;
-					}
-				}
-
-					break;
-
-				case State::EE:
-				{
-					if(stateVarsA.vertexIdx == it->second && stateVarsA.edgeToVertexIdx != it->first) {
-						std::swap(stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx);
-					}
-				}
-				default:
-				{
-					if(lastScanWasV) {
-						scanState = scanCheckE(*it);
-					} else {
-						scanState = scanCheckV(it->first);
-					}
-				}
-					break;
-			}
-
-			if (!lastScanWasV) {
+		while(scanState == State::done) {
+			if (lastScanWasV) {
+				scanState = scanCheckE(*it);
+			} else {
 				++it;
 				if(it == neighbours.end()) {
 					it = neighbours.begin();
 				}
+
+				scanState = scanCheckV(it->first);
+			}
+		}
+
+		while(!final) {
+			if (scanState == State::VE) {
+				scanState = scanCheckV(stateVarsA.vertexIdx);
+			} else if(scanState == State::EE){
+				scanState = scanCheckE(std::make_pair(stateVarsA.vertexIdx, stateVarsA.edgeToVertexIdx));
+			} else {
+				final = true;
 			}
 		}
 
@@ -996,7 +977,15 @@ bool VClip::run() {
 
 	state = State::VV;
 
+	StateVariables oldStateVarsA;
+	StateVariables oldStateVarsB;
+
 	while (true) {
+		if(oldStateVarsA == stateVarsA && oldStateVarsB == stateVarsB) {
+			//Loop
+			return false;
+		}
+
 		switch (state) {
 			case State::VV:
 				state = VV();

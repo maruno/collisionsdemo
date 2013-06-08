@@ -13,6 +13,10 @@ namespace collisiondetection {
 		enum class State {done, penetrating, VV, VE, VF, EE, EF};
 		struct StateVariables {
 			unsigned int faceIdx, vertexIdx, edgeToVertexIdx;
+
+			bool operator==(const StateVariables& other) {
+				return (other.faceIdx == faceIdx) && (other.vertexIdx == vertexIdx) && (other.edgeToVertexIdx == edgeToVertexIdx);
+			}
 		};
 
 		template<typename T, typename = std::enable_if<!std::is_same<typename std::iterator_traits<T>::value_type, void>::value>>
