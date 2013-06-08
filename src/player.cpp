@@ -16,6 +16,7 @@
 #include <iostream>
 
 extern dispatch_queue_t gcd_queue;
+extern std::chrono::milliseconds time_since_last_update;
 
 std::shared_ptr<Player> Player::instance;
 
@@ -26,7 +27,7 @@ Player::Player() : render::ColouredPhongSceneItem(glm::vec3{0.0f, 0.0f, 0.0f}, "
 }
 
 void Player::update() {
-	float stepSize = (0.1f / config::globals::updateRate);
+	float stepSize = (time_since_last_update.count() / 5000.0f);
 
 	signed char pitching = this->pitching;
 	signed char yawing = this->yawing;

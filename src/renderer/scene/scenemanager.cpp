@@ -5,6 +5,7 @@
 #include <mutex>
 #include <typeinfo>
 #include <algorithm>
+#include <chrono>
 
 #include <dispatch/dispatch.h>
 
@@ -24,6 +25,7 @@
 using namespace scene;
 
 extern dispatch_queue_t gcd_queue;
+std::chrono::milliseconds time_since_last_update;
 
 SceneManager::SceneManager()
 : world(3, collisiondetection::AABB(std::make_tuple(glm::vec3(-50.0f, -50.0f, 50.0f), glm::vec3(50.0f, 50.0f, -50.0f)))),
@@ -35,10 +37,17 @@ void SceneManager::startSceneLoop() {
 
 	running = true;
 
+	__block std::chrono::time_point<std::chrono::steady_clock> previousTime = std::chrono::steady_clock::now();
+
 	auto gcd_update_timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, gcd_queue);
 	dispatch_source_set_timer(gcd_update_timer, DISPATCH_TIME_NOW, (uint64_t) (1.0f/config::globals::frameRate)*1000000000, 0);
 	
 	dispatch_source_set_event_handler(gcd_update_timer, ^{
+		std::chrono::time_point<std::chrono::steady_clock> newTime = std::chrono::steady_clock::now();
+
+		time_since_last_update = std::chrono::duration_cast<std::chrono::milliseconds>(newTime - previousTime);
+		previousTime = newTime;
+
 		universalGravity.update();
 
 		world.visitScene([](std::shared_ptr<SceneItem>& child) {

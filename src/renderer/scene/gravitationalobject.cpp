@@ -6,6 +6,8 @@
 
 using namespace scene;
 
+extern std::chrono::milliseconds time_since_last_update;
+
 GravitationalObject::GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName, render::ColourInformationUniform colour)
 : ColouredPhongSceneItem(initialLocation, objectName, colour), mass{myMass} {
 }
@@ -16,7 +18,7 @@ void GravitationalObject::update() {
 	glm::vec3 directionalAcceleration = a * glm::normalize(gravitationalForce);
 
 	//Newton's first law of motion
-	currentMotion += 1.0f/config::globals::updateRate * directionalAcceleration;
+	currentMotion += (time_since_last_update.count() * 1000.0f) * directionalAcceleration;
 	
 	//Update location
 	locationMutex.lock();
