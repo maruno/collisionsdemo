@@ -84,12 +84,13 @@ void SceneManager::startSceneLoop() {
 			}
 		});
 
-		world.visitGroups([](SceneGroup& group) {
+		std::vector<std::pair<collisiondetection::Collidable*, collisiondetection::Collidable*>> dontCollide;
+		world.visitGroups([&dontCollide](SceneGroup& group) {
 			for (std::shared_ptr<SceneItem>& child : group.childItems) {
 				auto collidable = std::dynamic_pointer_cast<collisiondetection::Collidable>(child);
 
 				if(collidable.get() != nullptr) {
-					std::function<void(const SceneGroup&)> collisionCheck = [collidable, child](const SceneGroup& otherGroup) {
+					std::function<void(const SceneGroup&)> collisionCheck = [collidable, child, &dontCollide](const SceneGroup& otherGroup) {
 						for(const std::shared_ptr<SceneItem>& other : otherGroup.childItems) {
 							if(child.get() != other.get()) {
 								const collisiondetection::ObjectOrientedBoundingBox collidableBounds = child->getBounds();
@@ -99,7 +100,15 @@ void SceneManager::startSceneLoop() {
 								otherBounds.attachToItem(other.get());
 
 								if(collidableBounds.intersects(otherBounds)) {
-									collidable->handleCollision(*other);
+									auto otherCollidable = std::dynamic_pointer_cast<collisiondetection::Collidable>(other);
+									if(other.get() != nullptr) {
+										if(std::find(dontCollide.begin(), dontCollide.end(), std::make_pair(collidable.get(), otherCollidable.get())) == dontCollide.end()) {
+											dontCollide.push_back(std::make_pair(otherCollidable.get(), collidable.get()));
+											collidable->handleCollision(*other);
+										}
+									} else {
+										collidable->handleCollision(*other);
+									}
 								}
 							}
 						}

@@ -10,6 +10,6 @@ namespace collisiondetection {
 		 *
 		 * \param collidee Sceneitem with which the collision has occured
 		 */
-		virtual void handleCollision(scene::SceneItem& collidee){};
+		virtual void handleCollision(scene::SceneItem& collidee) = 0;
 	};
 }

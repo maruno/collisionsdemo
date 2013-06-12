@@ -15,9 +15,11 @@ namespace scene {
 	 */
 	class GravitationalObject : public render::ColouredPhongSceneItem {
 	 private:
-		unsigned int mass;
 		glm::vec3 gravitationalForce;
+
+	 protected:
 		glm::vec3 currentMotion;
+		unsigned int mass;
 
 	 public:
 		/**
