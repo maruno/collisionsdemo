@@ -94,10 +94,10 @@ int main(int argc, char** argv) {
 
 	//Add SceneItems
 	std::mt19937 gen;
-	std::uniform_real_distribution<float> locDis(-40, 40);
-	std::uniform_int_distribution<unsigned int> massDis(10, 50);
+	std::uniform_real_distribution<float> locDis(-25, 25);
+	std::uniform_int_distribution<unsigned int> massDis(1, 2);
 
-	for(unsigned int i = 0; i < 50; ++i) {
+	for(unsigned int i = 0; i < 150; ++i) {
 		scene::SceneItem* asteroid = new Asteroid(glm::vec3{locDis(gen), locDis(gen), locDis(gen)}, massDis(gen));
 		sceneManager.addItem(std::shared_ptr<scene::SceneItem>(asteroid));
 	}

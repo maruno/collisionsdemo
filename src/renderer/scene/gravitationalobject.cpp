@@ -1,6 +1,7 @@
 #include "gravitationalobject.hpp"
 
 #include <string>
+#include <random>
 
 #include "config/globals.hpp"
 
@@ -10,6 +11,10 @@ extern std::chrono::milliseconds time_since_last_update;
 
 GravitationalObject::GravitationalObject(glm::vec3 initialLocation, unsigned int myMass, std::string objectName, render::ColourInformationUniform colour)
 : ColouredPhongSceneItem(initialLocation, objectName, colour), mass{myMass} {
+	std::random_device randdev;
+	std::uniform_real_distribution<float> dis(-1, 1);
+
+	currentMotion = glm::vec3{dis(randdev), dis(randdev), dis(randdev)};
 }
 
 void GravitationalObject::update() {
