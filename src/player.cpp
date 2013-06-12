@@ -76,10 +76,17 @@ void Player::pitch(signed char pitch) {
 
 void Player::handleCollision(scene::SceneItem& collidee) {
 	static scene::SceneItem* lastVClipCollidee;
+	static scene::SceneItem* lastCollidee;
+
+	if (lastCollidee != &collidee) {
+		lastCollidee = & collidee;
+
+		std::cout << "OBB-collision! Collidee: " << lastCollidee << std::endl;
+	}
 
 	collisiondetection::VClip vclip(this, &collidee);
 	if(vclip.run()) {
-		if(lastVClipCollidee != & collidee) {
+		if(lastVClipCollidee != &collidee) {
 			lastVClipCollidee = &collidee;
 
 			std::cout << "VClip-collision! Collidee: " << lastVClipCollidee << std::endl;
