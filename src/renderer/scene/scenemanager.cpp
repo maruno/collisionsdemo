@@ -22,6 +22,8 @@
 
 #include "config/globals.hpp"
 
+#include "player.hpp"
+
 using namespace scene;
 
 extern dispatch_queue_t gcd_queue;
@@ -102,9 +104,16 @@ void SceneManager::startSceneLoop() {
 								if(collidableBounds.intersects(otherBounds)) {
 									auto otherCollidable = std::dynamic_pointer_cast<collisiondetection::Collidable>(other);
 									if(other.get() != nullptr) {
+										//Don't collide same objects twice
 										if(std::find(dontCollide.begin(), dontCollide.end(), std::make_pair(collidable.get(), otherCollidable.get())) == dontCollide.end()) {
 											dontCollide.push_back(std::make_pair(otherCollidable.get(), collidable.get()));
-											collidable->handleCollision(*other);
+
+											//Always prefer Player
+											if (typeid(*otherCollidable) == typeid(Player)) {
+												otherCollidable->handleCollision(*child);
+											} else {
+												collidable->handleCollision(*other);
+											}
 										}
 									} else {
 										collidable->handleCollision(*other);
