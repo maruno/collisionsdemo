@@ -26,8 +26,11 @@ scene::SceneManager* sceneManagerPtr;
 
 //Update queue
 dispatch_queue_t gcd_queue;
+std::atomic<bool> gameOver;
 
 int main(int argc, char** argv) {
+	gameOver = false;
+
 	glfwInit();
 
 	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, config::globals::multiSamples);

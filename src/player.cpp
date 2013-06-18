@@ -18,6 +18,8 @@
 extern dispatch_queue_t gcd_queue;
 extern std::chrono::milliseconds time_since_last_update;
 
+extern std::atomic<bool> gameOver;
+
 std::shared_ptr<Player> Player::instance;
 
 Player::Player() : render::ColouredPhongSceneItem(glm::vec3{0.0f, 0.0f, 0.0f}, "player", render::ColourInformationUniform{glm::vec3{120.0f, 0.0f, 0.0f}, 1.0f}) {
@@ -90,6 +92,7 @@ void Player::handleCollision(scene::SceneItem& collidee) {
 			lastVClipCollidee = &collidee;
 
 			std::cout << "VClip-collision! Collidee: " << lastVClipCollidee << std::endl;
+			gameOver = true;
 		}
 	}
 

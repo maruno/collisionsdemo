@@ -26,6 +26,7 @@
 
 using namespace scene;
 
+extern std::atomic<bool> gameOver;
 extern dispatch_queue_t gcd_queue;
 std::chrono::milliseconds time_since_last_update;
 
@@ -135,6 +136,21 @@ void SceneManager::startSceneLoop() {
 				}
 			}
 		});
+
+		if (gameOver) {
+			dispatch_source_cancel(gcd_update_timer);
+			auto sem = dispatch_semaphore_create(0);
+
+			dispatch_source_set_cancel_handler(gcd_update_timer, ^{
+				dispatch_semaphore_signal(sem);
+			});
+
+			dispatch_source_cancel(gcd_update_timer);
+			dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+
+			dispatch_release(sem);
+			dispatch_release(gcd_update_timer);
+		}
 	});
 
 	dispatch_resume(gcd_update_timer);
