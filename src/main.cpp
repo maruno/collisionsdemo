@@ -118,5 +118,8 @@ int main(int argc, char** argv) {
 
 	glfwCloseWindow();
 
+	//Cleanup GCD
+	dispatch_release(gcd_queue);
+
 	return EXIT_SUCCESS;
 }

@@ -187,7 +187,6 @@ void SceneManager::startSceneLoop() {
 
 	dispatch_release(sem);
 	dispatch_release(gcd_update_timer);
-	dispatch_release(gcd_queue);
 }
 
 void SceneManager::stopSceneLoop() {
