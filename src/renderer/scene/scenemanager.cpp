@@ -16,6 +16,7 @@
 #include "perspectivecamera.hpp"
 
 #include "render/lightmanager.hpp"
+#include "render/hud.hpp"
 
 #include "collisiondetection/collidable.hpp"
 #include "collisiondetection/objectorientedboundingbox.hpp"
@@ -138,6 +139,13 @@ void SceneManager::startSceneLoop() {
 		});
 
 		if (gameOver) {
+			std::shared_ptr<render::HUDItem> gameOverMsg(new render::HUDItem);
+			gameOverMsg->pointSize = 96;
+			gameOverMsg->text = "GAME OVER";
+			gameOverMsg->position = glm::uvec2{200, 384};
+
+			render::HUD::getInstance().addItem(gameOverMsg);
+
 			dispatch_source_cancel(gcd_update_timer);
 			auto sem = dispatch_semaphore_create(0);
 
@@ -160,6 +168,7 @@ void SceneManager::startSceneLoop() {
 
 		render::LightManager::getInstance().upload();
 		camera.render(&world);
+		render::HUD::getInstance().render();
 
 		glfwSwapBuffers();
 

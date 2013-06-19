@@ -10,7 +10,7 @@ include(FindGLFW)
 include(FindGCD)
 
 #Include-directory
-include_directories("${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/src" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${CMAKE_SOURCE_DIR}/include" "${CMAKE_SOURCE_DIR}/gltext" "${CMAKE_SOURCE_DIR}/src" ${CMAKE_CURRENT_BINARY_DIR})
 
 #Enable C++0xB and use libc++
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
@@ -23,11 +23,14 @@ ENDIF()
 
 IF(APPLE)
 	#Prefer homebrew-versions of Bison and Flex
-	set(CMAKE_PROGRAM_PATH /usr/local/bin /usr/local/opt/flex/bin ${CMAKE_PROGRAM_PATH})
-	set(CMAKE_INCLUDE_PATH /usr/local/opt/flex/include ${CMAKE_INCLUDE_PATH})
+	set(CMAKE_PROGRAM_PATH /usr/local/bin /usr/local/opt/bison /usr/local/opt/flex/bin ${CMAKE_PROGRAM_PATH})
+	set(CMAKE_INCLUDE_PATH /usr/local/opt/flex/include /usr/local/opt/bison/include ${CMAKE_INCLUDE_PATH})
 
 	#Add homebrew include dir
 	include_directories("/usr/local/include")
+	
+	#Add homebrew bison include dir
+	include_directories("/usr/local/opt/bison/include")
 	
 	#Add homebrew flex include dir
 	include_directories("/usr/local/opt/flex/include")
@@ -49,6 +52,9 @@ find_package(GCD REQUIRED)
 
 #Add GL Load source folder
 add_subdirectory(glload)
+
+#Add gltext source folder
+add_subdirectory(gltext)
 
 #Add main Source folder
 add_subdirectory(src)

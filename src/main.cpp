@@ -18,6 +18,8 @@
 #include "renderer/scene/scenemanager.hpp"
 #include "renderer/scene/perspectivecamera.hpp"
 
+#include "renderer/render/hud.hpp"
+
 #include "asteroid.hpp"
 #include "player.hpp"
 
@@ -58,7 +60,7 @@ int main(int argc, char** argv) {
 	//Set clear colour to black
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	//Initialize GCD
+	//Initialise GCD
 	gcd_queue = dispatch_queue_create("Update Queue", DISPATCH_QUEUE_SERIAL);
 
 	//Define world
@@ -68,6 +70,9 @@ int main(int argc, char** argv) {
 	//HACK for C access
 	sceneManagerPtr =  &sceneManager;
 
+	//Initialise gltext
+	render::HUD::getInstance().setViewPortSize(config::globals::initialWidth, config::globals::initialHeight);
+
 	glfwSetWindowCloseCallback([](){
 		sceneManagerPtr->stopSceneLoop();
 
@@ -76,6 +81,7 @@ int main(int argc, char** argv) {
 
 	glfwSetWindowSizeCallback([](int width, int height) {
 		scene::PerspectiveCamera::getInstance().rescale(width, height);
+		render::HUD::getInstance().setViewPortSize(width, height);
 	});
 
 	glfwSetKeyCallback([](int key, int action) {
