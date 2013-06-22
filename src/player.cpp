@@ -9,8 +9,11 @@
 #include "config/globals.hpp"
 
 #include "renderer/scene/perspectivecamera.hpp"
+#include "renderer/scene/scenemanager.hpp"
 
 #include "collisiondetection/vclip.hpp"
+
+#include "rocket.hpp"
 
 #warning Debug iostream include
 #include <iostream>
@@ -19,6 +22,8 @@ extern dispatch_queue_t gcd_queue;
 extern std::chrono::milliseconds time_since_last_update;
 
 extern std::atomic<bool> gameOver;
+
+extern scene::SceneManager* sceneManagerPtr;
 
 std::shared_ptr<Player> Player::instance;
 
@@ -77,6 +82,10 @@ void Player::pitch(signed char pitch) {
 }
 
 void Player::handleCollision(scene::SceneItem& collidee) {
+	if(typeid(collidee) == typeid(Rocket)) {
+		return;
+	}
+
 	static scene::SceneItem* lastVClipCollidee;
 	static scene::SceneItem* lastCollidee;
 
@@ -95,6 +104,10 @@ void Player::handleCollision(scene::SceneItem& collidee) {
 			gameOver = true;
 		}
 	}
+}
 
-//TODO collision response
+void Player::fireRocket() {
+	std::shared_ptr<scene::SceneItem> rocket(new Rocket(getLocation(), getRotation()));
+
+	sceneManagerPtr->addItem(rocket);
 }

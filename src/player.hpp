@@ -21,6 +21,8 @@ class Player : public render::ColouredPhongSceneItem, public collisiondetection:
 	void pitch(signed char pitch);
 
 	virtual void handleCollision(scene::SceneItem& collidee) override;
+
+	void fireRocket();
 };
 
 std::shared_ptr<Player> Player::getInstance() {

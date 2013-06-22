@@ -23,6 +23,7 @@
 
 #include "asteroid.hpp"
 #include "player.hpp"
+#include "rocket.hpp"
 
 //HACK for C access
 scene::SceneManager* sceneManagerPtr;
@@ -121,6 +122,9 @@ int main(int argc, char** argv) {
 				break;
 			case 'S':
 				Player::getInstance()->pitch(action? -1 : 0);
+				break;
+			case 'R':
+				Player::getInstance()->fireRocket();
 				break;
 		}
 	});
