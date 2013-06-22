@@ -10,5 +10,5 @@
 class Asteroid : public scene::GravitationalObject, public collisiondetection::Collidable {
  public:
 	Asteroid(glm::vec3 initialLocation, unsigned int mass);
-	virtual void handleCollision(scene::SceneItem& collidee);
+	virtual void handleCollision(scene::SceneItem& collidee) override;
 };
