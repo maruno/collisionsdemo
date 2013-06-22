@@ -202,3 +202,21 @@ void SceneManager::addItem(std::shared_ptr<SceneItem> item) {
 	std::lock_guard<std::recursive_mutex> guard(world.rootNode->sceneMutex);
 	world.bubbleItem(item);
 }
+
+void SceneManager::removeItem(std::shared_ptr<SceneItem> item) {
+	GravitationalObject* gravObject = dynamic_cast<GravitationalObject*>(item.get());
+	if(gravObject != nullptr) {
+		universalGravity.delObject(gravObject);
+	}
+
+	std::lock_guard<std::recursive_mutex> guard(world.rootNode->sceneMutex);
+	world.visitGroups([item](SceneGroup& group){
+		auto it = std::find(group.childItems.begin(), group.childItems.end(), item);
+
+		if(it != group.childItems.end()) {
+			group.childItems.erase(it);
+
+			return;
+		}
+	});
+}

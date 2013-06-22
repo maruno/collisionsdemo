@@ -107,7 +107,6 @@ void Player::handleCollision(scene::SceneItem& collidee) {
 }
 
 void Player::fireRocket() {
-	std::shared_ptr<scene::SceneItem> rocket(new Rocket(getLocation(), getRotation()));
-
+	std::shared_ptr<Rocket> rocket(new Rocket(getLocation(), getRotation()));
 	sceneManagerPtr->addItem(rocket);
 }

@@ -46,9 +46,16 @@ namespace scene {
 		/**
 		 * Add an item under scene graph control.
 		 *
-		 * @param item Unique pointer to the @ref SceneItem. The scene graph takes ownership.
+		 * @param item Shared pointer to the @ref SceneItem. The scene graph takes ownership.
 		 */
 		void addItem(std::shared_ptr<SceneItem> item);
+
+		/**
+		 * Remove an item under scene graph control.
+		 *
+		 * @param item Shared pointer to the @ref SceneItem.
+		 */
+		void removeItem(std::shared_ptr<SceneItem> item);
 	};
 }
 
