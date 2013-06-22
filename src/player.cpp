@@ -29,7 +29,7 @@ Player::Player() : render::ColouredPhongSceneItem(glm::vec3{0.0f, 0.0f, 0.0f}, "
 }
 
 void Player::update() {
-	float stepSize = (time_since_last_update.count() / 5000.0f);
+	float stepSize = (time_since_last_update.count() * 1000.0f) * 0.00000015f;
 
 	signed char pitching = this->pitching;
 	signed char yawing = this->yawing;
