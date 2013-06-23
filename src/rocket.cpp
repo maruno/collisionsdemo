@@ -1,6 +1,7 @@
 #include "rocket.hpp"
 
 #include <chrono>
+#include <iostream>
 
 #include <dispatch/dispatch.h>
 
@@ -11,17 +12,19 @@ extern std::chrono::milliseconds time_since_last_update;
 
 extern scene::SceneManager* sceneManagerPtr;
 
-Rocket::Rocket(glm::vec3 initialLocation, glm::quat initialRotation) : render::ColouredPhongSceneItem(initialLocation, "rocket", render::ColourInformationUniform{glm::vec3{148.0f, 23.0f, 81.0f}, 1.0f}) {
+Rocket::Rocket(glm::vec3 initialLocation, glm::quat initialRotation) : render::ColouredPhongSceneItem(initialLocation, "rocket", render::ColourInformationUniform{glm::vec3{148.0f, 23.0f, 81.0f}, 1.0f}), lifeTime{0}, explodeOnceToken{0} {
 	rotation = initialRotation;
 	scale = glm::vec3{0.15f, 0.15f, 0.15f};
-
-	auto when = dispatch_time(DISPATCH_TIME_NOW, 4000000000);
-	dispatch_after(when, gcd_queue, ^{
-		explode();
-	});
 }
 
 void Rocket::update() {
+	lifeTime += time_since_last_update;
+
+	if (lifeTime.count() >= 4000) {
+		explode();
+		return;
+	}
+
 	float stepSize = (time_since_last_update.count() * 1000.0f) * 0.0000035f;
 
 	//Forward movement
@@ -33,5 +36,9 @@ void Rocket::update() {
 }
 
 void Rocket::explode() {
-	sceneManagerPtr->removeItem(getShared());
+	dispatch_once(&explodeOnceToken, ^{
+		dispatch_async(dispatch_get_current_queue(), ^{
+			sceneManagerPtr->removeItem(getShared());
+		});
+	});
 }

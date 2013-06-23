@@ -2,11 +2,31 @@
 
 #include <typeinfo>
 
-Asteroid::Asteroid(glm::vec3 initialLocation, unsigned int mass) : scene::GravitationalObject(initialLocation, mass, "sphere", render::ColourInformationUniform{glm::vec3{142.0f, 100.0f, 0.0f}, 1.0f}) {
+#include <dispatch/dispatch.h>
+
+#include "renderer/scene/scenemanager.hpp"
+
+#include "rocket.hpp"
+
+extern scene::SceneManager* sceneManagerPtr;
+
+Asteroid::Asteroid(glm::vec3 initialLocation, unsigned int mass) : scene::GravitationalObject(initialLocation, mass, "sphere", render::ColourInformationUniform{glm::vec3{142.0f, 100.0f, 0.0f}, 1.0f}), removeOnceToken{0} {
 	scale = glm::vec3{mass * 0.5f, mass * 0.5f, mass * 0.5f};
 }
 
-void Asteroid::handleCollision(scene::SceneItem &collidee) {
+void Asteroid::handleCollision(scene::SceneItem& collidee) {
+	if (typeid(collidee) == typeid(Rocket)) {
+		static_cast<Rocket&>(collidee).explode();
+
+		dispatch_once(&removeOnceToken, ^{
+			dispatch_async(dispatch_get_current_queue(), ^{
+				sceneManagerPtr->removeItem(getShared());
+			});
+		});
+
+		return;
+	}
+
 	if (typeid(collidee) != typeid(*this)) {
 		return;
 	}

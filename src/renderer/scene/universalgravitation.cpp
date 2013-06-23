@@ -6,6 +6,8 @@
 using namespace scene;
 
 void UniversalGravitation::update() {
+	std::lock_guard<std::mutex> lock(gravObjectsMutex);
+
 	std::for_each(gravityObjects.begin(), gravityObjects.end(), [](GravitationalObject* gravObject) {
 		gravObject->resetForce();
 	});

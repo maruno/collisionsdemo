@@ -124,7 +124,9 @@ int main(int argc, char** argv) {
 				Player::getInstance()->pitch(action? -1 : 0);
 				break;
 			case 'R':
-				Player::getInstance()->fireRocket();
+				if (action == GLFW_PRESS) {
+					Player::getInstance()->fireRocket();
+				}
 				break;
 		}
 	});
@@ -135,8 +137,8 @@ int main(int argc, char** argv) {
 	std::uniform_int_distribution<unsigned int> massDis(1, 2);
 
 	for(unsigned int i = 0; i < 150; ++i) {
-		scene::SceneItem* asteroid = new Asteroid(glm::vec3{locDis(gen), locDis(gen), locDis(gen)}, massDis(gen));
-		sceneManager.addItem(std::shared_ptr<scene::SceneItem>(asteroid));
+		std::shared_ptr<Asteroid> asteroid(new Asteroid(glm::vec3{locDis(gen), locDis(gen), locDis(gen)}, massDis(gen)));
+		sceneManager.addItem(asteroid);
 	}
 
 	sceneManager.addItem(Player::getInstance());
