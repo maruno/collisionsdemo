@@ -6,6 +6,9 @@
 
 #include "renderer/scene/scenemanager.hpp"
 
+#define VCLIP_TEMPLATES
+#include "collisiondetection/vclip.hpp"
+
 #include "rocket.hpp"
 
 extern scene::SceneManager* sceneManagerPtr;
@@ -17,14 +20,17 @@ Asteroid::Asteroid(glm::vec3 initialLocation, unsigned int mass) : scene::Gravit
 
 void Asteroid::handleCollision(scene::SceneItem& collidee) {
 	if (typeid(collidee) == typeid(Rocket)) {
-		static_cast<Rocket&>(collidee).explode();
+		collisiondetection::VClip vclip(this, &collidee);
+		if(vclip.run()) {
+			static_cast<Rocket&>(collidee).explode();
 
-		dispatch_once(&removeOnceToken, ^{
-			dispatch_async(dispatch_get_current_queue(), ^{
-				score += 1000;
-				sceneManagerPtr->removeItem(getShared());
+			dispatch_once(&removeOnceToken, ^{
+				dispatch_async(dispatch_get_current_queue(), ^{
+					score += 1000;
+					sceneManagerPtr->removeItem(getShared());
+				});
 			});
-		});
+		}
 
 		return;
 	}
