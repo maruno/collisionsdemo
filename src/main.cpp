@@ -28,6 +28,8 @@
 //HACK for C access
 scene::SceneManager* sceneManagerPtr;
 
+unsigned int score;
+
 //Update queue
 dispatch_queue_t gcd_queue;
 std::atomic<bool> gameOver;
@@ -77,7 +79,7 @@ int main(int argc, char** argv) {
 
 	render::HUD::getInstance().addItem(scoreMsg);
 
-	__block unsigned int score = 0;
+	score = 0;
 	dispatch_source_set_event_handler(score_timer, ^{
 		score += 50;
 
