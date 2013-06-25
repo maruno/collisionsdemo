@@ -164,6 +164,10 @@ void SceneManager::startSceneLoop() {
 	dispatch_resume(gcd_update_timer);
 
 	while(running) {
+		world.visitScene([](std::shared_ptr<SceneItem>& child) {
+			child->auxilaryOnRenderThread();
+		});
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		render::LightManager::getInstance().upload();

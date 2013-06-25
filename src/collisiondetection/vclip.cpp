@@ -986,6 +986,8 @@ bool VClip::run() {
 			return false;
 		}
 
+		lastState = state;
+
 		switch (state) {
 			case State::VV:
 				state = VV();
@@ -1007,5 +1009,13 @@ bool VClip::run() {
 			case State::penetrating:
 				return true;
 		}
+	}
+}
+
+glm::vec3 VClip::getPenetratingLocation() {
+	if (lastState == State::VV || lastState == State::VE || lastState == State::VF) {
+		return transformVerticeA(stateVarsA.vertexIdx);
+	} else {
+		return (transformVerticeA(stateVarsA.vertexIdx) + transformVerticeA(stateVarsA.edgeToVertexIdx))/2.0f;
 	}
 }

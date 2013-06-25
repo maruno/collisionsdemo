@@ -22,7 +22,7 @@ void Asteroid::handleCollision(scene::SceneItem& collidee) {
 	if (typeid(collidee) == typeid(Rocket)) {
 		collisiondetection::VClip vclip(this, &collidee);
 		if(vclip.run()) {
-			static_cast<Rocket&>(collidee).explode();
+			static_cast<Rocket&>(collidee).explode(vclip.getPenetratingLocation());
 
 			dispatch_once(&removeOnceToken, ^{
 				dispatch_async(dispatch_get_current_queue(), ^{

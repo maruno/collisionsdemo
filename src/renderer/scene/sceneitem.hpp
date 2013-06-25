@@ -54,6 +54,8 @@ namespace scene {
 		 */
 		virtual void buildModelMatrix();
 
+		virtual void auxilaryOnRenderThread() {};
+
 		/**
 		 * Called every render-tick.
 		 */

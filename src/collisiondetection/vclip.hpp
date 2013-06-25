@@ -29,6 +29,7 @@ namespace collisiondetection {
 		};
 
 		StateVariables stateVarsA, stateVarsB;
+		State lastState;
 
 		std::pair<unsigned int, unsigned int> previousEdgeEdgeA, previousEdgeEdgeB;
 
@@ -83,6 +84,8 @@ namespace collisiondetection {
 		VClip(scene::SceneItem* myA, scene::SceneItem* myB);
 		
 		bool run();
+
+		glm::vec3 getPenetratingLocation();
 	};
 }
 

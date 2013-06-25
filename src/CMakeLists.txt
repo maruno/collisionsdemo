@@ -2,8 +2,8 @@ add_subdirectory(collisiondetection)
 add_subdirectory(modelloader)
 add_subdirectory(renderer)
 
-set(awesomegame_INCS asteroid.hpp player.hpp rocket.hpp)
-set(awesomegame_SRCS asteroid.cpp player.cpp rocket.cpp)
+set(awesomegame_INCS asteroid.hpp player.hpp rocket.hpp explosion.hpp)
+set(awesomegame_SRCS asteroid.cpp player.cpp rocket.cpp explosion.cpp)
 
 #Build main executable
 add_executable(awesomegame main.cpp ${awesomegame_INCS} ${awesomegame_SRCS})
