@@ -1,4 +1,4 @@
-#include "AxisAlignedBoundingBox.hpp"
+#include "axisalignedboundingbox.hpp"
 
 #include <typeinfo>
 

@@ -10,7 +10,7 @@
 
 #include "glload/gl_3_2.h"
 
-#include "collisiondetection/ObjectOrientedBoundingBox.hpp"
+#include "collisiondetection/objectorientedboundingbox.hpp"
 
 namespace modelloader {
 	class DataNotAvailable : public std::runtime_error {
